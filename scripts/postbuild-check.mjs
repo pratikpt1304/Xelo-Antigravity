@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { copyFileSync, existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -26,6 +26,11 @@ function walk(dir) {
 if (!existsSync(distDir)) {
   console.error('postbuild-check: dist/ directory does not exist.');
   process.exit(1);
+}
+
+const appIndex = resolve(distDir, 'app/index.html');
+if (existsSync(appIndex)) {
+  copyFileSync(appIndex, resolve(distDir, 'app.html'));
 }
 
 for (const required of ['_headers', '_redirects', 'robots.txt', 'sitemap.xml']) {
