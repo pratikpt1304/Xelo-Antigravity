@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>XeIO super admin</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F3EF}
+a{color:#0E5E52}
+input:focus,select:focus,button:focus-visible,a:focus-visible{outline:2px solid #0E5E52;outline-offset:2px}
+button,input,select{font-family:'IBM Plex Sans',system-ui,sans-serif}
+.num{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.card{background:#FFFFFF;border:1px solid #E2E0D8;border-radius:6px}
+.lbl{font-size:11px;color:#6B6A63}
+th{font-weight:500;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:#6B6A63;text-align:left}
+.fld{height:38px;box-sizing:border-box;padding:0 10px;border:1px solid #D6D3C9;border-radius:5px;font-size:14px;background:#FFFFFF}
+</style>
+</helmet>
+<div style="min-height: 1200px; display: flex; flex-wrap: wrap; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 14px; color: #141413; background: #F4F3EF">
+  <aside aria-label="Super admin navigation" style="flex: 1 1 232px; max-width: 256px; background: #141413; color: #E8E6DF; padding: 20px 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+    <div style="padding: 0 6px"><div><span style="font-weight: 600; font-size: 20px; letter-spacing: -0.3px; color: #FFFFFF">Xe<span style="color: #3FA9F5">IO</span></span> <span style="font-size: 14px; color: #CFCDC5">Super admin</span></div><div style="font-size: 11px; color: #A8A69E">All rights · Sanjivani University</div></div>
+    <nav style="display: flex; flex-direction: column; gap: 2px"><sc-for list="{{nav}}" as="n" hint-placeholder-count="4"><button type="button" onClick="{{n.go}}" style="{{n.style}}"><span style="flex: 1; text-align: left">{{n.label}}</span><span class="num" style="{{n.badgeStyle}}">{{n.badge}}</span></button></sc-for></nav>
+    <div style="margin-top: auto; padding: 0 8px; font-size: 12px; display: flex; flex-direction: column; gap: 6px"><span style="color: #A8A69E">superadmin@xeio</span><a href="Main.dc.html" style="color: #CFCDC5">Sign out</a><div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: #8F8D85">by <img src="/_blob/310d6bb43f64ba4b3825ee33891c415d" alt="elzeo" style="height: 13px"></div></div>
+  </aside>
+  <main style="flex: 999 1 640px; min-width: 0; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h1 style="margin: 0; font-size: 26px; font-weight: 600">{{title}}</h1><span style="font-size: 13px; color: #6B6A63">{{lead}}</span></div>
+    <sc-if value="{{hasMsg}}" hint-placeholder-val="{{ false }}"><div role="status" style="padding: 10px 14px; border-radius: 6px; font-size: 13px; background: {{msgBg}}; color: {{msgFg}}">{{msg}}</div></sc-if>
+
+    <sc-if value="{{isUsers}}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <form onSubmit="{{create}}" class="card" style="padding: 14px 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin: 0">
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #6B6A63">Name<input class="fld" value="{{fName}}" onChange="{{setName}}" style="width: 180px"></label>
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #6B6A63">Institutional email<input class="fld" type="email" value="{{fEmail}}" onChange="{{setEmail}}" placeholder="name@sanjivani.edu.in" style="width: 240px"></label>
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #6B6A63">Role<select class="fld" value="{{fRole}}" onChange="{{setRole}}"><sc-for list="{{roleOptions}}" as="ro" hint-placeholder-count="5"><option value="{{ro}}">{{ro}}</option></sc-for></select></label>
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #6B6A63">Scope<select class="fld" value="{{fScope}}" onChange="{{setScope}}" style="min-width: 220px"><sc-for list="{{scopeOptions}}" as="so" hint-placeholder-count="4"><option value="{{so}}">{{so}}</option></sc-for></select></label>
+          <button type="submit" style="min-height: 38px; padding: 0 16px; border: 0; border-radius: 5px; background: #141413; color: #FFFFFF; font-weight: 600; cursor: pointer">Create login and send invite</button>
+        </form>
+        <div class="card" style="overflow-x: auto">
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 820px">
+            <thead><tr><th style="padding: 10px 14px">Name</th><th style="padding: 10px 8px">Email</th><th style="padding: 10px 8px">Role</th><th style="padding: 10px 8px">Scope</th><th style="padding: 10px 8px">Status</th><th style="padding: 10px 14px"></th></tr></thead>
+            <tbody><sc-for list="{{users}}" as="u" hint-placeholder-count="10"><tr style="border-top: 1px solid #EFEDE6"><td style="padding: 8px 14px; font-weight: 500">{{u.name}}</td><td class="num" style="padding: 8px; font-size: 12px">{{u.email}}</td><td style="padding: 8px">{{u.role}}</td><td style="padding: 8px; font-size: 12px; color: #6B6A63">{{u.scope}}</td><td style="padding: 8px"><span style="{{u.chip}}">{{u.status}}</span></td><td style="padding: 8px 14px; text-align: right"><button type="button" onClick="{{u.toggle}}" style="min-height: 30px; padding: 0 10px; border: 1px solid #D6D3C9; border-radius: 5px; background: #FFFFFF; font-size: 12px; cursor: pointer">{{u.action}}</button></td></tr></sc-for></tbody>
+          </table>
+        </div>
+        <div style="font-size: 12px; color: #6B6A63">Students are not created here: faculty onboard them with invitation emails carrying the class code. Currently 2,147 students onboarded by 38 faculty.</div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isSubs}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+          <sc-for list="{{planCards}}" as="pc" hint-placeholder-count="2">
+            <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 10px">
+              <div style="display: flex; justify-content: space-between; gap: 8px"><strong style="font-size: 18px">{{pc.name}}</strong><span class="num" style="font-size: 12px; color: #6B6A63">{{pc.active}} faculty active</span></div>
+              <div style="display: flex; flex-wrap: wrap; gap: 16px">
+                <label style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #6B6A63">AI runs per subscription<input class="fld num" type="number" min="0" value="{{pc.total}}" onChange="{{pc.setTotal}}" style="width: 120px"></label>
+                <label style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #6B6A63">Daily cap<input class="fld num" type="number" min="1" value="{{pc.daily}}" onChange="{{pc.setDaily}}" style="width: 100px"></label>
+              </div>
+              <div style="font-size: 12px; color: #6B6A63">One run = one AI drafting request (questions, banks, tasks, announcements). Approvals, uploads and monitoring never use runs.</div>
+            </div>
+          </sc-for>
+        </div>
+        <div class="card" style="overflow-x: auto">
+          <div style="padding: 12px 16px; border-bottom: 1px solid #E2E0D8"><strong>Subscription requests</strong> <span style="font-size: 12px; color: #6B6A63">approved manually</span></div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 860px">
+            <thead><tr><th style="padding: 9px 14px">Requested by</th><th style="padding: 9px 8px">For</th><th style="padding: 9px 8px">Plan</th><th style="padding: 9px 8px">Start</th><th style="padding: 9px 8px">Duration</th><th style="padding: 9px 8px">Status</th><th style="padding: 9px 14px"></th></tr></thead>
+            <tbody><sc-for list="{{requests}}" as="rq" hint-placeholder-count="5"><tr style="border-top: 1px solid #EFEDE6">
+              <td style="padding: 8px 14px">{{rq.by}}</td><td style="padding: 8px; font-size: 12px">{{rq.for}}</td>
+              <td style="padding: 8px"><select class="fld" value="{{rq.plan}}" onChange="{{rq.setPlan}}" disabled="{{rq.locked}}" aria-label="Plan" style="height: 32px; font-size: 13px"><option value="Pro">Pro</option><option value="Elite">Elite</option></select></td>
+              <td style="padding: 8px"><input class="fld num" type="date" value="{{rq.start}}" onChange="{{rq.setStart}}" disabled="{{rq.locked}}" aria-label="Start date" style="height: 32px; font-size: 12px"></td>
+              <td style="padding: 8px"><select class="fld" value="{{rq.months}}" onChange="{{rq.setMonths}}" disabled="{{rq.locked}}" aria-label="Duration" style="height: 32px; font-size: 13px"><option value="3">3 months</option><option value="6">6 months</option><option value="12">12 months</option></select></td>
+              <td style="padding: 8px"><span style="{{rq.chip}}">{{rq.status}}</span><div class="num" style="font-size: 11px; color: #6B6A63">{{rq.until}}</div></td>
+              <td style="padding: 8px 14px; white-space: nowrap"><sc-if value="{{rq.pending}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{rq.approve}}" style="min-height: 32px; padding: 0 10px; border: 0; border-radius: 5px; background: #0E5E52; color: #FFFFFF; font-size: 12px; font-weight: 600; cursor: pointer; margin-right: 4px">Approve</button><button type="button" onClick="{{rq.reject}}" style="min-height: 32px; padding: 0 10px; border: 1px solid #D6D3C9; border-radius: 5px; background: #FFFFFF; font-size: 12px; cursor: pointer">Reject</button></sc-if></td>
+            </tr></sc-for></tbody>
+          </table>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isCredits}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px"><sc-for list="{{creditKpis}}" as="k" hint-placeholder-count="4"><div class="card" style="padding: 14px"><div class="lbl">{{k.label}}</div><div class="num" style="font-size: 24px">{{k.value}}</div></div></sc-for></div>
+        <div class="card" style="overflow-x: auto">
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 900px">
+            <thead><tr><th style="padding: 10px 14px">Faculty</th><th style="padding: 10px 8px">Plan</th><th style="padding: 10px 8px">Valid until</th><th style="padding: 10px 8px">Used this subscription</th><th style="padding: 10px 8px; text-align: right">Today</th><th style="padding: 10px 8px">Status</th><th style="padding: 10px 14px"></th></tr></thead>
+            <tbody><sc-for list="{{credits}}" as="cr" hint-placeholder-count="8"><tr style="border-top: 1px solid #EFEDE6">
+              <td style="padding: 8px 14px"><div style="font-weight: 500">{{cr.name}}</div><div class="num" style="font-size: 11px; color: #6B6A63">{{cr.email}}</div></td>
+              <td style="padding: 8px">{{cr.plan}}</td><td class="num" style="padding: 8px; font-size: 12px">{{cr.until}}</td>
+              <td style="padding: 8px; min-width: 180px"><div class="num" style="font-size: 12px">{{cr.usedText}}</div><div style="height: 5px; background: #EFEDE6; border-radius: 3px; margin-top: 4px"><div style="{{cr.bar}}"></div></div></td>
+              <td class="num" style="padding: 8px; text-align: right">{{cr.today}}</td><td style="padding: 8px"><span style="{{cr.chip}}">{{cr.status}}</span></td>
+              <td style="padding: 8px 14px; text-align: right"><button type="button" onClick="{{cr.switchPlan}}" style="min-height: 30px; padding: 0 10px; border: 1px solid #D6D3C9; border-radius: 5px; background: #FFFFFF; font-size: 12px; cursor: pointer">{{cr.switchLabel}}</button></td>
+            </tr></sc-for></tbody>
+          </table>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isAudit}}" hint-placeholder-val="{{ false }}">
+      <div class="card" style="overflow-x: auto"><table style="width: 100%; border-collapse: collapse; font-size: 13px"><tbody><sc-for list="{{audit}}" as="a" hint-placeholder-count="8"><tr style="border-top: 1px solid #EFEDE6"><td class="num" style="padding: 8px 14px; font-size: 12px; color: #6B6A63; white-space: nowrap">{{a.when}}</td><td class="num" style="padding: 8px; font-size: 12px">{{a.who}}</td><td style="padding: 8px 14px">{{a.what}}</td></tr></sc-for></tbody></table></div>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab: 'users', msg: '', ok: true, fName: '', fEmail: '', fRole: 'HOD', fScope: 'Information Technology',
+      users: [['Vice-Chancellor', 'vc@sanjivani.edu.in', 'VC', 'University', 'Active'], ['Controller of Examinations', 'coe@sanjivani.edu.in', 'CoE', 'University', 'Active'], ['Dean, SET', 'dean.set@sanjivani.edu.in', 'Dean', 'School of Engineering and Technology', 'Active'], ['Dean, SCM', 'dean.scm@sanjivani.edu.in', 'Dean', 'School of Commerce and Management', 'Active'], ['HOD, CSE', 'hod.cse@sanjivani.edu.in', 'HOD', 'Computer Science and Engineering', 'Active'], ['HOD, IT', 'hod.it@sanjivani.edu.in', 'HOD', 'Information Technology', 'Active'], ['Demo Faculty', 'faculty.demo@sanjivani.edu.in', 'Faculty', 'Computer Science and Engineering', 'Active'], ['Faculty B', 'faculty.b@sanjivani.edu.in', 'Faculty', 'Computer Science and Engineering', 'Active'], ['Faculty H', 'faculty.h@sanjivani.edu.in', 'Faculty', 'Computer Science and Engineering', 'Invited']],
+      plans: { Pro: { total: 125, daily: 5 }, Elite: { total: 250, daily: 7 } },
+      reqs: [{ by: 'hod.cse@sanjivani.edu.in', for: 'CSE department · 8 faculty', plan: 'Pro', start: '2027-01-04', months: '6', status: 'active' }, { by: 'faculty.h@sanjivani.edu.in', for: 'Faculty H · ML Lab', plan: 'Elite', start: '2027-03-01', months: '6', status: 'pending' }, { by: 'hod.it@sanjivani.edu.in', for: 'IT department · 6 faculty', plan: 'Pro', start: '2027-03-01', months: '12', status: 'pending' }, { by: 'dean.scm@sanjivani.edu.in', for: 'SCM · 3 faculty', plan: 'Pro', start: '2027-02-15', months: '3', status: 'rejected' }],
+      fac: [['Demo Faculty', 'faculty.demo@sanjivani.edu.in', 'Pro', 38, 3], ['Faculty B', 'faculty.b@sanjivani.edu.in', 'Pro', 112, 5], ['Faculty C', 'faculty.c@sanjivani.edu.in', 'Elite', 141, 2], ['Faculty D', 'faculty.d@sanjivani.edu.in', 'Pro', 125, 0], ['Faculty E', 'faculty.e@sanjivani.edu.in', 'Pro', 64, 1], ['Faculty F', 'faculty.f@sanjivani.edu.in', 'Elite', 207, 7], ['Faculty G', 'faculty.g@sanjivani.edu.in', 'Pro', 20, 0]],
+      audit: [] };
+  }
+  renderVals() {
+    const st = this.state;
+    const teal = '#0E5E52', muted = '#6B6A63';
+    const tag = (bg, fg) => `display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:500;background:${bg};color:${fg};white-space:nowrap`;
+    const good = tag('#E6F0EC', teal), warn = tag('#FFF4EC', '#9A3412'), bad = tag('#FBEAEA', '#9F1D1D'), grey = tag('#F1EFE9', muted);
+    const stamp = new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata' });
+    const log = (what) => [{ when: stamp, who: 'superadmin', what }].concat(st.audit);
+    const scopes = { VC: ['University'], CoE: ['University'], Dean: ['School of Engineering and Technology', 'School of Commerce and Management', 'School of Pharmaceutical Sciences'], HOD: ['Computer Science and Engineering', 'Information Technology', 'Mechanical Engineering', 'Electronics and Telecommunication'], Faculty: ['Computer Science and Engineering', 'Information Technology', 'Mechanical Engineering', 'Electronics and Telecommunication'] };
+    const create = (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      const em = (st.fEmail || '').trim().toLowerCase();
+      if (!st.fName.trim() || !em.endsWith('@sanjivani.edu.in')) { this.setState({ msg: 'Enter a name and an @sanjivani.edu.in email.', ok: false }); return; }
+      if (st.users.some((u) => u[1] === em)) { this.setState({ msg: `${em} already has a login.`, ok: false }); return; }
+      this.setState({ users: st.users.concat([[st.fName.trim(), em, st.fRole, st.fScope, 'Invited']]), fName: '', fEmail: '', msg: `Login created for ${em} as ${st.fRole} (${st.fScope}). Invite email sent; they sign in with SSO.`, ok: true, audit: log(`Created ${st.fRole} login ${em}`) });
+    };
+    const users = st.users.map((u, i) => ({ name: u[0], email: u[1], role: u[2], scope: u[3], status: u[4], chip: u[4] === 'Active' ? good : u[4] === 'Invited' ? warn : bad, action: u[4] === 'Disabled' ? 'Enable' : 'Disable',
+      toggle: () => this.setState({ users: st.users.map((x, j) => j === i ? [x[0], x[1], x[2], x[3], x[4] === 'Disabled' ? 'Active' : 'Disabled'] : x), audit: log(`${u[4] === 'Disabled' ? 'Enabled' : 'Disabled'} ${u[1]}`) }) }));
+
+    const P = st.plans;
+    const setPlan = (name, k) => (e) => this.setState({ plans: Object.assign({}, P, { [name]: Object.assign({}, P[name], { [k]: Math.max(k === 'daily' ? 1 : 0, parseInt(e.target.value, 10) || 0) }) }), audit: log(`Changed ${name} ${k === 'daily' ? 'daily cap' : 'runs per subscription'} to ${e.target.value}`) });
+    const planCards = ['Pro', 'Elite'].map((name) => ({ name, total: P[name].total, daily: P[name].daily, active: st.fac.filter((f) => f[2] === name).length, setTotal: setPlan(name, 'total'), setDaily: setPlan(name, 'daily') }));
+    const addMonths = (d, m) => { const x = new Date(d + 'T00:00:00Z'); x.setUTCMonth(x.getUTCMonth() + Number(m)); x.setUTCDate(x.getUTCDate() - 1); return x.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }); };
+    const setReq = (i, patch) => this.setState({ reqs: st.reqs.map((r, j) => j === i ? Object.assign({}, r, patch) : r) });
+    const requests = st.reqs.map((r, i) => ({ by: r.by, for: r.for, plan: r.plan, start: r.start, months: r.months, locked: r.status !== 'pending', pending: r.status === 'pending',
+      status: { active: 'Active', pending: 'Pending approval', rejected: 'Rejected' }[r.status], chip: { active: good, pending: warn, rejected: bad }[r.status], until: r.status === 'rejected' ? '' : `until ${addMonths(r.start, r.months)}`,
+      setPlan: (e) => setReq(i, { plan: e.target.value }), setStart: (e) => setReq(i, { start: e.target.value }), setMonths: (e) => setReq(i, { months: e.target.value }),
+      approve: () => this.setState({ reqs: st.reqs.map((x, j) => j === i ? Object.assign({}, x, { status: 'active' }) : x), msg: `${r.plan} approved for ${r.for}, ${r.months} months from ${r.start}.`, ok: true, audit: log(`Approved ${r.plan} for ${r.for} (${r.months} months)`) }),
+      reject: () => this.setState({ reqs: st.reqs.map((x, j) => j === i ? Object.assign({}, x, { status: 'rejected' }) : x), msg: `Request from ${r.by} rejected.`, ok: true, audit: log(`Rejected request from ${r.by}`) }) }));
+
+    const credits = st.fac.map((f, i) => {
+      const p = P[f[2]], left = Math.max(0, p.total - f[3]), todayLeft = p.daily - f[4];
+      const status = left <= 0 ? 'Subscription runs used up' : todayLeft <= 0 ? 'Daily cap reached' : left < p.total * 0.15 ? 'Running low' : 'OK';
+      return { name: f[0], email: f[1], plan: f[2], until: f[2] === 'Elite' ? '28 Feb 2028' : '3 Jul 2027', usedText: `${Math.min(f[3], p.total)} of ${p.total} used · ${left} left`, bar: `height:5px;width:${Math.min(100, Math.round(100 * f[3] / p.total))}%;border-radius:3px;background:${left <= 0 ? '#9F1D1D' : left < p.total * 0.15 ? '#C2410C' : teal}`,
+        today: `${Math.min(f[4], p.daily)}/${p.daily}`, status, chip: status === 'OK' ? good : status === 'Running low' ? warn : bad, switchLabel: f[2] === 'Pro' ? 'Move to Elite' : 'Move to Pro',
+        switchPlan: () => this.setState({ fac: st.fac.map((x, j) => j === i ? [x[0], x[1], x[2] === 'Pro' ? 'Elite' : 'Pro', x[3], x[4]] : x), msg: `${f[0]} moved to ${f[2] === 'Pro' ? 'Elite' : 'Pro'}. New caps apply immediately.`, ok: true, audit: log(`Moved ${f[1]} to ${f[2] === 'Pro' ? 'Elite' : 'Pro'}`) }) };
+    });
+    const usedAll = st.fac.reduce((a, f) => a + f[3], 0), todayAll = st.fac.reduce((a, f) => a + f[4], 0);
+    const creditKpis = [['Faculty with AI plans', String(st.fac.length)], ['Runs used this term', String(usedAll)], ['Runs today', String(todayAll)], ['At a cap today', String(credits.filter((c) => c.status !== 'OK' && c.status !== 'Running low').length)]].map(([label, value]) => ({ label, value }));
+
+    const pendingN = st.reqs.filter((r) => r.status === 'pending').length;
+    const nav = [['users', 'Users and roles', ''], ['subs', 'Subscriptions', pendingN ? String(pendingN) : ''], ['credits', 'AI credits', ''], ['audit', 'Audit log', '']].map(([id, label, badge]) => ({ label, badge, go: () => this.setState({ tab: id, msg: '' }), style: `display:flex;align-items:center;gap:8px;width:100%;min-height:38px;padding:0 10px;border:0;border-radius:5px;cursor:pointer;font-size:13px;background:${st.tab === id ? '#2C2B28' : 'transparent'};color:${st.tab === id ? '#FFFFFF' : '#CFCDC5'};font-weight:${st.tab === id ? 600 : 400}`, badgeStyle: badge ? 'font-size:11px;padding:1px 6px;border-radius:9px;background:#C2410C;color:#FFFFFF' : 'display:none' }));
+    const T = { users: ['Users and roles', 'Create logins and map emails for VC, CoE, deans, HODs and faculty'], subs: ['Subscriptions', 'Plans and AI limits; requests approved manually with a duration'], credits: ['AI credits', 'Usage per faculty against their subscription caps'], audit: ['Audit log', 'Every change made in this console'] }[st.tab];
+    const audit = st.audit.length ? st.audit : [{ when: '23 Feb, 17:02', who: 'superadmin', what: 'Approved Pro for CSE department (6 months)' }, { when: '20 Feb, 11:40', who: 'superadmin', what: 'Created HOD login hod.it@sanjivani.edu.in' }];
+
+    return {
+      nav, title: T[0], lead: T[1], hasMsg: !!st.msg, msg: st.msg, msgBg: st.ok ? '#E6F0EC' : '#FBEAEA', msgFg: st.ok ? teal : '#8F1D14',
+      isUsers: st.tab === 'users', isSubs: st.tab === 'subs', isCredits: st.tab === 'credits', isAudit: st.tab === 'audit',
+      fName: st.fName, fEmail: st.fEmail, fRole: st.fRole, fScope: st.fScope, roleOptions: ['VC', 'CoE', 'Dean', 'HOD', 'Faculty'], scopeOptions: scopes[st.fRole],
+      setName: (e) => this.setState({ fName: e.target.value }), setEmail: (e) => this.setState({ fEmail: e.target.value }), setRole: (e) => this.setState({ fRole: e.target.value, fScope: scopes[e.target.value][0] }), setScope: (e) => this.setState({ fScope: e.target.value }),
+      create, users, planCards, requests, credits, creditKpis, audit
+    };
+  }
+}
+</script>
+</body>
+</html>

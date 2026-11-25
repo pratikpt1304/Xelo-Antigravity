@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>XeIO student app</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Serif:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F3EF}
+a{color:#0E5E52}a:hover{color:#08403A}
+input:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:2px solid #0E5E52;outline-offset:2px}
+button,input,textarea{font-family:'IBM Plex Sans',system-ui,sans-serif}
+.num{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.card{background:#FFFFFF;border:1px solid #E2E0D8;border-radius:6px}
+.lbl{font-size:11px;color:#6B6A63}
+th{font-weight:500;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:#6B6A63;text-align:left}
+.page{background:#FFFFFF;border:1px solid #D6D3C9;box-shadow:0 1px 0 #E2E0D8;padding:48px 56px;box-sizing:border-box;max-width:760px;width:100%;margin:0 auto}
+</style>
+</helmet>
+<div style="min-height: 1600px; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 14px; color: #141413; background: #F4F3EF">
+  <sc-if value="{{showNav}}" hint-placeholder-val="{{ true }}">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 24px; background: #141413; color: #E8E6DF">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="font-weight: 600; font-size: 19px; letter-spacing: -0.3px; color: #FFFFFF">Xe<span style="color: #3FA9F5">IO</span></span><img src="/_blob/310d6bb43f64ba4b3825ee33891c415d" alt="elzeo" style="height: 14px; margin-left: 8px; opacity: 0.9">
+    </div>
+    <nav aria-label="Student sections" style="display: flex; flex-wrap: wrap; gap: 2px"><sc-for list="{{nav}}" as="n" hint-placeholder-count="5"><button type="button" onClick="{{n.go}}" style="{{n.style}}">{{n.label}}</button></sc-for></nav>
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 12px; color: #CFCDC5"><span class="num">Demo Student · 2301034</span><a href="Faculty.dc.html" style="color: #CFCDC5">Faculty view</a><a href="Main.dc.html" style="color: #CFCDC5">Sign out</a></div>
+  </header>
+  </sc-if>
+
+  <sc-if value="{{showIde}}" hint-placeholder-val="{{ false }}">
+    <section aria-label="{{ideAria}}" style="height: 880px; display: flex; flex-direction: column; background: #141413; color: #E8E6DF">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 8px 14px; border-bottom: 1px solid #2C2B28; min-height: 44px; box-sizing: border-box">
+        <strong style="font-size: 14px">{{ideTitle}}</strong>
+        <div style="display: flex; gap: 2px; margin-left: 8px"><sc-for list="{{ideTabs}}" as="qt" hint-placeholder-count="2"><button type="button" onClick="{{qt.pick}}" style="{{qt.style}}"><span style="{{qt.dot}}"></span>{{qt.label}}</button></sc-for></div>
+        <label style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #A8A69E; margin-left: 8px">Language<select value="{{lang}}" onChange="{{setLang}}" style="height: 30px; padding: 0 8px; border: 1px solid #3A3936; border-radius: 5px; background: #1F1F1D; color: #E8E6DF; font-size: 13px"><sc-for list="{{langs}}" as="lg" hint-placeholder-count="6"><option value="{{lg}}">{{lg}}</option></sc-for></select></label>
+        <span style="flex: 1"></span>
+        <sc-for list="{{ideChips}}" as="ch" hint-placeholder-count="3"><span class="num" style="{{ch.style}}">{{ch.text}}</span></sc-for>
+        <button type="button" onClick="{{ideRun}}" style="min-height: 32px; padding: 0 14px; border: 1px solid #3A3936; border-radius: 5px; background: #1F1F1D; color: #E8E6DF; font-size: 13px; cursor: pointer">Run</button>
+        <button type="button" onClick="{{ideSubmit}}" style="min-height: 32px; padding: 0 14px; border: 0; border-radius: 5px; background: #0E5E52; color: #FFFFFF; font-size: 13px; font-weight: 600; cursor: pointer">Submit</button>
+      </div>
+      <sc-if value="{{isProctored}}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 14px; padding: 6px 14px; background: #1F1F1D; border-bottom: 1px solid #2C2B28; font-size: 12px">
+          <div aria-label="Webcam preview" style="width: 64px; height: 40px; border-radius: 4px; background: #2C2B28; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A8A69E" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="9" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg></div>
+          <sc-for list="{{proctorChips}}" as="pc" hint-placeholder-count="6"><span style="{{pc.style}}">{{pc.text}}</span></sc-for>
+          <span style="flex: 1"></span>
+          <span class="num" style="{{saveStyle}}">{{saveText}}</span>
+          <button type="button" onClick="{{disconnect}}" style="min-height: 28px; padding: 0 10px; border: 1px dashed #9F1D1D; background: transparent; color: #FFB4A9; border-radius: 4px; font-size: 12px; cursor: pointer">Simulate disconnect</button>
+        </div>
+      </sc-if>
+      <div style="flex: 1; min-height: 0; display: flex">
+        <div style="flex: 0 0 25%; min-width: 260px; overflow-y: auto; background: #FBFAF7; color: #141413; padding: 16px 18px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; border-right: 1px solid #2C2B28">
+          <div><div style="font-size: 17px; font-weight: 600">{{pTitle}}</div><div style="display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap"><sc-for list="{{pTags}}" as="pt" hint-placeholder-count="3"><span style="{{pt.style}}">{{pt.text}}</span></sc-for></div></div>
+          <div style="font-size: 13px; line-height: 1.6">{{pStatement}}</div>
+          <div style="font-size: 12px; line-height: 1.6; color: #3D3C38"><strong>Input</strong> · {{pInput}}<br><strong>Output</strong> · {{pOutput}}<br><strong>Constraints</strong> · {{pConstraints}}</div>
+          <sc-for list="{{pExamples}}" as="ex" hint-placeholder-count="2">
+            <div style="border: 1px solid #E2E0D8; border-radius: 5px; overflow: hidden; font-size: 12px">
+              <div style="display: flex; justify-content: space-between; padding: 6px 10px; background: #F1EFE9"><strong>{{ex.name}}</strong><span style="{{ex.chip}}">{{ex.state}}</span></div>
+              <pre class="num" style="margin: 0; padding: 8px 10px; white-space: pre-wrap">Input:    {{ex.input}}
+Expected: {{ex.output}}</pre>
+            </div>
+          </sc-for>
+          <div style="padding: 10px; border: 1px dashed #D6D3C9; border-radius: 5px; font-size: 12px; color: #6B6A63">{{pHidden}}</div>
+          <sc-if value="{{showPostCard}}" hint-placeholder-val="{{ false }}"><div style="{{postCardStyle}}"><strong>{{postState}}</strong><div style="font-size: 12px; margin-top: 4px">{{postNote}}</div><sc-if value="{{postCanStart}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{takePost}}" style="margin-top: 8px; min-height: 32px; padding: 0 12px; border: 0; border-radius: 5px; background: #0E5E52; color: #FFFFFF; font-weight: 600; cursor: pointer">Start post-test</button></sc-if></div></sc-if>
+        </div>
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+          <div style="flex: 3; min-height: 0; display: flex; flex-direction: column; background: #1B1B1A">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 0 12px; height: 32px; border-bottom: 1px solid #2C2B28; font-size: 12px; color: #A8A69E"><span class="num" style="color: #E8E6DF; padding: 6px 0; border-bottom: 2px solid #3FA9F5">{{fileName}}</span><span>{{editorNote}}</span></div>
+            <div style="flex: 1; min-height: 0; display: flex; overflow: auto">
+              <pre class="num" aria-hidden="true" style="margin: 0; padding: 12px 10px 12px 14px; color: #5E5C56; font-size: 13px; line-height: 1.6; text-align: right; user-select: none">{{gutter}}</pre>
+              <textarea aria-label="Code editor" spellcheck="false" value="{{edCode}}" onChange="{{setEdCode}}" style="flex: 1; border: 0; outline: none; resize: none; padding: 12px 14px 12px 6px; background: transparent; color: #E8E6DF; font-family: 'IBM Plex Mono', monospace; font-size: 13px; line-height: 1.6; white-space: pre"></textarea>
+            </div>
+          </div>
+          <div style="flex: 1; min-height: 0; display: flex; flex-direction: column; background: #11110F; border-top: 1px solid #2C2B28">
+            <div style="display: flex; gap: 14px; padding: 0 12px; height: 30px; align-items: center; border-bottom: 1px solid #2C2B28; font-size: 12px"><span style="color: #E8E6DF; border-bottom: 2px solid #3FA9F5; padding: 6px 0">Console</span><span style="color: #8F8D85">{{consoleMeta}}</span></div>
+            <pre class="num" style="flex: 1; margin: 0; padding: 10px 14px; overflow: auto; font-size: 12px; line-height: 1.7; color: #CFCDC5; white-space: pre-wrap">{{consoleText}}</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+  <sc-if value="{{showMain}}" hint-placeholder-val="{{ true }}">
+  <main style="max-width: 1240px; margin: 0 auto; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+
+    <!-- HOME -->
+    <sc-if value="{{isHome}}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; flex-direction: column; gap: 18px">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
+          <h1 style="margin: 0; font-size: 26px; font-weight: 600">Semester IV · Jan–May 2027</h1>
+          <form onSubmit="{{join}}" style="display: flex; gap: 6px; align-items: center; margin: 0">
+            <label for="code" style="font-size: 12px; color: #6B6A63">Class code from your invite</label>
+            <input id="code" class="num" value="{{code}}" onChange="{{setCode}}" placeholder="e.g. CSL101-SYB-7Q4K" style="height: 36px; width: 180px; box-sizing: border-box; padding: 0 10px; border: 1px solid #D6D3C9; border-radius: 5px; font-size: 13px">
+            <button type="submit" style="height: 36px; padding: 0 14px; border: 0; border-radius: 5px; background: #141413; color: #FFFFFF; font-weight: 600; cursor: pointer">Join</button>
+          </form>
+        </div>
+        <sc-if value="{{hasJoinMsg}}" hint-placeholder-val="{{ false }}"><div role="status" style="font-size: 13px; color: {{joinColor}}">{{joinMsg}}</div></sc-if>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px">
+          <sc-for list="{{courses}}" as="c" hint-placeholder-count="3">
+            <button type="button" onClick="{{c.open}}" class="card" style="text-align: left; padding: 16px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; color: #141413">
+              <span class="num" style="font-size: 11px; color: #6B6A63">{{c.code}}</span><span style="font-weight: 600; font-size: 16px">{{c.title}}</span>
+              <span style="height: 4px; width: 100%; background: #EFEDE6; border-radius: 2px; display: block"><span style="{{c.bar}}"></span></span>
+              <span style="font-size: 12px; color: #6B6A63">{{c.next}}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+          <div class="card" style="flex: 2 1 560px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px"><strong>February 2027</strong><span style="font-size: 12px; color: #6B6A63">Also in Google Calendar or Outlook through your calendar link</span></div>
+            <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; font-size: 12px">
+              <sc-for list="{{dows}}" as="d" hint-placeholder-count="7"><div style="font-size: 11px; color: #6B6A63; padding: 2px 4px">{{d}}</div></sc-for>
+              <sc-for list="{{cells}}" as="cell" hint-placeholder-count="28"><div style="{{cell.style}}"><div class="num" style="font-weight: 600">{{cell.day}}</div><sc-for list="{{cell.events}}" as="ev" hint-placeholder-count="1"><div style="{{ev.style}}">{{ev.text}}</div></sc-for></div></sc-for>
+            </div>
+          </div>
+          <div style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 14px">
+            <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 8px">
+              <strong>Today</strong>
+              <div class="num" style="font-size: 13px; color: #6B6A63">Pre-test S13–S14 · closed 09:59 · you scored 4/5</div>
+              <div class="num" style="font-size: 13px">10:00 Lab 7 · S13 1-D arrays, S14 Searching</div>
+              <div class="num" style="font-size: 13px">Post-test · opens after your hidden tests pass · closes 23:59</div>
+              <button type="button" onClick="{{goLab}}" style="align-self: flex-start; min-height: 36px; padding: 0 14px; border: 0; border-radius: 5px; background: #0E5E52; color: #FFFFFF; font-weight: 600; cursor: pointer">Open today’s lab</button>
+            </div>
+            <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 6px">
+              <strong>Previous semesters</strong>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-top: 1px solid #EFEDE6"><span>Sem III · Data Structures Lab</span><span class="num">82/100</span></div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-top: 1px solid #EFEDE6"><span>Sem II · Problem Solving Lab</span><span class="num">76/100</span></div>
+              <div style="font-size: 11px; color: #6B6A63">Recorded on XeIO. Official results are with the CoE.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- CLASSROOM -->
+    <sc-if value="{{isClass}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h1 style="margin: 0; font-size: 26px; font-weight: 600">CSL-101 Programming in C Lab</h1><span style="font-size: 13px; color: #6B6A63">Batch A · Demo Faculty · Wednesdays 10:00</span></div>
+        <sc-for list="{{weeks}}" as="w" hint-placeholder-count="4">
+          <div style="display: grid; grid-template-columns: 112px 1fr; gap: 14px">
+            <div style="padding-top: 12px; text-align: right"><div class="num" style="font-size: 13px; font-weight: 600">{{w.date}}</div><div style="font-size: 11px; color: #6B6A63">{{w.tag}}</div></div>
+            <div style="{{w.box}}">
+              <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px"><strong>{{w.title}}</strong><span style="font-size: 12px; color: #6B6A63">{{w.unit}}</span></div>
+              <sc-for list="{{w.items}}" as="it" hint-placeholder-count="4">
+                <div style="display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px solid #EFEDE6">
+                  <span style="{{it.icon}}">{{it.glyph}}</span>
+                  <div><div style="font-size: 13px; font-weight: 500">{{it.title}}</div><div class="num" style="font-size: 11px; color: #6B6A63">{{it.meta}}</div></div>
+                  <span style="{{it.chip}}">{{it.state}}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- LAB FILE -->
+    <sc-if value="{{isFile}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; max-width: 760px; width: 100%; margin: 0 auto">
+          <div><h1 style="margin: 0; font-size: 22px; font-weight: 600">Lab file · CSL-101</h1><div style="font-size: 12px; color: #6B6A63">As of today. The final file is issued after the last working day and is needed to appear for the final practical.</div></div>
+          <button type="button" onClick="{{download}}" style="min-height: 40px; padding: 0 16px; border: 0; border-radius: 5px; background: #141413; color: #FFFFFF; font-weight: 600; cursor: pointer">Download PDF</button>
+        </div>
+        <sc-if value="{{hasFileMsg}}" hint-placeholder-val="{{ false }}"><div role="status" style="max-width: 760px; width: 100%; margin: 0 auto; font-size: 13px; color: #0E5E52">{{fileMsg}}</div></sc-if>
+
+        <section class="page" aria-label="Title page" style="min-height: 900px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; font-family: 'IBM Plex Serif', Georgia, serif">
+          <div style="font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: #6B6A63; font-family: 'IBM Plex Sans', sans-serif">Sanjivani University</div>
+          <div style="font-size: 15px">School of Engineering and Technology<br>Department of Computer Science and Engineering</div>
+          <div style="margin-top: 56px; font-size: 32px; font-weight: 600">Laboratory Record</div>
+          <div style="font-size: 20px">CSL-101 · Programming in C Lab</div>
+          <div style="font-size: 14px; color: #6B6A63">L-T-P-C 0-0-2-1 · Semester IV · Academic year 2026–27</div>
+          <table style="margin-top: 48px; border-collapse: collapse; font-size: 15px; text-align: left; font-family: 'IBM Plex Sans', sans-serif">
+            <tbody>
+              <tr><td style="padding: 8px 24px 8px 0; color: #6B6A63">Name</td><td style="padding: 8px 0; border-bottom: 1px solid #D6D3C9; min-width: 280px">Demo Student</td></tr>
+              <tr><td style="padding: 8px 24px 8px 0; color: #6B6A63">Roll number</td><td class="num" style="padding: 8px 0; border-bottom: 1px solid #D6D3C9">2301034</td></tr>
+              <tr><td style="padding: 8px 24px 8px 0; color: #6B6A63">Class and batch</td><td style="padding: 8px 0; border-bottom: 1px solid #D6D3C9">SY-B · Batch A</td></tr>
+              <tr><td style="padding: 8px 24px 8px 0; color: #6B6A63">Faculty in-charge</td><td style="padding: 8px 0; border-bottom: 1px solid #D6D3C9">Demo Faculty</td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top: auto; width: 100%; display: flex; justify-content: space-between; gap: 24px; font-family: 'IBM Plex Sans', sans-serif; font-size: 13px">
+            <div style="flex: 1; border-top: 1px solid #141413; padding-top: 8px">Faculty in-charge<br><span style="color: #6B6A63">signature and date</span></div>
+            <div style="flex: 1; border-top: 1px solid #141413; padding-top: 8px">Head of Department<br><span style="color: #6B6A63">signature and date</span></div>
+          </div>
+        </section>
+
+        <section class="page" aria-label="Declaration" style="min-height: 900px; display: flex; flex-direction: column; gap: 18px">
+          <div style="font-family: 'IBM Plex Serif', Georgia, serif; font-size: 24px; font-weight: 600; text-align: center">Declaration</div>
+          <p style="margin: 0; font-family: 'IBM Plex Serif', Georgia, serif; font-size: 15px; line-height: 1.8">I, Demo Student (roll number 2301034), declare that every program recorded in this laboratory record is my own original work, written by me during the scheduled lab sessions. I have not copied code from other students or other sources, have not used AI tools to generate the code, and have not been involved in any act of indiscipline during the course. I submit this record for my appearance in the final laboratory practical examination of CSL-101 Programming in C Lab.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-between; padding: 20px; border: 1px solid #141413">
+            <div style="display: flex; flex-direction: column; gap: 10px">
+              <div><div class="lbl">Internal marks</div><div class="num" style="font-size: 36px; font-weight: 500">{{total}}<span style="font-size: 18px; color: #6B6A63"> / 100</span></div></div>
+              <div><div class="lbl">Attendance</div><div class="num" style="font-size: 24px">{{attPct}}%</div></div>
+              <div class="num" style="font-size: 11px; color: #6B6A63">Verification code XO-CSL101-2301034-7F3A</div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+              <svg width="132" height="132" viewBox="0 0 29 29" role="img" aria-label="QR code to verify this record on XeIO (sample)" shape-rendering="crispEdges"><rect width="29" height="29" fill="#FFFFFF"></rect><path d="{{qr}}" fill="#141413"></path></svg>
+              <div style="font-size: 11px; color: #6B6A63">Scan to verify on XeIO (sample)</div>
+            </div>
+          </div>
+          <div style="margin-top: auto; display: flex; justify-content: space-between; gap: 24px; font-size: 13px">
+            <div style="flex: 1; border-top: 1px solid #141413; padding-top: 8px">Student signature</div>
+            <div style="flex: 1; border-top: 1px solid #141413; padding-top: 8px">Date</div>
+          </div>
+        </section>
+
+        <section class="page" aria-label="Index" style="display: flex; flex-direction: column; gap: 14px; padding: 40px 40px">
+          <div style="font-family: 'IBM Plex Serif', Georgia, serif; font-size: 22px; font-weight: 600; text-align: center">Index</div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 12px">
+            <thead><tr style="border-bottom: 1px solid #141413"><th style="padding: 6px 4px">#</th><th style="padding: 6px 4px">Title</th><th style="padding: 6px 4px">Scheduled</th><th style="padding: 6px 4px">Status</th><th style="padding: 6px 4px; text-align: right">Att</th><th style="padding: 6px 4px; text-align: right">Pre</th><th style="padding: 6px 4px; text-align: right">Post</th><th style="padding: 6px 4px; text-align: right">Vis</th><th style="padding: 6px 4px; text-align: right">Hid</th><th style="padding: 6px 4px; text-align: right">Viva</th></tr></thead>
+            <tbody><sc-for list="{{index}}" as="r" hint-placeholder-count="12"><tr style="border-bottom: 1px solid #EFEDE6"><td class="num" style="padding: 5px 4px">{{r.n}}</td><td style="padding: 5px 4px">{{r.title}}</td><td class="num" style="padding: 5px 4px; white-space: nowrap">{{r.date}}</td><td style="padding: 5px 4px">{{r.status}}</td><td class="num" style="padding: 5px 4px; text-align: right">{{r.att}}</td><td class="num" style="padding: 5px 4px; text-align: right">{{r.pre}}</td><td class="num" style="padding: 5px 4px; text-align: right">{{r.post}}</td><td class="num" style="padding: 5px 4px; text-align: right">{{r.vis}}</td><td class="num" style="padding: 5px 4px; text-align: right">{{r.hid}}</td><td class="num" style="padding: 5px 4px; text-align: right">{{r.viva}}</td></tr></sc-for></tbody>
+          </table>
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px">
+            <tbody>
+              <sc-for list="{{rubric}}" as="rb" hint-placeholder-count="6"><tr style="border-bottom: 1px solid #EFEDE6"><td style="padding: 5px 4px">{{rb.name}}</td><td class="num" style="padding: 5px 4px; text-align: right">{{rb.marks}}</td></tr></sc-for>
+              <tr style="border-top: 2px solid #141413; font-weight: 600"><td style="padding: 8px 4px">Total (scaled from {{rawOf}})</td><td class="num" style="padding: 8px 4px; text-align: right">{{total}} / 100</td></tr>
+            </tbody>
+          </table>
+          <div style="font-size: 12px; color: #6B6A63">Pages that follow: each program with its final code and test results. Hidden test cases are shown as passed or failed only.</div>
+        </section>
+        <section class="page" aria-label="Record of submitted programs" style="display: flex; flex-direction: column; gap: 12px; padding: 40px 40px">
+          <div style="font-family: 'IBM Plex Serif', Georgia, serif; font-size: 22px; font-weight: 600; text-align: center">Record of submitted programs</div>
+          <div style="font-size: 12px; color: #6B6A63; text-align: center">Final submission for each question. Hidden test cases are shown as passed or pending only.</div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 12px">
+            <thead><tr style="border-bottom: 1px solid #141413"><th style="padding: 6px 4px">Session</th><th style="padding: 6px 4px">Program</th><th style="padding: 6px 4px">Submitted</th><th style="padding: 6px 4px; text-align: right">Visible</th><th style="padding: 6px 4px; text-align: right">Hidden</th><th style="padding: 6px 4px">Status</th><th style="padding: 6px 4px"></th></tr></thead>
+            <tbody>
+              <sc-for list="{{subs}}" as="sb" hint-placeholder-count="12">
+                <tr style="border-bottom: 1px solid #EFEDE6">
+                  <td class="num" style="padding: 5px 4px; white-space: nowrap">{{sb.sess}}</td><td style="padding: 5px 4px">{{sb.title}}</td><td class="num" style="padding: 5px 4px; white-space: nowrap">{{sb.when}}</td>
+                  <td class="num" style="padding: 5px 4px; text-align: right">{{sb.vis}}</td><td class="num" style="padding: 5px 4px; text-align: right">{{sb.hid}}</td>
+                  <td style="padding: 5px 4px"><span style="{{sb.chip}}">{{sb.status}}</span></td>
+                  <td style="padding: 5px 4px; text-align: right"><sc-if value="{{sb.hasCode}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{sb.toggle}}" style="border: 0; background: none; padding: 0; min-height: 24px; color: #0E5E52; font-size: 12px; font-weight: 600; cursor: pointer">{{sb.btn}}</button></sc-if></td>
+                </tr>
+                <sc-if value="{{sb.open}}" hint-placeholder-val="{{ false }}"><tr><td colspan="7" style="padding: 0 4px 8px"><pre class="num" style="margin: 0; padding: 10px; background: #F6F5F1; border: 1px solid #EFEDE6; font-size: 11.5px; line-height: 1.55; white-space: pre-wrap">{{sb.code}}</pre></td></tr></sc-if>
+              </sc-for>
+            </tbody>
+          </table>
+          <div style="display: flex; justify-content: space-between; gap: 8px; font-size: 12px"><span class="num">{{subSummary}}</span><button type="button" onClick="{{toggleAllCode}}" style="border: 0; background: none; padding: 0; min-height: 24px; color: #0E5E52; font-weight: 600; cursor: pointer">{{allCodeLabel}}</button></div>
+        </section>
+      </div>
+    </sc-if>
+
+    <!-- END-SEM -->
+    <sc-if value="{{isExamPage}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <h1 style="margin: 0; font-size: 26px; font-weight: 600">End-sem practical · CSL-101</h1>
+        <div style="display: flex; flex-wrap: wrap; gap: 4px; align-items: center"><span style="font-size: 12px; color: #6B6A63; margin-right: 4px">Simulate:</span><sc-for list="{{steps}}" as="s" hint-placeholder-count="5"><button type="button" onClick="{{s.pick}}" style="{{s.style}}">{{s.label}}</button></sc-for></div>
+        <sc-if value="{{exInactive}}" hint-placeholder-val="{{ true }}"><div class="card" style="padding: 18px; line-height: 1.8"><div><strong>Date:</strong> 10 May 2027 · 10:00 · 120 minutes · Lab 3 · Batch A</div><div><strong>Eligibility:</strong> attendance {{attPct}}% (needs 75%) · lab file submitted · <span style="color: #0E5E52; font-weight: 600">Eligible</span></div><div><strong>Paper:</strong> 2 questions drawn for you from a 30-question set approved by the HOD · 2 visible + 3 hidden test cases each · viva 10 marks</div><div><strong>Rules:</strong> laptop or desktop with webcam; fullscreen and browser lockdown; screen and camera monitored by the AI proctor; copy, paste and AI tools blocked.</div></div></sc-if>
+        <sc-if value="{{exWaiting}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+            <div class="card" style="flex: 2 1 420px; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+              <strong>Secure exam check</strong>
+              <sc-for list="{{checks}}" as="ck" hint-placeholder-count="8"><div style="display: flex; justify-content: space-between; gap: 8px; padding: 6px 0; border-top: 1px solid #EFEDE6; font-size: 13px"><span>{{ck.k}}</span><span style="{{ck.style}}">{{ck.v}}</span></div></sc-for>
+            </div>
+            <div class="card" style="flex: 1 1 280px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+              <strong>Waiting room</strong>
+              <div style="font-size: 13px; line-height: 1.6">{{waitText}}</div>
+              <sc-if value="{{canStart}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{startExam}}" style="min-height: 42px; border: 0; border-radius: 6px; background: #141413; color: #FFFFFF; font-weight: 600; cursor: pointer">Enter fullscreen and start</button></sc-if>
+              <sc-if value="{{cannotStart}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{facultyActivates}}" style="min-height: 36px; border: 1px dashed #D6D3C9; border-radius: 6px; background: #FFFFFF; cursor: pointer; font-size: 13px">Simulate: faculty marks you present and activates</button></sc-if>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{exSubmitted}}" hint-placeholder-val="{{ false }}"><div class="card" style="padding: 18px"><strong style="color: #0E5E52">Submitted</strong><div class="num" style="font-size: 13px">10 May 2027, 11:41:07 IST · reference XO-ES-2301034-7F3A · proctor log: clean</div></div></sc-if>
+        <sc-if value="{{exResults}}" hint-placeholder-val="{{ false }}"><div class="card" style="padding: 18px; display: flex; flex-direction: column; gap: 6px"><div class="num">A14 Bubble sort with early exit · CO3 · visible 10/10 · hidden 15/15</div><div class="num">A27 Student records with structures · CO5 · visible 10/10 · hidden 10/15</div><div class="num">Viva 8/10</div><div class="num" style="font-weight: 600">Total 53/60 · published after HOD approval</div></div></sc-if>
+      </div>
+    </sc-if>
+    <footer style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; padding: 12px 0 4px; font-size: 11px; color: #6B6A63"><span style="font-weight: 600; color: #141413">Xe<span style="color: #1F5FE0">IO</span></span> · designed and maintained by <img src="/_blob/cd937b4667fcb87fd4c56aa7b066c481" alt="elzeo" style="height: 14px"> Elzeo Future Technologies Pvt Ltd, India</footer>
+  </main>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1600}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab: 'home', code: '', joinMsg: '', joinOk: false, q: [{ vis: 2, hid: 2 }, { vis: 0, hid: 0 }], qi: 0, lang: 'C', edits: {}, out: { 'lab-0': 'run' }, eq: [{ vis: 0, hid: 0 }, { vis: 0, hid: 0 }], activated: false, codes: ['#include <stdio.h>\nint main() {\n  int n, a[100];\n  scanf("%d", &n);\n  for (int i = 0; i < n; i++) scanf("%d", &a[i]);\n  for (int i = n - 1; i >= 0; i--) printf("%d ", a[i]);\n  return 0;\n}', '#include <stdio.h>\nint main() {\n  int n, key, a[100];\n  // read n, the array and key, then print the index of key or -1\n  return 0;\n}'],
+      postTaken: false, fileMsg: '', openCode: {}, allCode: false, exam: 'inactive', secs: 2632, savedAgo: 4, net: 'ok', examCode: '#include <stdio.h>\nint main() {\n  // write your solution\n  return 0;\n}' };
+  }
+  componentDidMount() { this.t = setInterval(() => { if (this.state.exam !== 'active') return; const s = this.state; this.setState({ secs: Math.max(0, s.secs - 1), savedAgo: s.net === 'ok' ? (s.savedAgo >= 12 ? 0 : s.savedAgo + 1) : s.savedAgo }); }, 1000); }
+  componentWillUnmount() { clearInterval(this.t); clearTimeout(this.rc); }
+  renderVals() {
+    const st = this.state;
+    const ink = '#141413', teal = '#0E5E52', muted = '#6B6A63';
+    const tag = (bg, fg) => `display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:500;background:${bg};color:${fg};white-space:nowrap`;
+    const good = tag('#E6F0EC', teal), warn = tag('#FFF4EC', '#9A3412'), bad = tag('#FBEAEA', '#9F1D1D'), grey = tag('#F1EFE9', muted), blue = tag('#EAEFF7', '#23436E');
+    const navStyle = (on) => `min-height:36px;padding:0 12px;border:0;border-radius:5px;cursor:pointer;font-size:13px;background:${on ? '#2C2B28' : 'transparent'};color:${on ? '#FFFFFF' : '#CFCDC5'};font-weight:${on ? 600 : 400}`;
+    const seg = (on) => `min-height:34px;padding:0 12px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid ${on ? ink : '#D6D3C9'};background:${on ? ink : '#FFFFFF'};color:${on ? '#FFFFFF' : ink};font-weight:${on ? 600 : 400}`;
+    const nav = [['home', 'Home'], ['class', 'Classroom'], ['lab', 'Today’s lab'], ['file', 'Lab file'], ['exam', 'End-sem practical']].map(([id, label]) => ({ label, go: () => this.setState({ tab: id }), style: navStyle(st.tab === id) }));
+
+    const topics = ['Input and output', 'Operators', 'Type conversion', 'if-else', 'switch', 'Nested conditions', 'for loops', 'while and do-while', 'Nested loops', 'Patterns', 'break and continue', 'Series sums', '1-D arrays', 'Searching', 'Sorting', '2-D arrays', 'String functions', 'String manipulation', 'Functions', 'Recursion', 'Pointer basics', 'Pointer arithmetic', 'Pass by reference', 'Dynamic memory', 'Structures', 'Array of structures', 'Unions and enums', 'File write', 'File read', 'Mini project'];
+    const labDates = ['6 Jan', '13 Jan', '20 Jan', '3 Feb', '10 Feb', '17 Feb', '24 Feb', '10 Mar', '17 Mar', '31 Mar', '7 Apr', '14 Apr', '21 Apr', '28 Apr', '5 May'];
+    const TODAY = 12;
+
+    // marks (same rule as the faculty side)
+    let s = 34 * 7919 + 13;
+    const r = () => { s = (s * 48271) % 2147483647; return s / 2147483647; };
+    const ab = 0.78;
+    const rows = topics.map((t, i) => {
+      const date = labDates[Math.floor(i / 2)];
+      if (i >= TODAY) return { n: i + 1, title: t, date, status: i === TODAY ? 'In progress' : 'Pending', att: '—', pre: '—', post: '—', vis: '—', hid: '—', viva: '—', raw: null };
+      if (r() > 0.9 + 0.08 * ab) return { n: i + 1, title: t, date, status: 'Absent', att: 0, pre: 0, post: 0, vis: 0, hid: 0, viva: 0, raw: [0, 0, 0, 0, 0, 0] };
+      const pre = Math.min(5, Math.round(5 * (ab + 0.25 * (r() - 0.5)))); const vis = r() < ab + 0.25 ? 2 : 1; const hid = vis === 2 ? Math.min(3, Math.round(3 * (ab + 0.3 * (r() - 0.3)))) : 0; const passed = hid === 3;
+      const post = passed ? Math.min(5, Math.round(5 * (ab + 0.2 * (r() - 0.4)))) : 0; const viva = Math.max(3, Math.min(10, Math.round(10 * (ab + 0.2 * (r() - 0.5)))));
+      return { n: i + 1, title: t, date, status: passed ? 'Passed' : 'Pending', att: 1, pre, post, vis, hid, viva, raw: [1, pre, post, vis, hid, viva] };
+    });
+    const counted = rows.filter((x) => x.raw);
+    const W = [['Attendance', 10, 1], ['Pre-test', 5, 5], ['Post-test', 5, 5], ['Visible tests', 10, 2], ['Hidden tests', 10, 3], ['Viva', 10, 10]];
+    const rubric = W.map(([name, w, per], ci) => { const e = counted.reduce((a, x) => a + x.raw[ci], 0), m = counted.length * per; return { name, marks: `${(w * e / m).toFixed(1)} / ${w}`, v: w * e / m }; });
+    const raw = rubric.reduce((a, b) => a + b.v, 0);
+    const total = Math.round(100 * raw / 50);
+    const attPct = Math.round(100 * counted.filter((x) => x.raw[0]).length / counted.length);
+
+
+    // record of submitted programs
+    const progs = [
+      ['Add two numbers', 'int a, b;\nscanf("%d %d", &a, &b);\nprintf("%d\\n", a + b);'], ['Area of a circle', 'float r;\nscanf("%f", &r);\nprintf("%.2f\\n", 3.14159f * r * r);'],
+      ['Swap two numbers without a temporary', 'int a, b;\nscanf("%d %d", &a, &b);\na = a + b; b = a - b; a = a - b;\nprintf("%d %d\\n", a, b);'], ['Quotient and remainder', 'int a, b;\nscanf("%d %d", &a, &b);\nprintf("%d %d\\n", a / b, a % b);'],
+      ['Celsius to Fahrenheit', 'float c;\nscanf("%f", &c);\nprintf("%.1f\\n", c * 9 / 5 + 32);'], ['Average of three as float', 'int a, b, c;\nscanf("%d %d %d", &a, &b, &c);\nprintf("%.2f\\n", (a + b + c) / 3.0);'],
+      ['Largest of three', 'int a, b, c;\nscanf("%d %d %d", &a, &b, &c);\nint m = a;\nif (b > m) m = b;\nif (c > m) m = c;\nprintf("%d\\n", m);'], ['Even or odd', 'int n;\nscanf("%d", &n);\nif (n % 2 == 0) printf("Even\\n"); else printf("Odd\\n");'],
+      ['Grade from marks', 'int m;\nscanf("%d", &m);\nswitch (m / 10) {\n  case 10: case 9: printf("A\\n"); break;\n  case 8: printf("B\\n"); break;\n  case 7: printf("C\\n"); break;\n  default: printf("F\\n");\n}'], ['Simple calculator', 'int a, b; char op;\nscanf("%d %c %d", &a, &op, &b);\nswitch (op) {\n  case \'+\': printf("%d\\n", a + b); break;\n  case \'-\': printf("%d\\n", a - b); break;\n  default: printf("Invalid\\n");\n}'],
+      ['Leap year', 'int y;\nscanf("%d", &y);\nif ((y % 4 == 0 && y % 100 != 0) || y % 400 == 0) printf("Leap\\n");\nelse printf("Not leap\\n");'], ['Triangle type', 'int a, b, c;\nscanf("%d %d %d", &a, &b, &c);\nif (a == b && b == c) printf("Equilateral\\n");\nelse if (a == b || b == c || a == c) printf("Isosceles\\n");\nelse printf("Scalene\\n");'],
+      ['Sum of first n numbers', 'int n, s = 0;\nscanf("%d", &n);\nfor (int i = 1; i <= n; i++) s += i;\nprintf("%d\\n", s);'], ['Factorial', 'int n; long f = 1;\nscanf("%d", &n);\nfor (int i = 2; i <= n; i++) f *= i;\nprintf("%ld\\n", f);'],
+      ['Sum of digits', 'int n, s = 0;\nscanf("%d", &n);\nwhile (n > 0) { s += n % 10; n /= 10; }\nprintf("%d\\n", s);'], ['Reverse a number', 'int n, r = 0;\nscanf("%d", &n);\ndo { r = r * 10 + n % 10; n /= 10; } while (n > 0);\nprintf("%d\\n", r);'],
+      ['Multiplication tables 1 to n', 'int n;\nscanf("%d", &n);\nfor (int i = 1; i <= n; i++) {\n  for (int j = 1; j <= 10; j++) printf("%d ", i * j);\n  printf("\\n");\n}'], ['Primes up to n', 'int n;\nscanf("%d", &n);\nfor (int i = 2; i <= n; i++) {\n  int p = 1;\n  for (int j = 2; j * j <= i; j++) if (i % j == 0) { p = 0; break; }\n  if (p) printf("%d ", i);\n}'],
+      ['Right triangle of stars', 'int n;\nscanf("%d", &n);\nfor (int i = 1; i <= n; i++) {\n  for (int j = 0; j < i; j++) printf("*");\n  printf("\\n");\n}'], ['Number pyramid', 'int n;\nscanf("%d", &n);\nfor (int i = 1; i <= n; i++) {\n  for (int j = 1; j <= i; j++) printf("%d ", j);\n  printf("\\n");\n}'],
+      ['First negative number', 'int n, x, found = 0;\nscanf("%d", &n);\nfor (int i = 0; i < n; i++) { scanf("%d", &x); if (x < 0) { printf("%d\\n", x); found = 1; break; } }\nif (!found) printf("None\\n");'], ['Skip multiples of 3', 'int n;\nscanf("%d", &n);\nfor (int i = 1; i <= n; i++) { if (i % 3 == 0) continue; printf("%d ", i); }'],
+      ['Fibonacci series', 'int n, a = 0, b = 1;\nscanf("%d", &n);\nfor (int i = 0; i < n; i++) { printf("%d ", a); int t = a + b; a = b; b = t; }'], ['Sum of 1 + 1/2 + ... + 1/n', 'int n; double s = 0;\nscanf("%d", &n);\nfor (int i = 1; i <= n; i++) s += 1.0 / i;\nprintf("%.4f\\n", s);']
+    ];
+    const wrap = (body) => '#include <stdio.h>\n\nint main() {\n  ' + body.split('\n').join('\n  ') + '\n  return 0;\n}';
+    const subs = [];
+    rows.slice(0, TODAY).forEach((row, i) => {
+      [0, 1].forEach((k) => {
+        const key = `${i}-${k}`, pr = progs[2 * i + k], absent = row.status === 'Absent';
+        const passed = !absent && (row.status === 'Passed' || k === 0);
+        const vis = absent ? 0 : (k === 0 ? 2 : row.vis), hid = absent ? 0 : (k === 0 ? 3 : row.hid);
+        const open = !absent && (st.allCode || !!st.openCode[key]);
+        subs.push({ sess: k === 0 ? `S${i + 1} · Q1` : `S${i + 1} · Q2`, title: pr[0], when: absent ? 'not submitted' : `${row.date} 10:${String(18 + ((i * 7 + k * 11) % 38)).padStart(2, '0')}`,
+          vis: `${vis}/2`, hid: `${hid}/3`, status: absent ? 'Absent' : passed ? 'Passed' : 'Hidden pending', chip: absent ? bad : passed ? good : warn,
+          hasCode: !absent, open, btn: open ? 'Hide code' : 'Show code', code: wrap(pr[1]), toggle: () => this.setState({ openCode: Object.assign({}, st.openCode, { [key]: !st.openCode[key] }) }) });
+      });
+    });
+    const nPass = subs.filter((x) => x.status === 'Passed').length, nPend = subs.filter((x) => x.status === 'Hidden pending').length, nAbs = subs.filter((x) => x.status === 'Absent').length;
+    // home
+    const courses = [{ code: 'CSL-101', title: 'Programming in C Lab', pct: 40, next: 'Today 10:00 · Lab 7', open: () => this.setState({ tab: 'class' }) }, { code: 'CS-201', title: 'Discrete Mathematics', pct: 45, next: 'Assignment due 26 Feb', open: () => this.setState({ tab: 'home' }) }, { code: 'CS-203', title: 'Digital Logic', pct: 38, next: 'Quiz on 1 Mar', open: () => this.setState({ tab: 'home' }) }].map((c) => Object.assign(c, { bar: `display:block;height:4px;width:${c.pct}%;background:${teal};border-radius:2px` }));
+    const ev = { 2: [['Pre-test opens', 'pre']], 3: [['Lab 4', 'lab']], 9: [['Pre-test opens', 'pre']], 10: [['Lab 5', 'lab']], 16: [['Pre-test opens', 'pre']], 17: [['Lab 6', 'lab']], 23: [['Pre-test opens', 'pre']], 24: [['Lab 7 · today', 'lab'], ['Post-test 23:59', 'post']], 26: [['DM assignment', 'due']] };
+    const evStyle = { lab: 'background:#141413;color:#FFFFFF', pre: 'background:#F5EFE3;color:#6B4E16', post: 'background:#E6F0EC;color:#0E5E52', due: 'background:#EAEFF7;color:#23436E' };
+    const lead = (new Date(Date.UTC(2027, 1, 1)).getUTCDay() + 6) % 7;
+    const cells = [];
+    for (let i = 0; i < lead; i++) cells.push({ day: '', events: [], style: 'min-height:62px' });
+    for (let d = 1; d <= 28; d++) cells.push({ day: d, events: (ev[d] || []).map(([text, k]) => ({ text, style: `margin-top:3px;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:500;${evStyle[k]}` })), style: `min-height:62px;padding:5px;border-radius:5px;border:1px solid ${d === 24 ? '#141413' : '#EFEDE6'};background:#FFFFFF` });
+    const join = (e) => { if (e && e.preventDefault) e.preventDefault(); const c = (st.code || '').trim().toUpperCase(); if (c === 'CSL101-SYB-7Q4K') this.setState({ joinOk: true, joinMsg: 'You are already enrolled in CSL-101 (Batch A) through your invite email.' }); else this.setState({ joinOk: false, joinMsg: 'That class code is not valid for your onboarded email. Check the invite from your faculty.' }); };
+
+    // classroom
+    const glyph = { ann: ['A', '#EAEFF7', '#23436E'], res: ['R', '#F1EFE9', muted], pre: ['P', '#F5EFE3', '#6B4E16'], lab: ['L', '#141413', '#FFFFFF'], post: ['Q', '#E6F0EC', teal], task: ['T', '#FFF4EC', '#9A3412'] };
+    const it = (k, title, meta, state, chip) => ({ glyph: glyph[k][0], icon: `width:26px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;background:${glyph[k][1]};color:${glyph[k][2]}`, title, meta, state, chip });
+    const hidAll = st.q.every((x) => x.hid === 3);
+    const weeks = [
+      { date: '10 Feb', tag: 'Done', title: 'Week of 8 Feb', unit: 'Unit 2 Loops', now: false, items: [it('pre', 'Pre-test · S9–S10', '5 MCQs · one attempt · closed 10 Feb 09:59', 'Done 4/5', good), it('lab', 'Lab 5 · S9 Nested loops · S10 Patterns', '2 questions each', 'Passed', good), it('post', 'Post-test · S9–S10', 'closed 10 Feb 23:59', 'Done 5/5', good)] },
+      { date: '17 Feb', tag: 'Done', title: 'Week of 15 Feb', unit: 'Unit 2 Loops', now: false, items: [it('res', 'Lab manual: Arrays and strings', 'Resource · PDF', 'Viewed', grey), it('pre', 'Pre-test · S11–S12', 'closed 17 Feb 09:59', 'Done 3/5', good), it('lab', 'Lab 6 · S11 break and continue · S12 Series sums', '2 questions each', 'Passed', good), it('post', 'Post-test · S11–S12', 'closed 17 Feb 23:59', 'Done 4/5', good), it('task', 'Debug the code · 1-D arrays', 'In-class task · 3 snippets', 'Done 2/3', good)] },
+      { date: '24 Feb', tag: 'This week', title: 'Week of 22 Feb', unit: 'Unit 3 Arrays and strings', now: true, items: [it('ann', 'Pre-test for S13–S14 closes at 09:59; bring one tricky test input', 'Announcement · 23 Feb 18:05', 'New', blue), it('pre', 'Pre-test · S13–S14', 'one attempt · closed 24 Feb 09:59', 'Done 4/5', good), it('lab', 'Lab 7 · S13 1-D arrays · S14 Searching', 'Wed 24 Feb 10:00', 'Today', warn), it('post', 'Post-test · S13–S14', 'opens after your hidden tests pass · closes 23:59', st.postTaken ? 'Done 4/5' : hidAll ? 'Open' : 'Locked', st.postTaken ? good : hidAll ? warn : grey)] },
+      { date: '10 Mar', tag: 'Upcoming', title: 'Week of 8 Mar', unit: 'Unit 3 Arrays and strings', now: false, items: [it('pre', 'Pre-test · S15–S16', 'opens Tue 9 Mar 18:00', 'Opens later', grey), it('lab', 'Lab 8 · S15 Sorting · S16 2-D arrays', 'Wed 10 Mar 10:00', 'Scheduled', grey), it('post', 'Post-test · S15–S16', 'after hidden tests pass', 'Locked', grey)] }
+    ].map((w) => Object.assign(w, { box: `background:#FFFFFF;border:1px solid ${w.now ? ink : '#E2E0D8'};border-radius:6px;padding:12px 16px;display:flex;flex-direction:column;gap:2px` }));
+
+    // full-screen lab and exam IDE
+    const langs = ['C', 'C++', 'Java', 'Python', 'Rust', 'Go'];
+    const files = { C: 'main.c', 'C++': 'main.cpp', Java: 'Main.java', Python: 'main.py', Rust: 'main.rs', Go: 'main.go' };
+    const starter = {
+      C: '#include <stdio.h>\n\nint main() {\n    // read input from stdin, print the answer to stdout\n    return 0;\n}\n',
+      'C++': '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // read input from stdin, print the answer to stdout\n    return 0;\n}\n',
+      Java: 'import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        // read input, print the answer\n    }\n}\n',
+      Python: 'def main():\n    # read input with input(), print the answer\n    pass\n\nif __name__ == "__main__":\n    main()\n',
+      Rust: 'use std::io::{self, Read};\n\nfn main() {\n    let mut s = String::new();\n    io::stdin().read_to_string(&mut s).unwrap();\n    // parse s and print the answer\n}\n',
+      Go: 'package main\n\nimport "fmt"\n\nfunc main() {\n    var n int\n    fmt.Scan(&n)\n    // read the rest and print the answer\n}\n'
+    };
+    const exam = st.tab === 'exam' && st.exam === 'active';
+    const mode = exam ? 'exam' : 'lab';
+    const P = exam ? [
+      { title: 'A14 · Bubble sort with early exit', tags: ['CO3', 'Medium', '2 visible · 3 hidden'], statement: 'Sort n integers in ascending order using bubble sort. Stop as soon as a full pass makes no swaps. Print the sorted array, then the number of passes made.', input: 'n, then n integers', output: 'sorted values on one line; passes on the next', constraints: '1 ≤ n ≤ 1000', ex: [['5 / 5 1 4 2 8', '1 2 4 5 8 / 4'], ['3 / 1 2 3', '1 2 3 / 1']] },
+      { title: 'A27 · Student records with structures', tags: ['CO5', 'Hard', '2 visible · 3 hidden'], statement: 'Read n student records (roll, name, marks). Print the record with the highest marks; on a tie, the smaller roll number.', input: 'n, then n lines of roll name marks', output: 'roll name marks of the top student', constraints: '1 ≤ n ≤ 500', ex: [['3 / 1 Asha 81 / 2 Ravi 92 / 3 Meera 92', '2 Ravi 92'], ['1 / 7 Om 40', '7 Om 40']] }
+    ] : [
+      { title: 'Q1 · Reverse an array', tags: ['CO3', 'Easy', '2 visible · 3 hidden'], statement: 'Read n integers and print them in reverse order, separated by single spaces.', input: 'n, then n integers', output: 'the n integers in reverse order', constraints: '1 ≤ n ≤ 100', ex: [['5 / 1 2 3 4 5', '5 4 3 2 1'], ['1 / 9', '9']] },
+      { title: 'Q2 · Linear search', tags: ['CO3', 'Medium', '2 visible · 3 hidden'], statement: 'Read n integers and a key. Print the 0-based index of the first occurrence of the key, or -1 if it is absent.', input: 'n, then n integers, then key', output: 'an index or -1', constraints: '1 ≤ n ≤ 1000', ex: [['5 / 4 8 15 16 23 / 15', '2'], ['3 / 1 2 3 / 7', '-1']] }
+    ];
+    const qi = st.qi, cur = st.q[qi] || { vis: 0, hid: 0 }, ex = exam ? (st.eq[qi] || { vis: 0, hid: 0 }) : cur;
+    const key = `${mode}-${qi}-${st.lang}`;
+    const preset = mode === 'lab' && qi === 0 && st.lang === 'C' ? '#include <stdio.h>\n\nint main() {\n    int n, a[100];\n    scanf("%d", &n);\n    for (int i = 0; i < n; i++) scanf("%d", &a[i]);\n    for (int i = n - 1; i >= 0; i--)\n        printf("%d%c", a[i], i ? \' \' : \'\\n\');\n    return 0;\n}\n' : starter[st.lang];
+    const edCode = st.edits[key] !== undefined ? st.edits[key] : preset;
+    const gutter = edCode.split('\n').map((_, i) => i + 1).join('\n');
+    const setQx = (patch) => { if (exam) this.setState({ eq: st.eq.map((x, j) => j === qi ? Object.assign({}, x, patch) : x), savedAgo: 0 }); else this.setState({ q: st.q.map((x, j) => j === qi ? Object.assign({}, x, patch) : x) }); };
+    const ideRun = () => { setQx({ vis: 2 }); this.setState({ out: Object.assign({}, st.out, { [`${mode}-${qi}`]: 'run' }) }); };
+    const ideSubmit = () => { setQx({ vis: 2, hid: 3 }); this.setState({ out: Object.assign({}, st.out, { [`${mode}-${qi}`]: 'submit' }) }); };
+    const o = st.out[`${mode}-${qi}`];
+    const pr = P[qi];
+    const consoleText = !o ? `${st.lang} · ${files[st.lang]}\nPress Run to test against the 2 visible test cases, or Submit to run all 5.`
+      : o === 'run' ? `$ compile ${files[st.lang]} … ok (0.4 s)\n\nTest 1  input ${pr.ex[0][0]}\n        expected ${pr.ex[0][1]}\n        output   ${pr.ex[0][1]}   ✓ passed\nTest 2  input ${pr.ex[1][0]}\n        expected ${pr.ex[1][1]}\n        output   ${pr.ex[1][1]}   ✓ passed\n\nVisible 2/2 passed. Submit to run the hidden test cases.`
+      : `$ submit ${files[st.lang]}\n\nVisible 2/2 ✓\nHidden  3/3 ✓  (inputs are not shown)\n\nAll test cases passed.${exam ? ' Answer saved to the server.' : (st.q.every((x, j) => j === qi ? true : x.hid === 3) ? ' Post-test is now open until 23:59.' : ' Finish the other question to open the post-test.')}`;
+    const ideTabs = P.map((p, i) => { const x = exam ? st.eq[i] : st.q[i]; const done = x.hid === 3; return { label: `Question ${i + 1}`, pick: () => this.setState({ qi: i }), style: `display:flex;align-items:center;gap:6px;min-height:30px;padding:0 12px;border:0;border-radius:5px;cursor:pointer;font-size:13px;background:${qi === i ? '#2C2B28' : 'transparent'};color:${qi === i ? '#FFFFFF' : '#A8A69E'}`, dot: `width:7px;height:7px;border-radius:50%;background:${done ? '#5FB3A1' : x.vis === 2 ? '#E8A26B' : '#57554F'}` }; });
+    const chip = (t, c) => ({ text: t, style: `font-size:11px;padding:2px 8px;border-radius:4px;background:#2C2B28;color:${c || '#CFCDC5'}` });
+    const ideChips = exam ? [chip(`Time left ${Math.floor(st.secs / 60)}:${String(st.secs % 60).padStart(2, '0')}`, '#FFFFFF'), chip('Proctored', '#E8A26B')] : [chip('Pre-test 4/5 · closed', '#9FE0BC'), chip(st.postTaken ? 'Post-test 4/5' : hidAll ? 'Post-test open' : 'Post-test locked', hidAll || st.postTaken ? '#9FE0BC' : '#A8A69E'), chip('Session ends 11:00')];
+    const tagS = 'font-size:11px;padding:1px 7px;border-radius:4px;background:#EFEDE6;color:#3D3C38';
+    const pExamples = pr.ex.map(([input, output], i) => { const passed = ex.vis === 2 || (i === 0 && ex.vis >= 1); return { name: `Visible test ${i + 1}`, input, output, state: o ? (passed ? 'passed' : 'failed') : 'not run', chip: passed && o ? good : grey }; });
+    const proctorChips = [['Camera · 1 face', '#9FE0BC'], ['Screen shared', '#9FE0BC'], ['Fullscreen locked', '#9FE0BC'], ['Tab switches 0', '#9FE0BC'], ['Copy/paste blocked', '#CFCDC5'], ['AI tools blocked', '#CFCDC5']].map(([t, c]) => ({ text: t, style: `color:${c}` }));
+    const facultyReady = st.activated;
+    const checks = [['Signed in with institutional SSO', 'verified'], ['Face matches your profile photo', 'verified'], ['Webcam and microphone', 'on'], ['Screen sharing (entire screen)', 'on'], ['Single monitor, no virtual machine', 'ok'], ['Browser lockdown and fullscreen', 'ready'], ['Marked present by faculty', facultyReady ? 'yes' : 'waiting'], ['Test activated by faculty', facultyReady ? 'yes' : 'waiting']].map(([k, v]) => ({ k, v, style: `font-size:12px;font-weight:600;color:${v === 'waiting' ? '#9A3412' : teal}` }));
+
+    // QR (sample pattern, deterministic)
+    let qs = 20230134;
+    const qr = () => { qs = (qs * 48271) % 2147483647; return qs / 2147483647; };
+    const N = 25, off = 2, parts = [];
+    const finder = (x0, y0) => { for (let y = 0; y < 7; y++) for (let x = 0; x < 7; x++) { const edge = x === 0 || y === 0 || x === 6 || y === 6, core = x >= 2 && x <= 4 && y >= 2 && y <= 4; if (edge || core) parts.push(`M${x0 + x + off} ${y0 + y + off}h1v1h-1z`); } };
+    finder(0, 0); finder(N - 7, 0); finder(0, N - 7);
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) { const inF = (x < 8 && y < 8) || (x >= N - 8 && y < 8) || (x < 8 && y >= N - 8); if (!inF && qr() < 0.48) parts.push(`M${x + off} ${y + off}h1v1h-1z`); }
+
+    // end-sem
+    const steps = [['inactive', 'Before the day'], ['waiting', 'Waiting room'], ['active', 'Exam in progress'], ['submitted', 'Submitted'], ['results', 'Results']].map(([id, label]) => ({ label, pick: () => this.setState({ exam: id, net: 'ok', qi: 0 }), style: seg(st.exam === id) }));
+    const disconnect = () => { this.setState({ net: 'down' }); clearTimeout(this.rc); this.rc = setTimeout(() => this.setState({ net: 'resumed', savedAgo: 0 }), 3000); };
+
+    return {
+      nav, isHome: st.tab === 'home', isClass: st.tab === 'class', isLab: st.tab === 'lab', isFile: st.tab === 'file', isExam: st.tab === 'exam',
+      code: st.code, setCode: (e) => this.setState({ code: e.target.value }), join, hasJoinMsg: !!st.joinMsg, joinMsg: st.joinMsg, joinColor: st.joinOk ? teal : '#9F1D1D',
+      courses, dows: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], cells, goLab: () => this.setState({ tab: 'lab' }),
+      weeks,
+      showNav: !exam, showIde: st.tab === 'lab' || exam, showMain: !(st.tab === 'lab' || exam), isProctored: exam, ideAria: exam ? 'Proctored end-sem exam' : 'Live lab workspace',
+      ideTitle: exam ? 'End-sem practical · CSL-101 · Batch A' : 'Lab 7 · S13 1-D arrays', ideTabs, langs, lang: st.lang, setLang: (e) => this.setState({ lang: e.target.value }), ideChips, ideRun, ideSubmit,
+      pTitle: pr.title, pTags: pr.tags.map((t) => ({ text: t, style: tagS })), pStatement: pr.statement, pInput: pr.input, pOutput: pr.output, pConstraints: pr.constraints, pExamples,
+      pHidden: `Hidden test cases: ${ex.hid}/3 passed. Their inputs and outputs stay hidden; you only see passed or failed.`,
+      showPostCard: !exam, postCanStart: hidAll && !st.postTaken, takePost: () => this.setState({ postTaken: true }),
+      postCardStyle: `padding:12px;border-radius:5px;font-size:13px;border:1px solid ${hidAll ? '#0E5E52' : '#D6D3C9'};background:${hidAll ? '#E6F0EC' : '#F1EFE9'};color:${hidAll ? '#0E5E52' : '#3D3C38'}`,
+      postState: st.postTaken ? 'Post-test submitted · 4/5' : hidAll ? 'Post-test open until 23:59' : 'Post-test locked',
+      postNote: st.postTaken ? 'Done for today.' : hidAll ? '5 questions (1 easy, 2 medium, 2 hard) drawn from the session bank.' : 'Opens when all hidden test cases of both questions pass. Pre-test was a single attempt and closed at 09:59.',
+      fileName: files[st.lang], editorNote: exam ? 'autosaves to the server every 10 s' : 'autosaves', edCode, gutter, setEdCode: (e) => this.setState({ edits: Object.assign({}, st.edits, { [key]: e.target.value }), savedAgo: 0 }),
+      consoleText, consoleMeta: o === 'submit' ? 'all tests' : o === 'run' ? 'visible tests' : 'idle', proctorChips,
+      isExamPage: st.tab === 'exam' && !exam, checks, canStart: facultyReady, cannotStart: !facultyReady,
+      waitText: facultyReady ? 'Your faculty has marked you present and activated the test. Starting locks this browser in fullscreen until you submit.' : 'You can start only after your faculty marks you present and activates the test for your batch.',
+      facultyActivates: () => this.setState({ activated: true }), startExam: () => this.setState({ exam: 'active', qi: 0 }),
+      rubric, total, attPct, rawOf: `${raw.toFixed(1)} / 50`, index: rows,
+      subs, subSummary: `${subs.length} programs · ${nPass} passed · ${nPend} hidden pending · ${nAbs} absent`, toggleAllCode: () => this.setState({ allCode: !st.allCode, openCode: {} }), allCodeLabel: st.allCode ? 'Hide all code' : 'Show all code',
+      qr: parts.join(''), download: () => this.setState({ fileMsg: 'Simulation: CSL-101_LabFile_2301034.pdf with title page, declaration, index and all programs.' }), hasFileMsg: !!st.fileMsg, fileMsg: st.fileMsg,
+      steps, exInactive: st.exam === 'inactive', exWaiting: st.exam === 'waiting', exSubmitted: st.exam === 'submitted', exResults: st.exam === 'results',
+      timeLeft: `${Math.floor(st.secs / 60)}:${String(st.secs % 60).padStart(2, '0')}`, saveText: st.net === 'down' ? 'Reconnecting… your code is safe' : st.net === 'resumed' ? 'Reconnected · code and time restored' : `Saved to server ${st.savedAgo}s ago`, saveStyle: st.net === 'down' ? 'color:#FFB4A9;font-weight:600' : 'color:#9FE0BC;font-weight:600',
+      disconnect
+    };
+  }
+}
+</script>
+</body>
+</html>

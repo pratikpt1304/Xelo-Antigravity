@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>XeIO Assist faculty workspace</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F3EF}
+a{color:#0E5E52}a:hover{color:#08403A}
+input:focus,select:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:2px solid #0E5E52;outline-offset:2px}
+button,input,select,textarea{font-family:'IBM Plex Sans',system-ui,sans-serif}
+.num{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.card{background:#FFFFFF;border:1px solid #E2E0D8;border-radius:6px}
+.lbl{font-size:11px;color:#6B6A63}
+th{font-weight:500;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:#6B6A63;text-align:left}
+</style>
+</helmet>
+<div style="position: relative; min-height: 1800px; display: flex; flex-wrap: wrap; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 14px; color: #141413; background: #F4F3EF">
+
+  <aside aria-label="Lab lifecycle" style="flex: 1 1 248px; max-width: 272px; background: #141413; color: #E8E6DF; padding: 20px 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 6px">
+      <div><div><span style="font-weight: 600; font-size: 20px; letter-spacing: -0.3px; color: #FFFFFF">Xe<span style="color: #3FA9F5">IO</span></span> <span style="font-weight: 500; font-size: 14px; color: #CFCDC5">Assist</span></div><div style="font-size: 11px; color: #A8A69E">Faculty workspace</div></div>
+    </div>
+    <div style="padding: 10px; border: 1px solid #2C2B28; border-radius: 6px">
+      <div style="font-size: 11px; color: #A8A69E">Course</div>
+      <div style="font-weight: 600">CSL-101 Programming in C Lab</div>
+      <div style="font-size: 12px; color: #A8A69E">SY-B · Sem 4 · Jan–May 2027</div>
+      <div style="margin-top: 8px; height: 4px; background: #2C2B28; border-radius: 2px"><div style="{{overallBar}}"></div></div>
+      <div class="num" style="margin-top: 6px; font-size: 11px; color: #A8A69E">{{overallText}}</div>
+    </div>
+    <nav style="display: flex; flex-direction: column; gap: 14px">
+      <sc-for list="{{phases}}" as="ph" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 2px">
+          <div style="padding: 0 8px 4px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #8F8D85">{{ph.name}}</div>
+          <sc-for list="{{ph.steps}}" as="s" hint-placeholder-count="3">
+            <button type="button" onClick="{{s.go}}" style="{{s.style}}"><span style="{{s.dot}}">{{s.mark}}</span><span style="flex: 1; text-align: left">{{s.label}}</span><span class="num" style="font-size: 11px; color: #A8A69E">{{s.meta}}</span></button>
+          </sc-for>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="margin-top: auto; display: flex; flex-direction: column; gap: 6px; padding: 0 8px; font-size: 12px">
+      <a href="Student.dc.html" style="color: #CFCDC5">Preview as student</a>
+      <a href="Main.dc.html" style="color: #CFCDC5">Sign out</a>
+      <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: #8F8D85">by <img src="/_blob/310d6bb43f64ba4b3825ee33891c415d" alt="elzeo" style="height: 13px"></div>
+    </div>
+  </aside>
+
+  <div style="flex: 999 1 640px; min-width: 0; display: flex; flex-direction: column">
+    <header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px 24px; border-bottom: 1px solid #E2E0D8; background: #FBFAF7">
+      <form onSubmit="{{ask}}" style="flex: 1 1 420px; display: flex; gap: 8px; margin: 0">
+        <label for="cmd" style="position: absolute; left: -9999px">Ask Assist</label>
+        <input id="cmd" value="{{cmd}}" onChange="{{setCmd}}" placeholder="Ask Assist: open today’s session, show 2301044’s submissions, download course file…" style="flex: 1; min-width: 0; height: 42px; box-sizing: border-box; padding: 0 14px; border: 1px solid #D6D3C9; border-radius: 6px; background: #FFFFFF; font-size: 14px">
+        <button type="submit" style="height: 42px; padding: 0 16px; border: 0; border-radius: 6px; background: #141413; color: #FFFFFF; font-weight: 600; cursor: pointer">Ask</button>
+      </form>
+      <div style="display: flex; align-items: center; gap: 8px; font-size: 12px"><span style="{{liveDot}}"></span><span class="num">{{liveText}}</span></div>
+      <div title="{{aiTip}}" style="display: flex; flex-direction: column; gap: 3px; min-width: 170px">
+        <div class="num" style="display: flex; justify-content: space-between; gap: 8px; font-size: 11px"><span style="color: #6B6A63">AI runs · {{aiPlan}}</span><span>{{aiLeft}}</span></div>
+        <div style="height: 4px; background: #E2E0D8; border-radius: 2px"><div style="{{aiBar}}"></div></div>
+        <div class="num" style="font-size: 11px; color: {{aiTodayColor}}">{{aiToday}}</div>
+      </div>
+      <div style="font-size: 12px; color: #6B6A63">Demo Faculty</div>
+    </header>
+    <sc-if value="{{hasAiMsg}}" hint-placeholder-val="{{ false }}"><div role="alert" style="padding: 10px 24px; background: #FBEAEA; border-bottom: 1px solid #F1C4BF; font-size: 13px; color: #8F1D14">{{aiMsg}}</div></sc-if>
+    <sc-if value="{{hasReply}}" hint-placeholder-val="{{ false }}"><div role="status" style="padding: 10px 24px; background: #FFF4EC; border-bottom: 1px solid #F1D9C6; font-size: 13px; color: #7A3410"><strong>Assist:</strong> {{reply}}</div></sc-if>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 24px; padding: 24px; align-items: flex-start">
+      <main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+        <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px">
+          <div><div class="num" style="font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #6B6A63">{{stepKicker}}</div><h1 style="margin: 2px 0 0; font-size: 26px; font-weight: 600; letter-spacing: -0.3px">{{stepTitle}}</h1></div>
+          <div style="font-size: 13px; color: #6B6A63; max-width: 480px">{{stepLead}}</div>
+        </div>
+
+        <!-- 1 COURSE -->
+        <sc-if value="{{is1}}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; flex-direction: column; gap: 16px">
+            <div class="card" style="padding: 16px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 16px">
+              <sc-for list="{{courseFields}}" as="cf" hint-placeholder-count="8">
+                <label style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #6B6A63">{{cf.label}}<input value="{{cf.value}}" readonly="" style="height: 36px; box-sizing: border-box; padding: 0 10px; border: 1px solid #E2E0D8; border-radius: 5px; font-size: 14px; color: #141413; background: #FBFAF7"></label>
+              </sc-for>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+              <div class="card" style="flex: 3 1 420px; overflow-x: auto">
+                <div style="padding: 12px 16px; border-bottom: 1px solid #E2E0D8; display: flex; justify-content: space-between; gap: 8px"><strong>Course outcomes and Bloom levels</strong><span style="font-size: 12px; color: #6B6A63">drafted from syllabus.pdf</span></div>
+                <table style="width: 100%; border-collapse: collapse; font-size: 13px">
+                  <thead><tr><th style="padding: 8px 16px">CO</th><th style="padding: 8px">Statement</th><th style="padding: 8px">Unit</th><th style="padding: 8px 16px">BTL</th></tr></thead>
+                  <tbody><sc-for list="{{coList}}" as="c" hint-placeholder-count="5"><tr style="border-top: 1px solid #EFEDE6"><td class="num" style="padding: 8px 16px; color: #6B6A63">{{c.code}}</td><td style="padding: 8px">{{c.text}}</td><td class="num" style="padding: 8px">{{c.unit}}</td><td style="padding: 8px 16px; white-space: nowrap">{{c.bloom}}</td></tr></sc-for></tbody>
+                </table>
+              </div>
+              <div class="card" style="flex: 2 1 280px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+                <strong>CO–PO map</strong>
+                <div role="img" aria-label="CO to PO mapping strengths" style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; font-size: 11px"><sc-for list="{{poGrid}}" as="g" hint-placeholder-count="42"><div class="num" style="{{g.style}}">{{g.v}}</div></sc-for></div>
+                <div style="font-size: 11px; color: #6B6A63">Strength 0–3, drafted by Assist.</div>
+              </div>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+              <div class="card" style="flex: 3 1 420px; overflow-x: auto">
+                <div style="padding: 12px 16px; border-bottom: 1px solid #E2E0D8; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: center"><strong>Marking rubric (internal)</strong><span style="{{rubricChip}}">{{rubricStatus}}</span></div>
+                <table style="width: 100%; border-collapse: collapse; font-size: 13px">
+                  <thead><tr><th style="padding: 8px 16px">Component</th><th style="padding: 8px">Earned in each session</th><th style="padding: 8px 16px; text-align: right">Marks</th></tr></thead>
+                  <tbody>
+                    <sc-for list="{{rubricRows}}" as="rr" hint-placeholder-count="6">
+                      <tr style="border-top: 1px solid #EFEDE6"><td style="padding: 7px 16px; font-weight: 500">{{rr.name}}</td><td style="padding: 7px 8px; color: #6B6A63; font-size: 12px">{{rr.how}}</td>
+                        <td style="padding: 5px 16px; text-align: right"><input class="num" type="number" min="0" max="50" value="{{rr.val}}" onChange="{{rr.set}}" disabled="{{rubricLocked}}" aria-label="{{rr.name}} marks" style="width: 64px; height: 32px; box-sizing: border-box; padding: 0 8px; border: 1px solid #D6D3C9; border-radius: 5px; text-align: right; font-size: 14px; background: #FFFFFF"></td></tr>
+                    </sc-for>
+                    <tr style="border-top: 2px solid #141413"><td style="padding: 9px 16px; font-weight: 600">Total</td><td style="padding: 9px 8px; font-size: 12px; color: #6B6A63">{{rubricScaleNote}}</td><td class="num" style="padding: 9px 16px; text-align: right; font-weight: 600">{{rubricTotal}}</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div style="flex: 2 1 280px; display: flex; flex-direction: column; gap: 12px">
+                <div class="card" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+                  <strong>Session rules</strong>
+                  <div style="font-size: 13px; line-height: 1.5"><strong>Pre-test:</strong> 5 MCQs (2 easy, 2 medium, 1 hard), one attempt, closes when the lab starts.</div>
+                  <div style="font-size: 13px; line-height: 1.5"><strong>Lab:</strong> 2 coding questions, each with 2 visible and 3 hidden test cases.</div>
+                  <div style="font-size: 13px; line-height: 1.5"><strong>Post-test:</strong> 5 MCQs (1 easy, 2 medium, 2 hard); opens only after all hidden tests pass; closes 23:59 the same day.</div>
+                </div>
+                <div class="card" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+                  <strong>HOD approval</strong>
+                  <div style="font-size: 13px; color: #6B6A63">{{rubricNote}}</div>
+                  <div style="display: flex; flex-wrap: wrap; gap: 6px">
+                    <sc-if value="{{rubricDraft}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{sendRubric}}" style="{{primaryBtn}}">Send course plan to HOD</button></sc-if>
+                    <sc-if value="{{rubricSent}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{hodApprove}}" style="{{ghostBtn}}">Simulate HOD approval</button></sc-if>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- 2 BATCHES -->
+        <sc-if value="{{is2}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 16px">
+            <div class="card" style="padding: 16px; display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end">
+              <div style="flex: 1 1 220px"><div class="lbl">Roster</div><div style="font-weight: 600">SY-B class list · <span class="num">125</span> students</div><div style="font-size: 12px; color: #6B6A63">Invited by email with class code CSL101-SYB-7Q4K. 122 joined.</div></div>
+              <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #6B6A63">Students<input class="num" type="number" min="1" max="400" value="{{students}}" onChange="{{setStudents}}" style="height: 40px; width: 110px; box-sizing: border-box; padding: 0 10px; border: 1px solid #D6D3C9; border-radius: 6px; font-size: 15px"></label>
+              <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #6B6A63">Working lab seats<input class="num" type="number" min="10" max="120" value="{{seats}}" onChange="{{setSeats}}" style="height: 40px; width: 110px; box-sizing: border-box; padding: 0 10px; border: 1px solid #D6D3C9; border-radius: 6px; font-size: 15px"></label>
+              <div style="font-size: 12px; color: #6B6A63; padding-bottom: 10px">Max per batch <strong class="num" style="color: #141413">{{cap}}</strong></div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+              <sc-for list="{{batches}}" as="b" hint-placeholder-count="2">
+                <div class="card" style="padding: 16px; display: grid; grid-template-columns: 1fr auto; gap: 6px 12px">
+                  <div style="font-weight: 600; font-size: 16px">{{b.name}}</div><div class="num" style="font-size: 22px; text-align: right">{{b.size}}</div>
+                  <div style="font-size: 12px; color: #6B6A63">{{b.slot}} · {{b.room}}</div><div style="font-size: 12px; color: #6B6A63; text-align: right">students</div>
+                  <div class="num" style="font-size: 12px; color: #6B6A63">Roll {{b.from}}–{{b.to}}</div><div style="font-size: 12px; text-align: right">{{b.staff}}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div><button type="button" onClick="{{confirmBatches}}" style="{{primaryBtn}}">Confirm batches and notify students</button></div>
+          </div>
+        </sc-if>
+
+        <!-- 3 SESSION PLAN -->
+        <sc-if value="{{is3}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; font-size: 13px">
+              <span style="color: #6B6A63">Academic calendar 2026–27 · Batch A Wednesdays 10:00–12:00</span>
+              <label style="display: flex; align-items: center; gap: 8px">Extra holidays<input class="num" type="number" min="0" max="3" value="{{extra}}" onChange="{{setExtra}}" style="height: 34px; width: 60px; box-sizing: border-box; padding: 0 8px; border: 1px solid #D6D3C9; border-radius: 6px"></label>
+              <label style="display: flex; align-items: center; gap: 8px; min-height: 34px"><input type="checkbox" checked="{{reserve}}" onChange="{{toggleReserve}}">Reserve last period for makeup</label>
+              <span class="num" style="margin-left: auto">{{activeSessions}}/30 sessions active in calendar</span>
+            </div>
+            <sc-if value="{{shortfall}}" hint-placeholder-val="{{ false }}">
+              <div role="alert" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 12px 14px; border: 1px solid #E8C9A9; background: #FFF6EE; border-radius: 6px; font-size: 13px">
+                <span style="color: #7A3410"><strong>Short by <span class="num">{{short}}</span> period(s).</strong> Assist suggests merging the two lightest topics into one session.</span>
+                <button type="button" onClick="{{acceptMerge}}" style="{{smallPrimary}}">Accept suggestion</button>
+              </div>
+            </sc-if>
+            <div class="card" style="overflow-x: auto">
+              <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 880px">
+                <thead><tr><th style="padding: 10px 14px">Lab date</th><th style="padding: 10px 8px">Sessions</th><th style="padding: 10px 8px">CO · BTL</th><th style="padding: 10px 8px">Pre-test window</th><th style="padding: 10px 8px">Post-test window</th><th style="padding: 10px 14px">Calendar</th></tr></thead>
+                <tbody>
+                  <sc-for list="{{planRows}}" as="p" hint-placeholder-count="19">
+                    <tr style="{{p.row}}">
+                      <td class="num" style="padding: 8px 14px; white-space: nowrap">{{p.date}}</td>
+                      <td style="padding: 8px"><div style="font-weight: 500">{{p.t1}}</div><div style="font-size: 12px; color: #6B6A63">{{p.t2}}</div></td>
+                      <td class="num" style="padding: 8px; font-size: 12px; white-space: nowrap">{{p.co}}</td>
+                      <td class="num" style="padding: 8px; font-size: 12px; color: #6B6A63; white-space: nowrap">{{p.pre}}</td>
+                      <td class="num" style="padding: 8px; font-size: 12px; color: #6B6A63; white-space: nowrap">{{p.post}}</td>
+                      <td style="padding: 8px 14px"><span style="{{p.chip}}">{{p.status}}</span></td>
+                    </tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center">
+              <button type="button" onClick="{{approvePlan}}" style="{{primaryBtn}}">Approve plan and add to calendars</button>
+              <button type="button" onClick="{{goQuestions}}" style="{{ghostBtn}}">Review questions to activate sessions</button>
+              <span role="status" style="font-size: 13px; color: #6B6A63">{{planMsg}}</span>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- 4 LAB QUESTIONS -->
+        <sc-if value="{{is4}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between">
+              <div style="display: flex; flex-wrap: wrap; gap: 4px" role="tablist" aria-label="Units"><sc-for list="{{unitTabs}}" as="u" hint-placeholder-count="5"><button type="button" role="tab" onClick="{{u.pick}}" style="{{u.style}}">{{u.label}}</button></sc-for></div>
+              <div class="num" style="font-size: 12px; color: #6B6A63">{{selSummary}}</div>
+            </div>
+            <sc-if value="{{hasQMsg}}" hint-placeholder-val="{{ false }}"><div role="status" style="padding: 8px 12px; border: 1px solid #E8C9A9; background: #FFF6EE; border-radius: 6px; font-size: 13px; color: #7A3410">{{qMsg}}</div></sc-if>
+            <sc-for list="{{qRows}}" as="r" hint-placeholder-count="3">
+              <div class="card" style="padding: 12px 14px; display: flex; flex-direction: column; gap: 8px">
+                <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px"><div><span class="num" style="font-size: 11px; color: #6B6A63">S{{r.n}} · {{r.date}}</span> <strong style="margin-left: 6px">{{r.topic}}</strong></div><span style="{{r.countStyle}}">{{r.count}}</span></div>
+                <sc-if value="{{r.empty}}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 13px; color: #6B6A63">No candidates yet.<button type="button" onClick="{{r.gen}}" style="{{smallPrimary}}">Draft 4 candidates</button></div></sc-if>
+                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px">
+                  <sc-for list="{{r.cands}}" as="c" hint-placeholder-count="4">
+                    <label style="{{c.box}}"><input type="checkbox" checked="{{c.on}}" onChange="{{c.toggle}}" style="margin-top: 2px; width: 16px; height: 16px; flex: none"><span style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-size: 13px">{{c.title}}</span><span style="font-size: 11px; color: #6B6A63">{{c.meta}}</span><span style="{{c.chip}}">{{c.state}}</span></span></label>
+                  </sc-for>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 4px">
+                  <button type="button" onClick="{{r.auto}}" style="{{smallGhost}}">Assist pick best 2</button>
+                  <button type="button" onClick="{{r.addOwn}}" style="{{smallGhost}}">Write own question</button>
+                  <label style="{{smallGhost}}">Upload own<input type="file" accept=".docx,.csv,.json" onChange="{{r.addOwn}}" style="display: none"></label>
+                </div>
+              </div>
+            </sc-for>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+              <button type="button" onClick="{{autoAll}}" style="{{primaryBtn}}">Assist pick 2 for <span class="num">{{openCount}}</span> sessions</button>
+              <button type="button" onClick="{{genAll}}" style="{{ghostBtn}}">Draft candidates for remaining sessions</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- 5 BANKS -->
+        <sc-if value="{{is5}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+              <div class="card" style="padding: 14px"><div class="lbl">Active banks</div><div class="num" style="font-size: 24px">{{activeBanks}}/30</div><div style="font-size: 12px; color: #6B6A63">{{draftBanks}} awaiting your approval</div></div>
+              <div class="card" style="padding: 14px"><div class="lbl">Pre-test · before the lab</div><div class="num" style="font-size: 20px; padding-top: 3px">2E · 2M · 1H</div><div style="font-size: 12px; color: #6B6A63">one attempt · closes at lab start</div></div>
+              <div class="card" style="padding: 14px"><div class="lbl">Post-test · same day</div><div class="num" style="font-size: 20px; padding-top: 3px">1E · 2M · 2H</div><div style="font-size: 12px; color: #6B6A63">opens after hidden tests pass · closes 23:59</div></div>
+              <div class="card" style="padding: 14px"><div class="lbl">Pre/post overlap</div><div class="num" style="font-size: 24px; color: {{overlapColor}}">{{overlap}}</div><div style="font-size: 12px; color: #6B6A63">matching or near-identical questions</div></div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 4px"><sc-for list="{{bankCells}}" as="bc" hint-placeholder-count="30"><button type="button" onClick="{{bc.pick}}" class="num" style="{{bc.style}}" aria-label="{{bc.aria}}">S{{bc.n}}</button></sc-for></div>
+            <div class="card" style="padding: 14px 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px">
+              <div><div style="font-weight: 600; font-size: 15px">{{previewTopic}}</div><div style="font-size: 12px; color: #6B6A63">{{previewNote}}</div></div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px">
+                <sc-if value="{{previewDraft}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{approveOne}}" style="{{primaryBtn}}">Approve and activate</button></sc-if>
+                <sc-if value="{{previewNone}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{genOne}}" style="{{primaryBtn}}">Generate with AI</button></sc-if>
+                <sc-if value="{{previewActive}}" hint-placeholder-val="{{ true }}"><span style="align-self: center; font-size: 13px; font-weight: 600; color: #0E5E52">Active for all batches</span></sc-if>
+              </div>
+            </div>
+            <sc-if value="{{previewHasBank}}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; flex-wrap: wrap; gap: 16px">
+                <sc-for list="{{bankCols}}" as="col" hint-placeholder-count="2">
+                  <div class="card" style="flex: 1 1 320px; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px">
+                    <div style="display: flex; justify-content: space-between; gap: 8px"><strong>{{col.name}}</strong><span class="num" style="font-size: 12px; color: #6B6A63">{{col.note}}</span></div>
+                    <sc-for list="{{col.levels}}" as="lv" hint-placeholder-count="3">
+                      <div style="display: flex; flex-direction: column; gap: 4px">
+                        <div class="num" style="font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #6B6A63">{{lv.head}}</div>
+                        <sc-for list="{{lv.qs}}" as="q" hint-placeholder-count="5"><div style="display: flex; gap: 8px; align-items: flex-start; padding: 6px 8px; border: 1px solid #EFEDE6; border-radius: 5px; font-size: 13px"><span class="num" style="color: #6B6A63; flex: none">{{q.id}}</span><span style="{{q.textStyle}}">{{q.text}}</span><button type="button" onClick="{{q.replace}}" style="margin-left: auto; flex: none; border: 0; background: none; color: #0E5E52; font-size: 12px; cursor: pointer; min-height: 24px">{{q.btn}}</button></div></sc-for>
+                        <div style="font-size: 12px; color: #6B6A63; padding-left: 8px">+ 10 more in this bucket</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+              <button type="button" onClick="{{approveAll}}" style="{{primaryBtn}}">{{approveAllLabel}}</button>
+              <button type="button" onClick="{{genAllBanks}}" style="{{ghostBtn}}">{{genAllLabel}}</button>
+              <label style="{{ghostBtn}}">Upload MCQs (CSV: stage, level, question, options, answer)<input type="file" accept=".csv" style="display: none"></label>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- 6 SESSIONS -->
+        <sc-if value="{{is6}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <div class="card" style="padding: 12px 14px; display: flex; flex-direction: column; gap: 8px">
+              <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 12px; color: #6B6A63"><span>Batch A sessions · click one to open it</span><span>dark = completed · outlined = today · light = upcoming</span></div>
+              <div style="display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 4px"><sc-for list="{{sessCells}}" as="sc" hint-placeholder-count="30"><button type="button" onClick="{{sc.open}}" class="num" title="{{sc.tip}}" style="{{sc.style}}">S{{sc.n}}</button></sc-for></div>
+            </div>
+            <sc-if value="{{noSession}}" hint-placeholder-val="{{ false }}"><div style="padding: 20px; border: 1px dashed #D6D3C9; border-radius: 6px; color: #6B6A63">Pick a session. Today’s session S13 opens with attendance first.</div></sc-if>
+            <sc-if value="{{hasSession}}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; flex-direction: column; gap: 14px">
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
+                  <div><div style="font-size: 18px; font-weight: 600">{{sessTitle}}</div><div class="num" style="font-size: 12px; color: #6B6A63">{{sessMeta}}</div></div>
+                  <button type="button" onClick="{{openAtt}}" style="{{smallGhost}}">Attendance · {{attSummary}}</button>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px">
+                  <sc-for list="{{liveStats}}" as="k" hint-placeholder-count="6"><div class="card" style="padding: 12px"><div class="lbl">{{k.label}}</div><div class="num" style="font-size: 21px">{{k.value}}</div></div></sc-for>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+                  <div class="card" style="flex: 2 1 300px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+                    <strong>Pre-test performance</strong>
+                    <div role="img" aria-label="Pre-test score distribution" style="display: flex; align-items: flex-end; gap: 8px; height: 110px; border-bottom: 1px solid #D6D3C9">
+                      <sc-for list="{{preDist}}" as="pd" hint-placeholder-count="6"><div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; justify-content: flex-end; height: 100%"><span class="num" style="font-size: 11px">{{pd.n}}</span><div style="{{pd.bar}}"></div></div></sc-for>
+                    </div>
+                    <div class="num" style="display: flex; justify-content: space-between; font-size: 11px; color: #6B6A63; padding: 0 4px"><span>0/5</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5/5</span></div>
+                    <sc-for list="{{preLevels}}" as="pl" hint-placeholder-count="3"><div style="display: grid; grid-template-columns: 64px 1fr 40px; gap: 8px; align-items: center; font-size: 12px"><span>{{pl.name}}</span><div style="height: 8px; background: #F1EFE9; border-radius: 4px"><div style="{{pl.bar}}"></div></div><span class="num" style="text-align: right">{{pl.pct}}%</span></div></sc-for>
+                    <div style="font-size: 12px; color: #9A3412; line-height: 1.5">{{preInsight}}</div>
+                  </div>
+                  <div class="card" style="flex: 3 1 420px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+                    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px"><strong>Live monitor · click a student</strong><span style="font-size: 12px; color: #6B6A63">{{monitorNote}}</span></div>
+                    <div style="display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 4px"><sc-for list="{{seatsLive}}" as="t" hint-placeholder-count="63"><button type="button" onClick="{{t.inspect}}" class="num" title="{{t.tip}}" style="{{t.style}}">{{t.roll}}</button></sc-for></div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: #6B6A63"><sc-for list="{{legend}}" as="l" hint-placeholder-count="6"><span style="display: flex; align-items: center; gap: 6px"><span style="{{l.sw}}"></span>{{l.label}}</span></sc-for></div>
+                    <div style="border-top: 1px solid #EFEDE6; padding-top: 8px; display: flex; flex-direction: column; gap: 6px">
+                      <sc-for list="{{alerts}}" as="a" hint-placeholder-count="3"><div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 12px"><button type="button" onClick="{{a.inspect}}" class="num" style="border: 0; background: none; padding: 0; color: #0E5E52; font-weight: 600; cursor: pointer; font-size: 12px">{{a.roll}}</button><span style="color: #6B6A63; flex: 1">{{a.why}}</span><span style="color: #9A3412">{{a.kind}}</span></div></sc-for>
+                      <div style="display: flex; flex-wrap: wrap; gap: 6px"><button type="button" onClick="{{sendHints}}" style="{{smallPrimary}}">Send hint to <span class="num">{{struggling}}</span></button><button type="button" onClick="{{assignTA}}" style="{{smallGhost}}">Send TA to seats</button><button type="button" onClick="{{flagSlow}}" style="{{smallGhost}}">Add to slow-learner list</button></div>
+                      <div role="status" style="font-size: 12px; color: #0E5E52">{{liveMsg}}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <sc-if value="{{hasInspect}}" hint-placeholder-val="{{ false }}">
+                  <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 14px; border-color: #141413">
+                    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline">
+                      <div><div style="font-size: 18px; font-weight: 600">{{insName}}</div><div class="num" style="font-size: 12px; color: #6B6A63">{{insMeta}}</div></div>
+                      <button type="button" onClick="{{closeInspect}}" style="{{smallGhost}}">Close</button>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px"><sc-for list="{{insStats}}" as="is" hint-placeholder-count="5"><div style="padding: 10px; border: 1px solid #EFEDE6; border-radius: 5px"><div class="lbl">{{is.label}}</div><div class="num" style="font-size: 18px">{{is.value}}</div></div></sc-for></div>
+                    <div>
+                      <div class="lbl" style="margin-bottom: 6px">Day 1 to today · click a session for its submissions</div>
+                      <div style="display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 4px"><sc-for list="{{insTimeline}}" as="it" hint-placeholder-count="13"><button type="button" onClick="{{it.pick}}" class="num" title="{{it.tip}}" style="{{it.style}}">S{{it.n}}<br>{{it.mark}}</button></sc-for></div>
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start">
+                      <div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 6px">
+                        <div style="font-weight: 600; font-size: 13px">{{insSessTitle}}</div>
+                        <sc-for list="{{insAttempts}}" as="at" hint-placeholder-count="4"><button type="button" onClick="{{at.pick}}" style="{{at.style}}"><span class="num">{{at.label}}</span><span style="font-size: 11px; color: #6B6A63">{{at.meta}}</span></button></sc-for>
+                        <div class="num" style="font-size: 12px; color: #6B6A63">{{insPrePost}}</div>
+                      </div>
+                      <pre class="num" style="flex: 2 1 360px; margin: 0; padding: 12px; background: #141413; color: #E8E6DF; border-radius: 5px; font-size: 12px; line-height: 1.55; white-space: pre-wrap; min-height: 220px">{{insCode}}</pre>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <!-- 7 CLASSROOM -->
+        <sc-if value="{{is7}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <div class="card" style="padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between">
+              <div style="font-size: 13px">Class code <strong class="num">CSL101-SYB-7Q4K</strong> · <span class="num">122</span> students joined · <span class="num">3</span> invites pending</div>
+              <div style="display: flex; gap: 6px"><button type="button" onClick="{{resendInvites}}" style="{{smallGhost}}">Resend 3 invites</button><button type="button" onClick="{{jumpToday}}" style="{{smallPrimary}}">Jump to this week</button></div>
+            </div>
+            <div role="status" style="font-size: 12px; color: #0E5E52">{{lmsMsg}}</div>
+            <sc-for list="{{weeksLms}}" as="w" hint-placeholder-count="5">
+              <div style="display: grid; grid-template-columns: 112px 1fr; gap: 14px">
+                <div style="padding-top: 12px; text-align: right">
+                  <div class="num" style="font-size: 13px; font-weight: 600">{{w.date}}</div>
+                  <div style="font-size: 11px; color: #6B6A63">{{w.tag}}</div>
+                </div>
+                <div style="{{w.box}}">
+                  <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline"><strong>{{w.title}}</strong><span style="font-size: 12px; color: #6B6A63">{{w.unit}}</span></div>
+                  <sc-for list="{{w.items}}" as="it" hint-placeholder-count="4">
+                    <div style="display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px solid #EFEDE6">
+                      <span style="{{it.icon}}">{{it.glyph}}</span>
+                      <div><div style="font-size: 13px; font-weight: 500">{{it.title}}</div><div class="num" style="font-size: 11px; color: #6B6A63">{{it.meta}}</div></div>
+                      <span class="num" style="font-size: 12px; color: #6B6A63; text-align: right">{{it.stat}}</span>
+                    </div>
+                  </sc-for>
+                  <sc-if value="{{w.composing}}" hint-placeholder-val="{{ false }}">
+                    <div style="border-top: 1px solid #EFEDE6; padding-top: 10px; display: flex; flex-direction: column; gap: 8px">
+                      <div style="display: flex; flex-wrap: wrap; gap: 4px"><sc-for list="{{addKinds}}" as="ak" hint-placeholder-count="3"><button type="button" onClick="{{ak.pick}}" style="{{ak.style}}">{{ak.label}}</button></sc-for></div>
+                      <sc-if value="{{kindTask}}" hint-placeholder-val="{{ true }}">
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end">
+                          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #6B6A63">Task type<select value="{{taskType}}" onChange="{{setTaskType}}" style="height: 36px; min-width: 200px; padding: 0 8px; border: 1px solid #D6D3C9; border-radius: 5px; font-size: 13px; background: #FFFFFF"><sc-for list="{{taskTypes}}" as="tt" hint-placeholder-count="6"><option value="{{tt}}">{{tt}}</option></sc-for></select></label>
+                          <button type="button" onClick="{{genTask}}" style="{{smallPrimary}}">Generate with AI</button>
+                        </div>
+                        <sc-if value="{{taskReady}}" hint-placeholder-val="{{ false }}">
+                          <div style="padding: 10px; background: #FBFAF7; border: 1px solid #EFEDE6; border-radius: 5px; display: flex; flex-direction: column; gap: 6px">
+                            <div style="font-size: 13px">{{taskPrompt}}</div>
+                            <pre class="num" style="margin: 0; font-size: 12px; white-space: pre-wrap">{{taskCode}}</pre>
+                            <div style="font-size: 12px; color: #0E5E52">Answer key: {{taskAnswer}}</div>
+                          </div>
+                        </sc-if>
+                      </sc-if>
+                      <sc-if value="{{kindAnn}}" hint-placeholder-val="{{ false }}">
+                        <textarea value="{{annText}}" onChange="{{setAnn}}" rows="2" aria-label="Announcement" style="border: 1px solid #D6D3C9; border-radius: 5px; padding: 8px; font-size: 13px; resize: vertical"></textarea>
+                        <div><button type="button" onClick="{{draftAnn}}" style="{{smallGhost}}">Draft with Assist</button></div>
+                      </sc-if>
+                      <sc-if value="{{kindRes}}" hint-placeholder-val="{{ false }}">
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center"><input value="{{resTitle}}" onChange="{{setResTitle}}" aria-label="Resource title" placeholder="Title" style="height: 36px; flex: 1 1 200px; box-sizing: border-box; padding: 0 8px; border: 1px solid #D6D3C9; border-radius: 5px; font-size: 13px"><label style="{{smallGhost}}">Choose file<input type="file" style="display: none"></label></div>
+                      </sc-if>
+                      <div style="display: flex; gap: 6px"><button type="button" onClick="{{addItem}}" style="{{smallPrimary}}">Add to this week</button><button type="button" onClick="{{cancelAdd}}" style="{{smallGhost}}">Cancel</button></div>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{w.canAdd}}" hint-placeholder-val="{{ true }}"><div style="border-top: 1px solid #EFEDE6; padding-top: 8px"><button type="button" onClick="{{w.add}}" style="border: 0; background: none; padding: 0; min-height: 28px; color: #0E5E52; font-weight: 600; font-size: 13px; cursor: pointer">+ Add task, resource or announcement</button></div></sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- 9 ASSESSMENTS -->
+        <sc-if value="{{is9}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between">
+              <div style="display: flex; flex-wrap: wrap; gap: 4px"><sc-for list="{{asBatches}}" as="ab" hint-placeholder-count="2"><button type="button" onClick="{{ab.pick}}" style="{{ab.style}}">{{ab.label}}</button></sc-for></div>
+              <div style="font-size: 12px; color: #6B6A63">End-sem practical · each batch gets its own newly generated set</div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px">
+              <sc-for list="{{asStages}}" as="sg" hint-placeholder-count="6"><button type="button" onClick="{{sg.go}}" style="{{sg.style}}"><span class="num" style="font-size: 11px">{{sg.n}}</span><span style="font-size: 13px; font-weight: 600">{{sg.label}}</span><span style="font-size: 11px">{{sg.state}}</span></button></sc-for>
+            </div>
+            <sc-if value="{{hasAsMsg}}" hint-placeholder-val="{{ false }}"><div role="status" style="padding: 9px 12px; border-radius: 6px; font-size: 13px; background: {{asMsgBg}}; color: {{asMsgFg}}">{{asMsg}}</div></sc-if>
+
+            <sc-if value="{{asS1}}" hint-placeholder-val="{{ true }}">
+              <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 14px">
+                <strong>Assessment rules</strong>
+                <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+                  <sc-for list="{{asFields}}" as="af" hint-placeholder-count="9"><label style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #6B6A63">{{af.label}}<input class="num" type="number" min="0" value="{{af.val}}" onChange="{{af.set}}" disabled="{{asLocked}}" style="height: 36px; box-sizing: border-box; padding: 0 10px; border: 1px solid #D6D3C9; border-radius: 5px; font-size: 14px; background: #FFFFFF"></label></sc-for>
+                </div>
+                <div>
+                  <div class="lbl" style="margin-bottom: 6px">COs to cover (every selected CO needs at least 4 approved questions)</div>
+                  <div style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{asCos}}" as="ac2" hint-placeholder-count="5"><button type="button" onClick="{{ac2.toggle}}" style="{{ac2.style}}">{{ac2.label}}</button></sc-for></div>
+                </div>
+                <div class="num" style="padding: 10px 12px; background: #FBFAF7; border: 1px solid #EFEDE6; border-radius: 5px; font-size: 13px">{{asSummary}}</div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap"><button type="button" onClick="{{asGenerate}}" style="{{primaryBtn}}">Generate 40 questions with AI</button><span style="align-self: center; font-size: 12px; color: #6B6A63">Uses 1 AI run. Questions already used for another batch are excluded.</span></div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{asS2}}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 10px">
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between">
+                  <div class="num" style="font-size: 13px">{{asApprovedText}}</div>
+                  <div style="display: flex; gap: 6px; flex-wrap: wrap"><button type="button" onClick="{{asPickBest}}" style="{{smallGhost}}">Assist pick best 30 (balanced by CO and level)</button><button type="button" onClick="{{asSendHod}}" style="{{smallPrimary}}">Add to question bank and send to HOD</button></div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px">
+                  <sc-for list="{{asQs}}" as="aq" hint-placeholder-count="40"><label style="{{aq.box}}"><input type="checkbox" checked="{{aq.on}}" onChange="{{aq.toggle}}" disabled="{{aq.bad}}" style="width: 16px; height: 16px; flex: none; margin-top: 2px"><span style="display: flex; flex-direction: column; gap: 1px; min-width: 0"><span style="font-size: 13px">{{aq.title}}</span><span class="num" style="font-size: 11px; color: #6B6A63">{{aq.meta}}</span></span></label></sc-for>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{asS3}}" hint-placeholder-val="{{ false }}">
+              <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 10px">
+                <strong>HOD approval</strong>
+                <div style="font-size: 13px; color: #6B6A63">{{asHodNote}}</div>
+                <sc-if value="{{asHodPending}}" hint-placeholder-val="{{ true }}"><div><button type="button" onClick="{{asHodApprove}}" style="{{ghostBtn}}">Simulate HOD approval</button></div></sc-if>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{asS4}}" hint-placeholder-val="{{ false }}">
+              <div class="card" style="padding: 16px; display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end">
+                <label style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #6B6A63">Date<input type="date" value="{{asDate}}" onChange="{{asSetDate}}" style="height: 38px; box-sizing: border-box; padding: 0 10px; border: 1px solid #D6D3C9; border-radius: 5px; font-size: 14px"></label>
+                <label style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #6B6A63">Start<input type="time" value="{{asTime}}" onChange="{{asSetTime}}" style="height: 38px; box-sizing: border-box; padding: 0 10px; border: 1px solid #D6D3C9; border-radius: 5px; font-size: 14px"></label>
+                <div style="font-size: 13px; color: #6B6A63; padding-bottom: 8px">{{asSchedNote}}</div>
+                <button type="button" onClick="{{asSchedule}}" style="{{primaryBtn}}">Add to calendar and notify students</button>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{asS5}}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+                <div class="card" style="flex: 3 1 420px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+                  <div style="display: flex; justify-content: space-between; gap: 8px"><strong>{{asConductTitle}}</strong><span class="num" style="font-size: 12px">{{asAttSummary}}</span></div>
+                  <div style="display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 4px"><sc-for list="{{asSeats}}" as="g" hint-placeholder-count="63"><button type="button" onClick="{{g.toggle}}" class="num" title="{{g.tip}}" style="{{g.style}}">{{g.roll}}</button></sc-for></div>
+                  <div style="font-size: 12px; color: #6B6A63">{{asConductNote}}</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap"><sc-if value="{{asCanActivate}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{asActivate}}" style="{{primaryBtn}}">Confirm attendance and activate test</button></sc-if><sc-if value="{{asIsLive}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{asEnd}}" style="{{ghostBtn}}">End test and compute marks</button></sc-if></div>
+                </div>
+                <div class="card" style="flex: 2 1 280px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+                  <strong>AI proctor</strong>
+                  <sc-for list="{{asProctor}}" as="pr" hint-placeholder-count="5"><div style="display: flex; justify-content: space-between; gap: 8px; font-size: 13px; padding: 5px 0; border-top: 1px solid #EFEDE6"><span>{{pr.k}}</span><span class="num" style="{{pr.style}}">{{pr.v}}</span></div></sc-for>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{asS6}}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 12px">
+                <div class="card" style="overflow-x: auto">
+                  <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 860px">
+                    <thead><tr><th style="padding: 9px 14px">Roll</th><th style="padding: 9px 8px">Questions (CO)</th><th style="padding: 9px 8px; text-align: right">Visible</th><th style="padding: 9px 8px; text-align: right">Hidden</th><th style="padding: 9px 8px; text-align: right">Viva</th><th style="padding: 9px 8px; text-align: right">Total</th><th style="padding: 9px 8px">Integrity</th><th style="padding: 9px 14px">Submitted</th></tr></thead>
+                    <tbody><sc-for list="{{asMarks}}" as="am" hint-placeholder-count="8"><tr style="border-top: 1px solid #EFEDE6"><td class="num" style="padding: 7px 14px">{{am.roll}}</td><td class="num" style="padding: 7px 8px; font-size: 12px">{{am.qs}}</td><td class="num" style="padding: 7px 8px; text-align: right">{{am.vis}}</td><td class="num" style="padding: 7px 8px; text-align: right">{{am.hid}}</td><td class="num" style="padding: 7px 8px; text-align: right">{{am.viva}}</td><td class="num" style="padding: 7px 8px; text-align: right; font-weight: 600">{{am.total}}</td><td style="padding: 7px 8px"><span style="{{am.chip}}">{{am.flag}}</span></td><td class="num" style="padding: 7px 14px; font-size: 12px">{{am.at}}</td></tr></sc-for></tbody>
+                  </table>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+                  <div class="card" style="flex: 2 1 360px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+                    <strong>End-sem CO attainment · {{asBatchName}}</strong>
+                    <sc-for list="{{asCoBars}}" as="cb" hint-placeholder-count="5"><div style="display: grid; grid-template-columns: 44px 1fr 48px; gap: 10px; align-items: center"><span class="num" style="font-size: 12px">{{cb.code}}</span><div style="position: relative; height: 12px; background: #F1EFE9; border-radius: 3px"><div style="{{cb.bar}}"></div><div style="position: absolute; left: 60%; top: -3px; bottom: -3px; width: 2px; background: #141413"></div></div><span class="num" style="font-size: 12px; text-align: right">{{cb.pct}}%</span></div></sc-for>
+                    <div style="font-size: 12px; color: #6B6A63">{{asInsight}}</div>
+                  </div>
+                  <div class="card" style="flex: 1 1 260px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+                    <strong>Outputs</strong>
+                    <div style="font-size: 13px; color: #6B6A63">Mark list as per rubric, end-sem attainment report and the approved question set.</div>
+                    <button type="button" onClick="{{asAddFile}}" style="{{primaryBtn}}">{{asAddLabel}}</button>
+                    <button type="button" onClick="{{asDl}}" style="{{ghostBtn}}">Download mark list (Excel)</button>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <!-- 8 REPORTS -->
+        <sc-if value="{{is8}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <div style="display: flex; flex-wrap: wrap; gap: 4px" role="tablist" aria-label="Reports"><sc-for list="{{repTabs}}" as="rt" hint-placeholder-count="3"><button type="button" role="tab" onClick="{{rt.pick}}" style="{{rt.style}}">{{rt.label}}</button></sc-for></div>
+
+            <sc-if value="{{repFile}}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; flex-direction: column; gap: 14px">
+                <div class="card" style="overflow-x: auto">
+                  <table style="width: 100%; border-collapse: collapse; font-size: 13px">
+                    <thead><tr><th style="padding: 10px 14px">#</th><th style="padding: 10px 8px">Course file section</th><th style="padding: 10px 14px">Status</th></tr></thead>
+                    <tbody><sc-for list="{{fileSections}}" as="fs" hint-placeholder-count="16"><tr style="border-top: 1px solid #EFEDE6"><td class="num" style="padding: 7px 14px; color: #6B6A63">{{fs.n}}</td><td style="padding: 7px 8px">{{fs.name}}</td><td style="padding: 7px 14px"><span style="{{fs.chip}}">{{fs.status}}</span></td></tr></sc-for></tbody>
+                  </table>
+                </div>
+                <div class="card" style="overflow-x: auto">
+                  <div style="padding: 12px 16px; border-bottom: 1px solid #E2E0D8"><strong>Actual log of session plan</strong> <span style="font-size: 12px; color: #6B6A63">planned vs conducted, with remarks</span></div>
+                  <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 720px">
+                    <thead><tr><th style="padding: 8px 14px">Lab</th><th style="padding: 8px">Sessions</th><th style="padding: 8px">Planned</th><th style="padding: 8px">Conducted</th><th style="padding: 8px">Status</th><th style="padding: 8px 14px">Remarks</th></tr></thead>
+                    <tbody><sc-for list="{{logRows}}" as="lg" hint-placeholder-count="8"><tr style="border-top: 1px solid #EFEDE6"><td class="num" style="padding: 7px 14px">{{lg.lab}}</td><td style="padding: 7px 8px">{{lg.sess}}</td><td class="num" style="padding: 7px 8px">{{lg.plan}}</td><td class="num" style="padding: 7px 8px">{{lg.done}}</td><td style="padding: 7px 8px"><span style="{{lg.chip}}">{{lg.status}}</span></td><td style="padding: 7px 14px; font-size: 12px; color: #6B6A63">{{lg.remark}}</td></tr></sc-for></tbody>
+                  </table>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+                  <button type="button" onClick="{{dlFile}}" style="{{primaryBtn}}">Download course file to date (PDF)</button>
+                  <button type="button" onClick="{{dlFileX}}" style="{{ghostBtn}}">Mark lists and logs (Excel)</button>
+                  <span role="status" style="font-size: 13px; color: #0E5E52">{{reportMsg}}</span>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{repInternal}}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 14px">
+                <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+                  <div class="card" style="padding: 12px"><div class="lbl">Overall attainment</div><div class="num" style="font-size: 22px">{{overallPct}}%</div><div style="{{overallChip}}">{{overallResult}}</div></div>
+                  <div class="card" style="padding: 12px"><div class="lbl">COs attained</div><div class="num" style="font-size: 22px">{{coAttained}}/5</div><div style="font-size: 12px; color: #6B6A63">60% of students at ≥ 50%</div></div>
+                  <div class="card" style="padding: 12px"><div class="lbl">Slow learners</div><div class="num" style="font-size: 22px">{{slowAll}}</div><div style="font-size: 12px; color: #6B6A63">overall below 40%</div></div>
+                  <div class="card" style="padding: 12px"><div class="lbl">Fast learners</div><div class="num" style="font-size: 22px">{{fastAll}}</div><div style="font-size: 12px; color: #6B6A63">overall 80% and above</div></div>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+                  <div class="card" style="flex: 1 1 380px; overflow-x: auto">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 13px">
+                      <thead><tr><th style="padding: 10px 14px">CO</th><th style="padding: 10px 8px">≥ 50%</th><th style="padding: 10px 8px">Mean</th><th style="padding: 10px 8px">Slow</th><th style="padding: 10px 8px">Fast</th><th style="padding: 10px 14px">Result</th></tr></thead>
+                      <tbody><sc-for list="{{coRows}}" as="co" hint-placeholder-count="6"><tr style="border-top: 1px solid #EFEDE6"><td style="padding: 6px 14px"><button type="button" onClick="{{co.pick}}" style="{{co.btn}}">{{co.code}}</button></td><td class="num" style="padding: 6px 8px">{{co.pct}}%</td><td class="num" style="padding: 6px 8px">{{co.mean}}%</td><td class="num" style="padding: 6px 8px">{{co.slow}}</td><td class="num" style="padding: 6px 8px">{{co.fast}}</td><td style="padding: 6px 14px"><span style="{{co.chip}}">{{co.result}}</span></td></tr></sc-for></tbody>
+                    </table>
+                  </div>
+                  <div class="card" style="flex: 1 1 380px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+                    <div style="display: flex; justify-content: space-between; gap: 8px"><strong>{{selCo}} distribution</strong><span class="num" style="font-size: 12px; color: #6B6A63">mean {{selMean}}% · sd {{selSd}}</span></div>
+                    <div style="position: relative; height: 170px">
+                      <div role="img" aria-label="Histogram with bell curve" style="position: absolute; inset: 0; display: flex; align-items: flex-end; gap: 4px; border-bottom: 1px solid #D6D3C9"><sc-for list="{{bins}}" as="bin" hint-placeholder-count="10"><div title="{{bin.tip}}" style="{{bin.style}}"></div></sc-for></div>
+                      <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible"><path d="{{curve}}" fill="none" stroke="#141413" stroke-width="1.2" vector-effect="non-scaling-stroke"></path></svg>
+                    </div>
+                    <div class="num" style="display: flex; justify-content: space-between; font-size: 11px; color: #6B6A63"><span>0</span><span>40 slow</span><span>50 target</span><span>80 fast</span><span>100</span></div>
+                  </div>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+                  <div class="card" style="flex: 1 1 300px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px"><strong>Gaps identified</strong><sc-for list="{{gaps}}" as="gp" hint-placeholder-count="3"><div style="font-size: 13px; line-height: 1.5; padding-top: 6px; border-top: 1px solid #EFEDE6">{{gp}}</div></sc-for></div>
+                  <div class="card" style="flex: 1 1 300px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px"><strong>Insights and suggestions for BoS</strong><sc-for list="{{insights}}" as="ins" hint-placeholder-count="4"><div style="font-size: 13px; line-height: 1.5; padding-top: 6px; border-top: 1px solid #EFEDE6">{{ins}}</div></sc-for></div>
+                  <div class="card" style="flex: 1 1 300px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px"><strong>Slow and fast learners</strong><div style="font-size: 12px; color: #6B6A63">Slow (overall)</div><div class="num" style="font-size: 12px; line-height: 1.6">{{slowList}}</div><div style="font-size: 12px; color: #6B6A63">Fast (overall)</div><div class="num" style="font-size: 12px; line-height: 1.6">{{fastList}}</div></div>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center"><button type="button" onClick="{{dlInternal}}" style="{{primaryBtn}}">Download internal mark report (PDF)</button><button type="button" onClick="{{dlSheet}}" style="{{ghostBtn}}">Mark sheet as per rubric (Excel)</button><span role="status" style="font-size: 13px; color: #0E5E52">{{reportMsg}}</span></div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{repStudent}}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 12px">
+                <div class="card" style="padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between">
+                  <label style="display: flex; align-items: center; gap: 8px; font-size: 13px">Student<select value="{{stuIdx}}" onChange="{{setStu}}" style="height: 36px; padding: 0 8px; border: 1px solid #D6D3C9; border-radius: 5px; font-size: 14px; background: #FFFFFF"><sc-for list="{{stuOptions}}" as="so" hint-placeholder-count="5"><option value="{{so.v}}">{{so.label}}</option></sc-for></select></label>
+                  <div class="num" style="font-size: 13px">Lab file: title page · declaration (marks {{stuTotal}}/100, attendance {{stuAttPct}}%, QR) · index</div>
+                  <div style="display: flex; gap: 6px"><button type="button" onClick="{{dlStu}}" style="{{smallPrimary}}">Download lab file</button><button type="button" onClick="{{dlAllStu}}" style="{{smallGhost}}">All students (ZIP)</button></div>
+                </div>
+                <div class="card" style="overflow-x: auto">
+                  <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 860px">
+                    <thead><tr><th style="padding: 9px 12px">#</th><th style="padding: 9px 8px">Title</th><th style="padding: 9px 8px">Scheduled</th><th style="padding: 9px 8px">Status</th><th style="padding: 9px 8px; text-align: right">Att</th><th style="padding: 9px 8px; text-align: right">Pre /5</th><th style="padding: 9px 8px; text-align: right">Post /5</th><th style="padding: 9px 8px; text-align: right">Vis /2</th><th style="padding: 9px 8px; text-align: right">Hid /3</th><th style="padding: 9px 8px; text-align: right">Viva /10</th><th style="padding: 9px 12px">Last submitted</th></tr></thead>
+                    <tbody><sc-for list="{{stuRows}}" as="sr" hint-placeholder-count="12"><tr style="border-top: 1px solid #EFEDE6"><td class="num" style="padding: 6px 12px; color: #6B6A63">{{sr.n}}</td><td style="padding: 6px 8px">{{sr.title}}</td><td class="num" style="padding: 6px 8px; white-space: nowrap">{{sr.date}}</td><td style="padding: 6px 8px"><span style="{{sr.chip}}">{{sr.status}}</span></td><td class="num" style="padding: 6px 8px; text-align: right">{{sr.att}}</td><td class="num" style="padding: 6px 8px; text-align: right">{{sr.pre}}</td><td class="num" style="padding: 6px 8px; text-align: right">{{sr.post}}</td><td class="num" style="padding: 6px 8px; text-align: right">{{sr.vis}}</td><td class="num" style="padding: 6px 8px; text-align: right">{{sr.hid}}</td><td class="num" style="padding: 6px 8px; text-align: right">{{sr.viva}}</td><td class="num" style="padding: 6px 12px; font-size: 12px; white-space: nowrap">{{sr.sub}}</td></tr></sc-for></tbody>
+                  </table>
+                </div>
+                <div class="card" style="overflow-x: auto">
+                  <table style="width: 100%; border-collapse: collapse; font-size: 13px">
+                    <thead><tr><th style="padding: 9px 14px">Rubric component</th><th style="padding: 9px 8px; text-align: right">Earned</th><th style="padding: 9px 8px; text-align: right">Out of</th><th style="padding: 9px 14px; text-align: right">Marks</th></tr></thead>
+                    <tbody><sc-for list="{{stuRubric}}" as="sb" hint-placeholder-count="6"><tr style="border-top: 1px solid #EFEDE6"><td style="padding: 6px 14px">{{sb.name}}</td><td class="num" style="padding: 6px 8px; text-align: right">{{sb.earned}}</td><td class="num" style="padding: 6px 8px; text-align: right">{{sb.max}}</td><td class="num" style="padding: 6px 14px; text-align: right">{{sb.marks}}</td></tr></sc-for>
+                      <tr style="border-top: 2px solid #141413; font-weight: 600"><td style="padding: 9px 14px">Total</td><td></td><td class="num" style="padding: 9px 8px; text-align: right">{{stuRawOf}}</td><td class="num" style="padding: 9px 14px; text-align: right">{{stuTotal}} / 100</td></tr></tbody>
+                  </table>
+                </div>
+                <div style="font-size: 12px; color: #6B6A63">{{reportMsg}}</div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+      </main>
+
+      <aside aria-label="Assist" style="flex: 1 1 300px; max-width: 360px; display: flex; flex-direction: column; gap: 14px">
+        <div class="card" style="overflow: hidden">
+          <div style="padding: 12px 16px; border-bottom: 1px solid #E2E0D8; display: flex; align-items: center; gap: 8px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C2410C" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"></path></svg>
+            <strong>Next best actions</strong><span class="num" style="margin-left: auto; font-size: 11px; color: #6B6A63">{{actionCount}}</span>
+          </div>
+          <sc-for list="{{actions}}" as="ac" hint-placeholder-count="4">
+            <div style="padding: 12px 16px; border-top: 1px solid #EFEDE6; display: flex; flex-direction: column; gap: 6px"><div style="font-weight: 600; font-size: 13px">{{ac.title}}</div><div style="font-size: 12px; color: #6B6A63; line-height: 1.45">{{ac.why}}</div><div><button type="button" onClick="{{ac.run}}" style="{{smallPrimary}}">{{ac.cta}}</button></div></div>
+          </sc-for>
+        </div>
+        <div style="background: #141413; color: #E8E6DF; border-radius: 6px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+          <div style="font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #A8A69E">Today · Wed 24 Feb</div>
+          <div class="num" style="font-size: 13px">09:59 Pre-test S13–S14 closed</div>
+          <div class="num" style="font-size: 13px">10:00 Batch A · S13 1-D arrays, S14 Searching</div>
+          <div class="num" style="font-size: 13px">14:00 Batch B · S13–S14</div>
+          <div class="num" style="font-size: 13px">23:59 Post-test S13–S14 closes</div>
+        </div>
+        <div style="font-size: 11px; color: #6B6A63; line-height: 1.5">Sample data for simulation. AI output stays a draft until you approve it.</div>
+      </aside>
+    </div>
+  </div>
+
+  <sc-if value="{{attOpen}}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; inset: 0; background: rgba(20,20,19,0.45); display: flex; align-items: flex-start; justify-content: center; padding: 60px 16px; z-index: 20">
+      <div role="dialog" aria-modal="true" aria-label="Attendance" style="width: 100%; max-width: 640px; background: #FFFFFF; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 20px 60px rgba(0,0,0,0.25)">
+        <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><div><div style="font-size: 18px; font-weight: 600">Attendance · {{sessShort}}</div><div style="font-size: 12px; color: #6B6A63">Auto-marked from lab sign-in and seat. Click a seat to change it.</div></div><span class="num" style="font-size: 13px">{{attSummary}}</span></div>
+        <div style="display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 4px"><sc-for list="{{attGrid}}" as="g" hint-placeholder-count="63"><button type="button" onClick="{{g.toggle}}" class="num" title="{{g.tip}}" style="{{g.style}}">{{g.roll}}</button></sc-for></div>
+        <div style="display: flex; flex-wrap: wrap; gap: 14px; font-size: 11px; color: #6B6A63"><span>Green: present</span><span>Orange: late</span><span>Red: absent</span></div>
+        <div style="display: flex; gap: 8px; justify-content: flex-end"><button type="button" onClick="{{closeAtt}}" style="{{ghostBtn}}">Later</button><button type="button" onClick="{{confirmAtt}}" style="{{primaryBtn}}">Confirm and open session</button></div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1800}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const fresh = (i) => ({ gen: true, cands: [0, 1, 2, 3].map((k) => ({ k, own: false, ok: !(i === 13 && k === 2) })), sel: [] });
+    this.state = {
+      step: 1, rubric: { att: 10, pre: 5, post: 5, vis: 10, hid: 10, viva: 10 }, rubricState: 'draft',
+      batchesOk: true, students: 125, seats: 65, extra: 0, reserve: true, merged: false, planOk: true,
+      unit: 3, q: Array.from({ length: 30 }, (_, i) => i < 14 ? Object.assign(fresh(i), { sel: [0, 1] }) : i < 20 ? fresh(i) : { gen: false, cands: [], sel: [] }), qMsg: '',
+      banks: Array.from({ length: 30 }, (_, i) => i < 14 ? 'active' : i < 20 ? 'draft' : 'none'), replaced: {}, preview: 14,
+      session: null, attOpen: false, attDone: {}, att: {}, inspect: null, insSess: 12, insAtt: 3, tick: 4, liveMsg: '',
+      composeWeek: null, addKind: 'task', taskType: 'Predict the output', taskReady: false, annText: '', resTitle: '', added: {}, lmsMsg: '',
+      asBatch: 'A', asMsg: '', asOk: true, esAdded: false, asState: { A: { stage: 1, cfg: { qper: 2, easy: 12, med: 16, hard: 12, vis: 2, hid: 3, mv: 5, mh: 5, viva: 10, dur: 120 }, cos: { 1: true, 2: true, 3: true, 4: true, 5: true }, gen: false, sel: [], hod: 'none', date: '2027-05-10', time: '10:00', scheduled: false, live: false, ended: false, added: false, att: {} }, B: { stage: 1, cfg: { qper: 2, easy: 12, med: 16, hard: 12, vis: 2, hid: 3, mv: 5, mh: 5, viva: 10, dur: 120 }, cos: { 1: true, 2: true, 3: true, 4: true, 5: true }, gen: false, sel: [], hod: 'none', date: '2027-05-11', time: '10:00', scheduled: false, live: false, ended: false, added: false, att: {} } },
+      repTab: 'file', aiPlan: 'Pro', aiUsed: 38, aiTodayUsed: 3, aiMsg: '', selCo: 5, stuIdx: 0, reportMsg: '', cmd: '', reply: ''
+    };
+    let s = 7;
+    const rnd = () => { s = (s * 48271) % 2147483647; return s / 2147483647; };
+    const gauss = () => { const u = Math.max(rnd(), 1e-9), v = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+    const ab = Array.from({ length: 120 }, () => gauss());
+    this.scores = [74, 66, 55, 47, 62].map((m) => ab.map((a) => Math.max(0, Math.min(100, Math.round(m + 13 * a + 9 * gauss())))));
+    this.overall = Array.from({ length: 120 }, (_, k) => Math.round(this.scores.reduce((a, arr) => a + arr[k], 0) / 5));
+  }
+  componentDidMount() { this.t = setInterval(() => { if (this.state.step === 6 && this.state.session === 12 && !this.state.attOpen) this.setState({ tick: this.state.tick + 1 }); }, 2000); }
+  componentWillUnmount() { clearInterval(this.t); }
+  renderVals() {
+    const st = this.state;
+    const ink = '#141413', teal = '#0E5E52', muted = '#6B6A63';
+    const tag = (bg, fg) => `display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:500;background:${bg};color:${fg}`;
+    const good = tag('#E6F0EC', teal), warn = tag('#FFF4EC', '#9A3412'), bad = tag('#FBEAEA', '#9F1D1D'), grey = tag('#F1EFE9', muted), blue = tag('#EAEFF7', '#23436E');
+    const primaryBtn = `min-height:42px;padding:0 16px;border:0;border-radius:6px;background:${ink};color:#FFFFFF;font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:4px`;
+    const ghostBtn = `min-height:42px;padding:0 16px;border:1px solid #D6D3C9;border-radius:6px;background:#FFFFFF;color:${ink};font-size:14px;cursor:pointer;display:inline-flex;align-items:center`;
+    const smallPrimary = `min-height:32px;padding:0 12px;border:0;border-radius:5px;background:${teal};color:#FFFFFF;font-weight:600;font-size:12px;cursor:pointer;margin:2px 4px 2px 0;display:inline-flex;align-items:center;gap:4px`;
+    const smallGhost = `min-height:32px;padding:0 12px;border:1px solid #D6D3C9;border-radius:5px;background:#FFFFFF;color:${ink};font-size:12px;cursor:pointer;margin:2px 4px 2px 0;display:inline-flex;align-items:center`;
+    const seg = (on) => `min-height:34px;padding:0 12px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid ${on ? ink : '#D6D3C9'};background:${on ? ink : '#FFFFFF'};color:${on ? '#FFFFFF' : ink};font-weight:${on ? 600 : 400}`;
+    const go = (n, extra) => () => this.setState(Object.assign({ step: n }, extra || {}));
+    const stamp = new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata' });
+    const plans = { Pro: { total: 125, daily: 5 }, Elite: { total: 250, daily: 7 } };
+    const aiCap = plans[st.aiPlan];
+    const aiLeftN = aiCap.total - st.aiUsed, aiTodayLeft = aiCap.daily - st.aiTodayUsed;
+    const ai = (fn, extra) => () => {
+      if (aiLeftN <= 0) { this.setState({ aiMsg: `All ${aiCap.total} AI runs in your ${st.aiPlan} plan are used. Ask the super admin to renew or upgrade.` }); return; }
+      if (aiTodayLeft <= 0) { this.setState({ aiMsg: `Daily AI cap reached (${aiCap.daily}/${aiCap.daily} on ${st.aiPlan}). It resets at midnight; approvals and uploads still work.` }); return; }
+      this.setState(Object.assign({ aiUsed: st.aiUsed + 1, aiTodayUsed: st.aiTodayUsed + 1, aiMsg: '' }, extra || {}));
+      fn();
+    };
+    const roll = (k) => '2301' + String(k + 1).padStart(3, '0');
+    const TODAY = 12;
+
+    const units = [
+      ['Basics', ['Input and output', 'Operators', 'Type conversion', 'if-else', 'switch', 'Nested conditions']],
+      ['Loops', ['for loops', 'while and do-while', 'Nested loops', 'Patterns', 'break and continue', 'Series sums']],
+      ['Arrays and strings', ['1-D arrays', 'Searching', 'Sorting', '2-D arrays', 'String functions', 'String manipulation']],
+      ['Functions and pointers', ['Functions', 'Recursion', 'Pointer basics', 'Pointer arithmetic', 'Pass by reference', 'Dynamic memory']],
+      ['Structures and files', ['Structures', 'Array of structures', 'Unions and enums', 'File write', 'File read', 'Mini project']]
+    ];
+    const topics = units.reduce((a, u) => a.concat(u[1]), []);
+    const btlOf = (i) => i === 29 ? 'L6 Create' : ['L2 Understand', 'L3 Apply', 'L3 Apply', 'L4 Analyse', 'L3 Apply', 'L4 Analyse'][i % 6];
+
+    // rubric
+    const R = st.rubric;
+    const rubricDefs = [['att', 'Attendance', 'Present in the session'], ['pre', 'Pre-test', '5 MCQs before the lab, one attempt'], ['post', 'Post-test', '5 MCQs, same day, after hidden tests pass'], ['vis', 'Visible test cases', '2 per question'], ['hid', 'Hidden test cases', '3 per question'], ['viva', 'Viva', 'Faculty marks, out of 10 per session']];
+    const rubricTotal = rubricDefs.reduce((a, d) => a + (Number(R[d[0]]) || 0), 0);
+    const rubricRows = rubricDefs.map(([k, name, how]) => ({ name, how, val: R[k], set: (e) => this.setState({ rubric: Object.assign({}, R, { [k]: Math.max(0, Math.min(50, parseInt(e.target.value, 10) || 0)) }) }) }));
+
+    // calendar and plan
+    const blocked = { 3: 'Holiday', 8: 'Mid-term exams', 12: 'Holiday' };
+    [15, 16, 17].slice(0, Number(st.extra) || 0).forEach((i) => { blocked[i] = 'Holiday'; });
+    const weeks = Array.from({ length: 19 }, (_, i) => new Date(Date.UTC(2027, 0, 6 + 7 * i)));
+    const fmt = (d) => d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+    const fmtS = (d) => d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+    const open = weeks.map((_, i) => i).filter((i) => !blocked[i]);
+    const resv = st.reserve ? open[open.length - 1] : -1;
+    const labs = open.filter((i) => i !== resv);
+    const available = Math.min(15, labs.length + (st.merged ? Math.max(0, 15 - labs.length) : 0));
+    const short = Math.max(0, 15 - available);
+    const sessDate = (s) => { const w = labs[Math.floor(s / 2)]; return w === undefined ? 'TBD' : fmtS(weeks[w]); };
+    const isActive = (i) => st.q[i].sel.length === 2 && st.banks[i] === 'active';
+    const activeSessions = topics.filter((_, i) => isActive(i)).length;
+    let p = 0;
+    const planRows = weeks.map((d, i) => {
+      const day = new Date(d.getTime() - 864e5);
+      if (blocked[i]) return { date: fmt(d), t1: blocked[i], t2: 'No lab', co: '—', pre: '—', post: '—', status: 'Blocked', chip: grey, row: 'border-top:1px solid #EFEDE6;background:repeating-linear-gradient(135deg,#FFFFFF,#FFFFFF 6px,#F6F5F1 6px,#F6F5F1 12px)' };
+      if (i === resv) return { date: fmt(d), t1: 'Reserved', t2: 'Makeup sessions and practical exam', co: '—', pre: '—', post: '—', status: 'Reserved', chip: blue, row: 'border-top:1px solid #EFEDE6' };
+      if (p >= 15) { p++; return { date: fmt(d), t1: 'Spare', t2: 'Open practice', co: '—', pre: '—', post: '—', status: 'Spare', chip: grey, row: 'border-top:1px solid #EFEDE6' }; }
+      const s1 = 2 * p, s2 = 2 * p + 1, u = Math.floor(p / 3); p++;
+      const act = isActive(s1) && isActive(s2);
+      return { date: fmt(d), t1: `S${s1 + 1} ${topics[s1]} · S${s2 + 1} ${topics[s2]}`, t2: `Unit ${u + 1} ${units[u][0]}`, co: `CO${u + 1} · ${btlOf(s1).slice(0, 2)}/${btlOf(s2).slice(0, 2)}`, pre: `${fmtS(day)} 18:00 → ${fmtS(d)} 09:59`, post: `after hidden pass → ${fmtS(d)} 23:59`,
+        status: s1 < TODAY ? 'Completed' : act ? 'Active' : 'Needs approval', chip: s1 < TODAY ? tag('#141413', '#FFFFFF') : act ? good : warn, row: 'border-top:1px solid #EFEDE6' };
+    });
+
+    // batches
+    const N = Number(st.students) || 0, cap = Math.min(65, Number(st.seats) || 65);
+    const nb = Math.max(1, Math.ceil(N / cap)), bsz = Math.floor(N / nb), rem = N % nb;
+    const slots = ['Wed 10:00–12:00', 'Wed 14:00–16:00', 'Thu 10:00–12:00', 'Fri 10:00–12:00'];
+    let r0 = 2301001;
+    const batches = Array.from({ length: nb }, (_, i) => { const size = bsz + (i < rem ? 1 : 0); const b = { name: 'Batch ' + String.fromCharCode(65 + i), size, from: r0, to: r0 + size - 1, slot: slots[i % 4], room: 'Lab ' + (3 + (i % 2)), staff: i % 2 ? 'Demo Faculty + TA 2' : 'Demo Faculty + TA 1' }; r0 += size; return b; });
+
+    // lab questions
+    const kinds = [['Core exercise', 'Easy'], ['Applied problem', 'Medium'], ['Edge-case challenge', 'Hard'], ['Debug and fix', 'Medium']];
+    const newCands = () => [0, 1, 2, 3].map((k) => ({ k, own: false, ok: true }));
+    const setQ = (i, fn) => this.setState({ q: st.q.map((x, j) => j === i ? fn(x) : x), qMsg: '' });
+    const bestTwo = (x) => { const ok = x.cands.filter((c) => c.ok).map((c) => c.k); const own = x.cands.filter((c) => c.own).map((c) => c.k); const pref = own.concat([0, 1, 2, 3].filter((k) => ok.includes(k) && !own.includes(k))); const easy = pref.find((k) => k === 0 || k === 1 || (x.cands[k] && x.cands[k].own)); const hard = pref.find((k) => k !== easy && (k === 2 || k === 3 || k === 1)); return [easy, hard].filter((k) => k !== undefined).slice(0, 2); };
+    const qRows = topics.slice((st.unit - 1) * 6, st.unit * 6).map((t, j) => {
+      const i = (st.unit - 1) * 6 + j, x = st.q[i], n = x.sel.length;
+      return { n: i + 1, date: sessDate(i), topic: t, empty: !x.gen, count: `${n} of 2 selected`, countStyle: n === 2 ? good : grey,
+        cands: x.cands.map((c, ci) => {
+          const on = x.sel.includes(ci);
+          return { on, title: c.own ? `Your question ${ci - 3}` : `${t} · ${kinds[c.k][0]}`, meta: c.own ? 'Faculty-written · tests from your upload' : `${kinds[c.k][1]} · CO${Math.floor(i / 6) + 1} · ${btlOf(i)} · 2 visible + 3 hidden`,
+            state: c.own ? 'Yours' : c.ok ? 'Checks passed' : 'Fails hidden case 4 · cannot select', chip: c.own ? blue : c.ok ? warn : bad,
+            box: `display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border-radius:5px;cursor:${c.ok ? 'pointer' : 'not-allowed'};border:1px solid ${on ? ink : '#EFEDE6'};background:${on ? '#FBFAF7' : '#FFFFFF'};opacity:${c.ok ? 1 : 0.6}`,
+            toggle: () => { if (!c.ok) return; if (on) { setQ(i, (y) => Object.assign({}, y, { sel: y.sel.filter((s2) => s2 !== ci) })); return; } if (n >= 2) { this.setState({ qMsg: `S${i + 1} already has 2 questions. Unselect one to choose this.` }); return; } setQ(i, (y) => Object.assign({}, y, { sel: y.sel.concat(ci) })); } };
+        }),
+        gen: ai(() => setQ(i, (y) => Object.assign({}, y, { gen: true, cands: newCands() }))),
+        auto: x.gen ? () => setQ(i, (y) => Object.assign({}, y, { sel: bestTwo(y) })) : ai(() => { const y = { gen: true, cands: newCands(), sel: [] }; setQ(i, () => Object.assign(y, { sel: bestTwo(y) })); }),
+        addOwn: () => setQ(i, (y) => { const cands = y.cands.concat({ k: y.cands.length, own: true, ok: true }); return Object.assign({}, y, { gen: true, cands, sel: y.sel.length < 2 ? y.sel.concat(cands.length - 1) : y.sel }); }) };
+    });
+    const doneQ = st.q.filter((x) => x.sel.length === 2).length;
+    const openCount = st.q.filter((x) => x.gen && x.sel.length < 2).length, noneCount = st.q.filter((x) => !x.gen).length;
+    const autoAll = () => this.setState({ q: st.q.map((x) => x.gen && x.sel.length < 2 ? Object.assign({}, x, { sel: bestTwo(x) }) : x), qMsg: '' });
+    const genAllRaw = () => this.setState({ q: st.q.map((x) => x.gen ? x : Object.assign({}, x, { gen: true, cands: newCands() })), qMsg: '' });
+    const genAll = ai(genAllRaw);
+    const unitTabs = units.map((u, i) => ({ label: `U${i + 1} ${u[0]}`, pick: () => this.setState({ unit: i + 1 }), style: seg(st.unit === i + 1) }));
+
+    // banks
+    const preBank = { Easy: ['Which keyword leaves a switch early?', 'How many default labels can one switch have?', 'Can a case label be a variable?', "Which is valid: case 'a': or case \"a\":?", 'Can a switch sit inside another switch?'], Medium: ['What happens when break is left out of a case?', 'Where may the default label appear?', 'Can two case labels share the same value?', 'What runs when no case matches and there is no default?', 'Which data types can a switch expression use?'], Hard: ['Given the code, what prints after fall-through from case 1 into case 2?', 'Inside a loop, what does continue do within a switch?', 'What type does the controlling expression take after integer promotion?', 'Is case 1 ... 5: valid standard C?', 'Why can some if-else-if chains not become a switch?'] };
+    const postBank = { Easy: ['What does your program print for input 0?', 'Which input tests your default branch?', 'Which compiler warning did you see, if any?', 'How many cases does your menu handle?', 'Which header file did your program need?'], Medium: ['Your menu printed two results for one choice. What is the likely cause?', 'How did your program handle an invalid menu option?', 'Why is a switch clearer than if-else for this task?', 'Which test failed first, and what fixed it?', 'How would you add a new menu option safely?'], Hard: ['Where did fall-through help or hurt your solution?', 'What would change if the marks were floats?', 'How many test inputs cover every path in your program?', 'Remove one break: how does the output change, and why?', 'What is the time complexity of your solution, and why?'] };
+    const levels = ['Easy', 'Medium', 'Hard'];
+    const bstat = st.banks[st.preview];
+    const colOf = (bank, L0, per) => levels.map((L, li) => ({ head: `${L} · 15 in bank · ${per[li]} per paper`, qs: bank[L].map((t, qi) => { const key = `${st.preview}-${L0}${L[0]}${qi}`, rep = !!st.replaced[key]; return { id: `${L0}${L[0]}${qi + 1}`, text: rep ? 'AI replacement drafted · review before approving' : t, textStyle: rep ? 'color:#9A3412;font-style:italic' : '', btn: rep ? 'Undo' : (bstat === 'active' ? '' : 'Replace'), replace: () => { if (bstat === 'active' && !rep) return; this.setState({ replaced: Object.assign({}, st.replaced, { [key]: !rep }) }); } }; }) }));
+    const bankCols = [{ name: 'Pre-test bank', note: '45 · 2E 2M 1H per paper', levels: colOf(preBank, 'P', [2, 2, 1]) }, { name: 'Post-test bank', note: '45 · 1E 2M 2H per paper', levels: colOf(postBank, 'Q', [1, 2, 2]) }];
+    const norm = (t) => t.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
+    const preSet = new Set(levels.reduce((a, L) => a.concat(preBank[L].map(norm)), []));
+    const overlapN = levels.reduce((a, L) => a + postBank[L].filter((t) => preSet.has(norm(t))).length, 0);
+    const bankTone = { active: ['#0E5E52', '#FFFFFF'], draft: ['#FBE3D2', '#7A3410'], none: ['#ECEAE3', muted] };
+    const bankCells = topics.map((t, i) => ({ n: i + 1, aria: `Session ${i + 1} ${t}: ${st.banks[i]}`, pick: () => this.setState({ preview: i }), style: `min-height:34px;border-radius:4px;font-size:11px;cursor:pointer;outline:${st.preview === i ? '2px solid #141413' : 'none'};outline-offset:1px;border:0;background:${bankTone[st.banks[i]][0]};color:${bankTone[st.banks[i]][1]}` }));
+    const activeBanks = st.banks.filter((x) => x === 'active').length, draftBanks = st.banks.filter((x) => x === 'draft').length, noneBanks = st.banks.filter((x) => x === 'none').length;
+    const setBank = (i, v) => this.setState({ banks: st.banks.map((x, j) => j === i ? v : x) });
+
+    // sessions
+    const S = st.session;
+    const openSession = (i) => () => this.setState({ session: i, inspect: null, attOpen: i === TODAY && !st.attDone[i] });
+    const sessCells = topics.map((t, i) => ({ n: i + 1, tip: `${t} · ${sessDate(i)}`, open: openSession(i), style: `min-height:34px;border-radius:4px;font-size:11px;cursor:pointer;border:${i === TODAY ? '2px solid #C2410C' : '0'};background:${i < TODAY ? ink : i === TODAY ? '#FFF4EC' : '#ECEAE3'};color:${i < TODAY ? '#FFFFFF' : i === TODAY ? '#7A3410' : muted};outline:${S === i ? '2px solid #0E5E52' : 'none'};outline-offset:1px` }));
+    const live = S === TODAY, past = S !== null && S < TODAY, future = S !== null && S > TODAY;
+    const order = ['absent', 'pre', 'coding', 'vis', 'hid', 'stuck'];
+    const colors = { absent: '#ECEAE3', pre: '#EAEFF7', coding: '#F5EFE3', vis: '#CFE3DC', hid: '#0E5E52', stuck: '#C2410C' };
+    const fgc = { absent: muted, pre: '#23436E', coding: '#6B4E16', vis: teal, hid: '#FFFFFF', stuck: '#FFFFFF' };
+    let ls = 11 + (S || 0) * 101;
+    const lr = () => { ls = (ls * 48271) % 2147483647; return ls / 2147483647; };
+    const tk = past ? 40 : future ? -3 : st.tick;
+    const base = Array.from({ length: 63 }, () => [lr(), lr()]);
+    const seatsLive = base.map(([a, sp], i) => {
+      let lvl = a < 0.06 ? 0 : Math.max(future ? 0 : 1, Math.min(4, 1 + Math.floor((tk + 3) * (0.25 + sp) / 4)));
+      if (a > 0.06 && sp < 0.12 && !past && !future) lvl = 5;
+      if (past && sp < 0.1) lvl = 3;
+      const k = future ? 'absent' : order[lvl];
+      return { roll: String(i + 1).padStart(2, '0'), k, inspect: () => this.setState({ inspect: i, insSess: Math.min(S === null ? TODAY : S, TODAY), insAtt: 3 }), tip: `${roll(i)}: ${k}`, style: `height:30px;border:0;border-radius:4px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;background:${colors[k]};color:${fgc[k]};outline:${st.inspect === i ? '2px solid #141413' : 'none'};outline-offset:1px` };
+    });
+    const count = (k) => seatsLive.filter((x) => x.k === k).length;
+    const struggling = count('stuck');
+    const legend = [['Absent', 'absent'], ['Pre-test done', 'pre'], ['Coding', 'coding'], ['Visible passed', 'vis'], ['Hidden passed · post-test open', 'hid'], ['Struggling', 'stuck']].map(([label, k]) => ({ label, sw: `width:12px;height:12px;border-radius:3px;background:${colors[k]}` }));
+    const attStates = ['P', 'L', 'A'];
+    const attGrid = seatsLive.map((x, i) => {
+      const auto = (S !== null && base[i][0] < 0.06) ? 'A' : (i % 17 === 5 ? 'L' : 'P');
+      const v = (st.att[S] || {})[i] || auto;
+      const c = { P: ['#E6F0EC', teal, 'Present'], L: ['#FFF4EC', '#9A3412', 'Late'], A: ['#FBEAEA', '#9F1D1D', 'Absent'] }[v];
+      return { roll: x.roll, v, tip: `${roll(i)}: ${c[2]}`, toggle: () => this.setState({ att: Object.assign({}, st.att, { [S]: Object.assign({}, st.att[S] || {}, { [i]: attStates[(attStates.indexOf(v) + 1) % 3] }) }) }), style: `height:34px;border-radius:4px;font-size:11px;cursor:pointer;border:0;background:${c[0]};color:${c[1]}` };
+    });
+    const nP = attGrid.filter((g) => g.v === 'P').length, nL = attGrid.filter((g) => g.v === 'L').length, nA = attGrid.filter((g) => g.v === 'A').length;
+    const preCounts = [1, 3, 7, 14, 21, 13];
+    const preMax = Math.max(...preCounts);
+    const preDist = preCounts.map((n, i) => ({ n, bar: `width:100%;height:${Math.round(80 * n / preMax)}px;border-radius:3px 3px 0 0;background:${i <= 2 ? '#E8A26B' : '#7FB5A7'}` }));
+    const preLevels = [['Easy', 88], ['Medium', 71], ['Hard', 46]].map(([name, pct]) => ({ name, pct, bar: `height:8px;width:${pct}%;border-radius:4px;background:${pct < 60 ? '#C2410C' : teal}` }));
+    const liveStats = future ? [{ label: 'Status', value: 'Upcoming' }, { label: 'Lab date', value: sessDate(S) }, { label: 'Questions', value: st.q[S].sel.length + '/2' }, { label: 'Banks', value: st.banks[S] }, { label: 'Pre-test opens', value: 'Tue 18:00' }, { label: 'Calendar', value: isActive(S) ? 'Active' : 'Pending' }]
+      : [{ label: 'Present', value: `${nP + nL}/63` }, { label: 'Pre-test done', value: '59/63' }, { label: 'Pre-test average', value: '3.6/5' }, { label: 'Visible passed', value: count('vis') + count('hid') }, { label: past ? 'Hidden passed' : 'Post-test open', value: count('hid') }, { label: past ? 'Post-test done' : 'Struggling', value: past ? Math.max(0, count('hid') - 3) : struggling }];
+    const alerts = seatsLive.map((x, i) => [x, i]).filter(([x]) => x.k === 'stuck').slice(0, 3).map(([x, i], j) => ({ roll: roll(i), inspect: x.inspect, kind: j % 2 ? 'Repeated compile errors' : 'No passing run', why: j % 2 ? '9 compile errors in 20 min' : '35 min, 0 of 2 visible tests; pre-test 1/5' }));
+
+    // inspector
+    const ins = st.inspect;
+    let ss2 = ((ins || 0) + 3) * 7919;
+    const sr = () => { ss2 = (ss2 * 48271) % 2147483647; return ss2 / 2147483647; };
+    const ability = 0.45 + 0.5 * ((((ins || 0) * 37) % 100) / 100);
+    const hist = topics.slice(0, TODAY + 1).map((t, i) => {
+      if (i === TODAY) return { i, t, s: 'live', pre: 4, post: null, att: 1 };
+      if (sr() > 0.92 + 0.06 * ability) return { i, t, s: 'absent', pre: 0, post: 0, att: 0 };
+      const passed = sr() < ability + 0.2;
+      return { i, t, s: passed ? 'passed' : 'pending', pre: Math.min(5, Math.round(5 * (ability + 0.2 * (sr() - 0.5)))), post: passed ? Math.min(5, Math.round(5 * (ability + 0.15 * (sr() - 0.3)))) : 0, att: 1 };
+    });
+    const insTimeline = hist.map((h) => ({ n: h.i + 1, mark: { passed: '✓', pending: '…', absent: 'A', live: '●' }[h.s], tip: `${h.t}: ${h.s}`, pick: () => this.setState({ insSess: h.i, insAtt: 3 }), style: `min-height:40px;border-radius:4px;font-size:10px;line-height:1.3;cursor:pointer;border:${st.insSess === h.i ? '2px solid #141413' : '0'};background:${{ passed: '#E6F0EC', pending: '#FFF4EC', absent: '#FBEAEA', live: '#EAEFF7' }[h.s]};color:${{ passed: teal, pending: '#9A3412', absent: '#9F1D1D', live: '#23436E' }[h.s]}` }));
+    const sortCode = [
+      '#include <stdio.h>\nint main() {\n  int n, a[100];\n  scanf("%d", &n);\n  for (int i = 0; i < n; i++) scanf("%d", &a[i]);\n  for (int i = 0; i < n; i++)\n    for (int j = 0; j < n; j++)\n      if (a[j] > a[j+1]) { int t = a[j]; a[j] = a[j+1]; a[j+1] = t }\n  return 0;\n}',
+      '#include <stdio.h>\nint main() {\n  int n, a[100];\n  scanf("%d", &n);\n  for (int i = 0; i < n; i++) scanf("%d", &a[i]);\n  for (int i = 0; i < n; i++)\n    for (int j = 0; j < n; j++)\n      if (a[j] > a[j+1]) { int t = a[j]; a[j] = a[j+1]; a[j+1] = t; }\n  for (int i = 0; i < n; i++) printf("%d ", a[i]);\n  return 0;\n}',
+      '#include <stdio.h>\nint main() {\n  int n, a[100];\n  scanf("%d", &n);\n  for (int i = 0; i < n; i++) scanf("%d", &a[i]);\n  for (int i = 0; i < n - 1; i++)\n    for (int j = 0; j < n - i - 1; j++)\n      if (a[j] > a[j+1]) { int t = a[j]; a[j] = a[j+1]; a[j+1] = t; }\n  for (int i = 0; i < n; i++) printf("%d ", a[i]);\n  return 0;\n}',
+      '#include <stdio.h>\nint main() {\n  int n, a[100];\n  if (scanf("%d", &n) != 1 || n < 1) return 0;\n  for (int i = 0; i < n; i++) scanf("%d", &a[i]);\n  for (int i = 0; i < n - 1; i++) {\n    int swapped = 0;\n    for (int j = 0; j < n - i - 1; j++)\n      if (a[j] > a[j+1]) { int t = a[j]; a[j] = a[j+1]; a[j+1] = t; swapped = 1; }\n    if (!swapped) break;\n  }\n  for (int i = 0; i < n; i++) printf("%d%c", a[i], i == n - 1 ? 10 : 32);\n  return 0;\n}'
+    ];
+    const attemptsMeta = [['10:14', 'Compile error: expected ; before }'], ['10:22', 'Visible 1/2 · out of bounds on a[j+1]'], ['10:31', 'Visible 2/2 · hidden 2/3 (n = 1 fails)'], ['10:40', 'Visible 2/2 · hidden 3/3 · post-test unlocked']];
+    const hs = hist[st.insSess] || hist[TODAY];
+    const insAttempts = hs.s === 'absent' ? [] : attemptsMeta.map(([time, meta], k) => ({ label: `Attempt ${k + 1} · ${hs.i === TODAY ? time : sessDate(hs.i)}`, meta, pick: () => this.setState({ insAtt: k }), style: `display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:7px 10px;border-radius:5px;cursor:pointer;font-size:12px;border:1px solid ${st.insAtt === k ? ink : '#EFEDE6'};background:${st.insAtt === k ? '#FBFAF7' : '#FFFFFF'}` }));
+    const insCode = hs.s === 'absent' ? '// Absent: no submissions for this session.' : hs.i === TODAY || hs.i === 12 ? sortCode[st.insAtt] : `// ${hs.t} · Question 1 · attempt ${st.insAtt + 1}\n// Full code is stored for every attempt; sample shown is today’s array program.\n\n` + sortCode[st.insAtt];
+    const insStudent = ins === null ? null : { att: hist.filter((h) => h.att).length, pass: hist.filter((h) => h.s === 'passed').length };
+
+    // classroom timeline
+    const taskTypes = ['MCQ quiz', 'Fill in the code', 'Predict the output', 'Debug the code', 'Coding assignment', 'Poll'];
+    const samples = {
+      'MCQ quiz': ['Which sort makes the fewest swaps on an already sorted array?', 'a) Selection  b) Bubble with early exit  c) Insertion  d) Both b and c', 'd'],
+      'Fill in the code': ['Fill the blank so the inner loop compares adjacent elements.', 'for (int i = 0; i < n - 1; i++)\n  for (int j = 0; j < ____; j++)', 'n - i - 1'],
+      'Predict the output': ['What does this program print?', 'int a[] = {3, 1, 2};\nfor (int i = 0; i < 2; i++)\n  if (a[i] > a[i + 1]) { int t = a[i]; a[i] = a[i + 1]; a[i + 1] = t; }\nprintf("%d %d %d", a[0], a[1], a[2]);', '1 2 3'],
+      'Debug the code': ['This swap does not work. Find and fix the bug.', 'void swap(int x, int y) { int t = x; x = y; y = t; }', 'Use pointers: void swap(int *x, int *y)'],
+      'Coding assignment': ['Return 1 if an array is sorted in ascending order, else 0.', 'int is_sorted(int a[], int n);', 'Auto-graded: 2 visible + 3 hidden tests'],
+      'Poll': ['How confident are you with nested loops for sorting?', '1 Not yet · 2 Somewhat · 3 Confident', 'No right answer']
+    };
+    const smp = samples[st.taskType];
+    const glyph = { ann: ['A', '#EAEFF7', '#23436E'], res: ['R', '#F1EFE9', muted], pre: ['P', '#F5EFE3', '#6B4E16'], lab: ['L', '#141413', '#FFFFFF'], post: ['Q', '#E6F0EC', teal], task: ['T', '#FFF4EC', '#9A3412'] };
+    const item = (kind, title, meta, stat) => ({ glyph: glyph[kind][0], icon: `width:26px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;background:${glyph[kind][1]};color:${glyph[kind][2]}`, title, meta, stat });
+    let pp = 0;
+    const lmsWeeks = [];
+    weeks.forEach((d, i) => {
+      if (blocked[i] || i === resv || pp >= 15) return;
+      const s1 = 2 * pp, u = Math.floor(pp / 3), labNo = pp + 1; pp++;
+      if (labNo < 5 || labNo > 9) return;
+      const isPast = s1 < TODAY, isNow = s1 === TODAY;
+      const day = new Date(d.getTime() - 864e5);
+      const items = [];
+      if (isNow) items.push(item('ann', 'Pre-test for S13–S14 closes at 09:59; bring one tricky test input', `Announcement · ${fmtS(day)} 18:05`, 'read by 119'));
+      if (s1 === 10) items.push(item('res', 'Lab manual: Arrays and strings', 'Resource · PDF', '61 views'));
+      items.push(item('pre', `Pre-test · S${s1 + 1}–S${s1 + 2}`, `5 MCQs · one attempt · ${fmtS(day)} 18:00 → ${fmtS(d)} 09:59`, isPast || isNow ? '59/63 done' : 'opens later'));
+      items.push(item('lab', `Lab ${labNo} · S${s1 + 1} ${topics[s1]} · S${s1 + 2} ${topics[s1 + 1]}`, `2 questions each · ${fmt(d)} 10:00`, isPast ? '57/63 passed' : isNow ? 'live now' : 'scheduled'));
+      items.push(item('post', `Post-test · S${s1 + 1}–S${s1 + 2}`, `opens after hidden tests pass · closes ${fmtS(d)} 23:59`, isPast ? '55/63 done' : isNow ? '12 open' : 'locked'));
+      if (s1 === 10) items.push(item('task', 'Debug the code · 1-D arrays', 'In-class task · 3 snippets', '61/63 · 66% correct'));
+      (st.added[i] || []).forEach((a) => items.push(item(a.kind, a.title, a.meta, 'just added')));
+      lmsWeeks.push({ i, date: fmtS(d), tag: isNow ? 'This week' : isPast ? 'Done' : 'Upcoming', title: `Week of ${fmtS(new Date(d.getTime() - 2 * 864e5))}`, unit: `Unit ${u + 1} ${units[u][0]}`, items,
+        composing: st.composeWeek === i, canAdd: st.composeWeek !== i, add: () => this.setState({ composeWeek: i, taskReady: false }),
+        box: `background:#FFFFFF;border:1px solid ${isNow ? '#141413' : '#E2E0D8'};border-radius:6px;padding:12px 16px;display:flex;flex-direction:column;gap:2px` });
+    });
+    const addKinds = [['task', 'Task'], ['res', 'Resource'], ['ann', 'Announcement']].map(([id, label]) => ({ label, pick: () => this.setState({ addKind: id }), style: seg(st.addKind === id) }));
+    const addItem = () => {
+      const w = st.composeWeek; if (w === null) return;
+      const a = st.addKind === 'task' ? { kind: 'task', title: `${st.taskType} · 1-D arrays`, meta: 'In-class task · launch from the lab screen or schedule' } : st.addKind === 'ann' ? { kind: 'ann', title: st.annText || 'Announcement', meta: `Announcement · ${stamp}` } : { kind: 'res', title: st.resTitle || 'New resource', meta: 'Resource · file' };
+      this.setState({ added: Object.assign({}, st.added, { [w]: (st.added[w] || []).concat(a) }), composeWeek: null, annText: '', resTitle: '', taskReady: false, lmsMsg: 'Added. Students in all batches see it on their timeline.' });
+    };
+
+    // reports
+    const T = 50, TH = 60;
+    const stat = (arr) => { const m = arr.reduce((a, v) => a + v, 0) / arr.length; return [m, Math.sqrt(arr.reduce((a, v) => a + (v - m) * (v - m), 0) / arr.length)]; };
+    const all = this.scores.concat([this.overall]);
+    const coRows = all.map((arr, i) => { const pct = Math.round(100 * arr.filter((v) => v >= T).length / arr.length), ok = pct >= TH; return { code: i === 5 ? 'Overall' : 'CO' + (i + 1), pct, mean: Math.round(stat(arr)[0]), slow: arr.filter((v) => v < 40).length, fast: arr.filter((v) => v >= 80).length, ok, result: ok ? 'Attained' : 'Not attained', chip: ok ? good : bad, pick: () => this.setState({ selCo: i }), btn: `min-height:30px;padding:0 10px;border-radius:5px;cursor:pointer;font-weight:600;font-size:12px;border:1px solid ${st.selCo === i ? ink : '#D6D3C9'};background:${st.selCo === i ? ink : '#FFFFFF'};color:${st.selCo === i ? '#FFFFFF' : ink}` }; });
+    const sel = all[st.selCo], [mu, sd] = stat(sel);
+    const counts = Array.from({ length: 10 }, (_, b) => sel.filter((v) => Math.min(9, Math.floor(v / 10)) === b).length);
+    const pdf = (x) => Math.exp(-((x - mu) * (x - mu)) / (2 * sd * sd)) / (sd * Math.sqrt(2 * Math.PI));
+    const maxC = Math.max(...counts, ...Array.from({ length: 10 }, (_, b) => sel.length * 10 * pdf(b * 10 + 5)), 1);
+    const bins = counts.map((c, b) => ({ tip: `${b * 10}–${b * 10 + 9}%: ${c}`, style: `flex:1;height:${(100 * c / maxC).toFixed(1)}%;border-radius:3px 3px 0 0;background:${b < 5 ? '#E8A26B' : '#7FB5A7'}` }));
+    const curve = Array.from({ length: 51 }, (_, k) => `${k ? 'L' : 'M'}${k * 2} ${(100 - 100 * (sel.length * 10 * pdf(k * 2)) / maxC).toFixed(2)}`).join(' ');
+    const ov = coRows[5];
+    const coTopics = ['I/O, operators and decisions', 'loops and patterns', 'arrays, searching and sorting', 'functions and pointers', 'structures and files'];
+    const missed = coRows.slice(0, 5).filter((r) => !r.ok);
+    const gaps = (missed.length ? missed.map((r) => `${r.code} (${coTopics[Number(r.code.slice(2)) - 1]}): ${r.pct}% of students reached 50%; ${r.slow} below 40%.`) : ['No CO below the rule.']).concat(['Hidden test cases fail 2.3× more often than visible ones in Units 3–4: students test only the happy path.']);
+    const insights = [`Strongest CO1 (mean ${coRows[0].mean}%); weakest CO4 (mean ${coRows[3].mean}%).`, 'Pre-test under 3/5 predicts a missed session completion about half the time.', 'Suggestion for BoS: add 2 guided sessions on pointers before Unit 5, and a testing-mindset exercise in Unit 2.', 'Suggestion for BoS: move dynamic memory to the theory course; keep the lab on pointer arithmetic.'];
+    const ord = this.overall.map((v, k) => [v, k]).sort((a, b) => a[0] - b[0]);
+    const slowList = ord.filter((x) => x[0] < 40).slice(0, 8).map((x) => `${roll(x[1])} (${x[0]}%)`).join(', ') || 'None';
+    const fastList = ord.slice().reverse().filter((x) => x[0] >= 80).slice(0, 8).map((x) => `${roll(x[1])} (${x[0]}%)`).join(', ') || 'None';
+    const fileSections = ['Course details', 'CO–PO mapping', 'Session plan', 'Actual log of session plan (planned, conducted, gaps, remarks)', 'Marking rubric (HOD-approved)', 'Lab questions with test cases', 'Mark list as per rubric (student index sheets)', 'Internal attainment report (CO-wise, overall, bell curves)', 'Internal summary', 'Suggestions for next BoS', 'End-sem questions', 'End-sem mark sheet', 'Overall attainment (internal + end-sem)', 'Overall summary and suggestions'].map((name, i) => ({ n: i + 1, name, status: i < 10 ? (i === 6 || i === 7 ? 'To date (S1–S12)' : 'Ready') : (i < 13 && st.esAdded) ? 'Ready (from Assessments)' : 'After end-sem', chip: i < 10 ? good : grey }));
+    let lp = 0;
+    const logRows = [];
+    weeks.forEach((d, i) => { if (blocked[i] || i === resv || lp >= 7) return; const s1 = 2 * lp; lp++; const dev = lp === 2 ? 1 : lp === 5 ? 2 : 0; const cd = new Date(d.getTime() + (dev === 1 ? 2 : 0) * 864e5);
+      logRows.push({ lab: `Lab ${lp}`, sess: `S${s1 + 1}–S${s1 + 2}`, plan: fmtS(d), done: lp === 7 ? 'today' : fmtS(cd), status: lp === 7 ? 'In progress' : dev === 1 ? 'Postponed' : dev === 2 ? 'Partial' : 'As planned', chip: lp === 7 ? blue : dev ? warn : good, remark: dev === 1 ? 'University sports day; conducted Fri in an extra slot.' : dev === 2 ? 'Power outage 40 min; S10 completed in the next lab.' : '—' }); });
+    const stuOptions = [0, 11, 26, 40, 57].map((k, i) => ({ v: String(i), label: `${roll(k)} · Student ${i + 1}` }));
+    const sk = [0, 11, 26, 40, 57][Number(st.stuIdx) || 0];
+    let ss3 = sk * 7919 + 13;
+    const sr3 = () => { ss3 = (ss3 * 48271) % 2147483647; return ss3 / 2147483647; };
+    const abl = [0.92, 0.7, 0.55, 0.4, 0.82][Number(st.stuIdx) || 0];
+    const sessions = topics.map((t, i) => {
+      if (i >= TODAY) return { n: i + 1, sub: '—', title: t, date: sessDate(i), status: 'Pending', chip: grey, att: '—', pre: '—', post: '—', vis: '—', hid: '—', viva: '—', raw: null };
+      if (sr3() > 0.9 + 0.08 * abl) return { n: i + 1, sub: 'none (absent)', title: t, date: sessDate(i), status: 'Absent', chip: bad, att: 0, pre: 0, post: 0, vis: 0, hid: 0, viva: 0, raw: [0, 0, 0, 0, 0, 0] };
+      const pre = Math.min(5, Math.round(5 * (abl + 0.25 * (sr3() - 0.5)))); const vis = sr3() < abl + 0.25 ? 2 : 1; const hid = vis === 2 ? Math.min(3, Math.round(3 * (abl + 0.3 * (sr3() - 0.3)))) : 0; const passed = hid === 3;
+      const post = passed ? Math.min(5, Math.round(5 * (abl + 0.2 * (sr3() - 0.4)))) : 0; const viva = Math.max(3, Math.min(10, Math.round(10 * (abl + 0.2 * (sr3() - 0.5)))));
+      return { n: i + 1, sub: `${sessDate(i)} 10:${String(20 + ((i * 7) % 35)).padStart(2, '0')}`, title: t, date: sessDate(i), status: passed ? 'Passed' : 'Pending', chip: passed ? good : warn, att: 1, pre, post, vis, hid, viva, raw: [1, pre, post, vis, hid, viva] };
+    });
+    const counted = sessions.filter((x) => x.raw);
+    const perMax = [1, 5, 5, 2, 3, 10];
+    const stuRubric = rubricDefs.map(([k, name], ci) => { const earned = counted.reduce((a, x) => a + x.raw[ci], 0), max = counted.length * perMax[ci]; return { name, earned, max, marks: `${(R[k] * earned / max).toFixed(1)} / ${R[k]}`, val: R[k] * earned / max }; });
+    const raw = stuRubric.reduce((a, b) => a + b.val, 0);
+    const stuTotal = Math.round(100 * raw / (rubricTotal || 1));
+    const stuAttPct = Math.round(100 * counted.filter((x) => x.raw[0]).length / counted.length);
+    const dl = (name) => () => this.setState({ reportMsg: `Simulation: ${name} generated as of ${stamp} IST.` });
+
+    // assessments (end-sem)
+    const AB = st.asBatch, A = st.asState[AB];
+    const setA = (patch) => this.setState({ asState: Object.assign({}, st.asState, { [AB]: Object.assign({}, A, patch) }) });
+    const cfg = A.cfg;
+    const perQ = cfg.vis * cfg.mv + cfg.hid * cfg.mh, setSize = cfg.easy + cfg.med + cfg.hard;
+    const fieldDefs = [['qper', 'Questions per student'], ['easy', 'Easy in the set'], ['med', 'Medium in the set'], ['hard', 'Hard in the set'], ['vis', 'Visible tests per question'], ['hid', 'Hidden tests per question'], ['mv', 'Marks per visible test'], ['mh', 'Marks per hidden test'], ['viva', 'Viva marks'], ['dur', 'Duration (minutes)']];
+    const asFields = fieldDefs.map(([k, label]) => ({ label, val: cfg[k], set: (e) => setA({ cfg: Object.assign({}, cfg, { [k]: Math.max(0, parseInt(e.target.value, 10) || 0) }) }) }));
+    const asCos = [1, 2, 3, 4, 5].map((n) => ({ label: `CO${n}`, toggle: () => { if (A.gen) return; setA({ cos: Object.assign({}, A.cos, { [n]: !A.cos[n] }) }); }, style: seg(!!A.cos[n]) }));
+    const coSel = [1, 2, 3, 4, 5].filter((n) => A.cos[n]);
+    const lvlOf = (k) => k < cfg.easy ? 'Easy' : k < cfg.easy + cfg.med ? 'Medium' : 'Hard';
+    const genQs = () => Array.from({ length: 40 }, (_, k) => { const co = coSel[k % coSel.length] || 1; const t = topics[(co - 1) * 6 + ((k * 5 + (AB === 'B' ? 3 : 0)) % 6)]; return { k, co, lvl: lvlOf(k), title: `${t} · ${['Core program', 'Applied problem', 'Edge-case challenge', 'Debug and fix'][(k + (AB === 'B' ? 1 : 0)) % 4]}`, bad: k === 11 || k === 27 }; });
+    const qs = A.gen ? genQs() : [];
+    const nSel = A.sel.length;
+    const coCount = (n) => A.sel.filter((k) => qs[k] && qs[k].co === n).length;
+    const asQs = qs.map((q) => { const on = A.sel.includes(q.k); return { on, bad: q.bad, title: `${AB}${q.k + 1}. ${q.title}`, meta: `CO${q.co} · ${q.lvl} · ${cfg.vis}V + ${cfg.hid}H tests · ${q.bad ? 'reference fails hidden test 2' : 'checks passed'}`,
+      box: `display:flex;gap:8px;align-items:flex-start;padding:7px 10px;border-radius:5px;background:${on ? '#FBFAF7' : '#FFFFFF'};border:1px solid ${on ? '#141413' : '#E2E0D8'};opacity:${q.bad ? 0.55 : 1};cursor:${q.bad ? 'not-allowed' : 'pointer'}`,
+      toggle: () => { if (q.bad || A.hod !== 'none') return; setA({ sel: on ? A.sel.filter((x) => x !== q.k) : A.sel.concat(q.k) }); } }; });
+    const pickBest = () => { const byCo = {}; qs.filter((q) => !q.bad).forEach((q) => { (byCo[q.co] = byCo[q.co] || []).push(q.k); }); const out = []; let i = 0; while (out.length < 30 && i < 40) { coSel.forEach((n) => { const l = byCo[n] || []; if (out.length < 30 && l[i] !== undefined) out.push(l[i]); }); i++; } setA({ sel: out }); };
+    const reached = [true, A.gen, A.hod !== 'none', A.hod === 'approved', A.scheduled, A.ended];
+    const stageNames = ['Rules', 'Generate and approve', 'HOD approval', 'Schedule', 'Attendance and conduct', 'Marks and attainment'];
+    const stageState = [A.gen ? 'done' : 'now', A.hod !== 'none' ? 'done' : A.gen ? `${nSel}/30` : '', A.hod === 'approved' ? 'approved' : A.hod === 'sent' ? 'waiting' : '', A.scheduled ? A.date : '', A.ended ? 'done' : A.live ? 'live' : '', A.added ? 'in course file' : ''];
+    const asStages = stageNames.map((label, i) => ({ n: `Stage ${i + 1}`, label, state: stageState[i], go: () => { if (reached[i]) setA({ stage: i + 1 }); },
+      style: `display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:8px 10px;border-radius:5px;cursor:${reached[i] ? 'pointer' : 'not-allowed'};border:1px solid ${A.stage === i + 1 ? '#141413' : '#E2E0D8'};background:${A.stage === i + 1 ? '#141413' : reached[i] ? '#FFFFFF' : '#F1EFE9'};color:${A.stage === i + 1 ? '#FFFFFF' : reached[i] ? '#141413' : '#9C9A92'}` }));
+    const asMsgSet = (m, ok) => this.setState({ asMsg: m, asOk: ok !== false });
+    const asSeats = Array.from({ length: 63 }, (_, i) => { const v = (A.att || {})[i] || ([4, 22, 47].includes(i) ? 'A' : 'P'); const c = v === 'P' ? ['#E6F0EC', teal, 'Present'] : ['#FBEAEA', '#9F1D1D', 'Absent']; return { roll: String(i + 1).padStart(2, '0'), v, tip: `${roll(i)}: ${c[2]}`, toggle: () => { if (A.live || A.ended) return; setA({ att: Object.assign({}, A.att || {}, { [i]: v === 'P' ? 'A' : 'P' }) }); }, style: `height:32px;border:0;border-radius:4px;font-size:11px;cursor:pointer;background:${c[0]};color:${c[1]}` }; });
+    const presentN = asSeats.filter((s) => s.v === 'P').length;
+    const asProctor = [['Students started', A.live || A.ended ? `${presentN}/${presentN} present` : 'not active'], ['Absent, blocked from starting', String(63 - presentN)], ['Fullscreen and browser lockdown', A.live || A.ended ? 'enforced' : '—'], ['Tab or window switch attempts', A.live || A.ended ? '3 (2 students)' : '—'], ['Multiple faces or no face', A.live || A.ended ? '1 flag · seat 51' : '—'], ['Copy, paste and AI tools', A.live || A.ended ? 'blocked · 4 attempts' : '—'], ['Submitted', A.ended ? `${presentN}/${presentN}` : A.live ? '0' : '—']].map(([k, v]) => ({ k, v, style: /flag|attempts|switch/.test(k) && v !== '—' && /\d/.test(v) && !/^0/.test(v) ? 'color:#9A3412' : '' }));
+    const total = cfg.qper * perQ + cfg.viva;
+    const asMarks = asSeats.slice(0, 10).map((s, i) => { if (s.v === 'A') return { roll: roll(i), qs: '—', vis: '—', hid: '—', viva: '—', total: 'Absent', flag: 'not allowed', chip: grey, at: '—' };
+      const q1 = A.sel[(i * 7) % Math.max(1, A.sel.length)], q2 = A.sel[(i * 11 + 3) % Math.max(1, A.sel.length)];
+      const vis = cfg.qper * cfg.vis * cfg.mv - ((i * 3) % 3 === 0 ? 0 : cfg.mv), hid = cfg.qper * cfg.hid * cfg.mh - ((i % 4) * cfg.mh), viva = Math.max(4, cfg.viva - (i % 5));
+      return { roll: roll(i), qs: `${AB}${(q1 || 0) + 1} (CO${qs[q1] ? qs[q1].co : 1}) · ${AB}${(q2 || 0) + 1} (CO${qs[q2] ? qs[q2].co : 1})`, vis: `${vis}/${cfg.qper * cfg.vis * cfg.mv}`, hid: `${Math.max(0, hid)}/${cfg.qper * cfg.hid * cfg.mh}`, viva: `${viva}/${cfg.viva}`, total: `${vis + Math.max(0, hid) + viva}/${total}`, flag: i === 6 ? '1 flag · reviewed' : 'clean', chip: i === 6 ? warn : good, at: `${A.date} ${11 + (i % 2)}:${String(10 + i * 4).padStart(2, '0')}` }; });
+    const asCoBars = coSel.map((n, i) => { const pct = [86, 74, 63, 52, 69][n - 1]; return { code: `CO${n}`, pct, bar: `position:absolute;left:0;top:0;bottom:0;width:${pct}%;border-radius:3px;background:${pct >= 60 ? teal : '#C2410C'}` }; });
+
+    // rail
+    const rubricOk = st.rubricState === 'approved', qDone = doneQ >= 30, banksDone = activeBanks === 30;
+    const stepDefs = [[1, 'Course setup', rubricOk, rubricOk ? 'HOD ok' : st.rubricState], [2, 'Batches', st.batchesOk, `${nb}`], [3, 'Session plan', st.planOk && short === 0, `${activeSessions}/30`], [4, 'Lab questions', qDone, `${doneQ}/30`], [5, 'Pre/post-test banks', banksDone, `${activeBanks}/30`], [6, 'Sessions', false, 'S13 live'], [7, 'Classroom', false, ''], [9, 'Assessments', st.asState.A.added && st.asState.B.added, st.asState.A.ended ? 'A done' : 'end-sem'], [8, 'Reports', false, '']];
+    const stepStyle = (n) => `display:flex;align-items:center;gap:10px;width:100%;min-height:36px;padding:0 8px;border:0;border-radius:5px;cursor:pointer;font-size:13px;background:${st.step === n ? '#2C2B28' : 'transparent'};color:${st.step === n ? '#FFFFFF' : '#CFCDC5'};font-weight:${st.step === n ? 600 : 400}`;
+    const mk = ([n, label, done, meta]) => ({ label, meta, go: go(n), style: stepStyle(n), mark: done ? '✓' : String(stepDefs.findIndex((d) => d[0] === n) + 1), dot: `width:18px;height:18px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;background:${done ? teal : 'transparent'};border:1px solid ${done ? teal : '#57554F'};color:#FFFFFF` });
+    const phases = [{ name: 'Plan', steps: stepDefs.slice(0, 3).map(mk) }, { name: 'Prepare', steps: stepDefs.slice(3, 5).map(mk) }, { name: 'Run', steps: stepDefs.slice(5, 8).map(mk) }, { name: 'Complete', steps: stepDefs.slice(8).map(mk) }];
+    const doneSteps = [rubricOk, st.batchesOk, st.planOk && short === 0, qDone, banksDone].filter(Boolean).length;
+    const meta = {
+      1: ['Step 1 · Plan', 'Course setup', 'Course details, COs with Bloom levels, CO–PO map and the marking rubric, sent to the HOD as one course plan.'],
+      2: ['Step 2 · Plan', 'Batch creation', 'From the roster and lab seats: at most 65 per batch, split evenly.'],
+      3: ['Step 3 · Plan', 'Session plan and calendar', 'Lab dates come from the academic calendar. Each session carries its CO, BTL, pre-test and post-test windows; it goes live in calendars once its questions are approved.'],
+      4: ['Step 4 · Prepare', 'Lab questions', 'Assist drafts 4 candidates per session. Keep any 2, or add your own.'],
+      5: ['Step 5 · Prepare', 'Pre-test and post-test banks', 'Per session: 45 pre-test and 45 post-test questions, 15 per level. AI drafts, you approve.'],
+      6: ['Step 6 · Run', 'Sessions', 'Open a session: attendance first, then pre-test performance and the live monitor. Click any student to inspect.'],
+      7: ['Step 7 · Run', 'Classroom', 'Moodle-style timeline shared with all onboarded students. Add tasks, resources and announcements in place.'],
+      9: ['Step 8 · Run', 'Assessments', 'Set the rules, generate 40 questions, approve 30, get HOD approval, schedule, activate after attendance, then publish marks and attainment.'],
+      8: ['Step 9 · Complete', 'Reports', 'Course file, internal mark report and student lab files, current to the minute.']
+    }[st.step];
+
+    // assist
+    const actions = [];
+    if (st.rubricState === 'draft') actions.push({ title: 'Send course plan to HOD', why: `Details, COs, CO–PO map and rubric (${rubricTotal} marks, reported out of 100).`, cta: 'Send now', run: () => this.setState({ rubricState: 'sent', step: 1 }) });
+    if (st.rubricState === 'sent') actions.push({ title: 'Waiting for HOD approval', why: 'Assist will remind the HOD tomorrow at 09:00.', cta: 'View', run: go(1) });
+    if (!st.attDone[TODAY]) actions.push({ title: 'Open today’s session S13', why: `Attendance first: auto-marked ${nP} present, ${nL} late, ${nA} absent. 4 students skipped the pre-test.`, cta: 'Open S13', run: () => this.setState({ step: 6, session: TODAY, attOpen: true, inspect: null }) });
+    if (st.step === 6 && live && struggling) actions.push({ title: `Help ${struggling} struggling students`, why: 'No passing run after 35 minutes. A hint on the inner-loop bound fits most of them.', cta: 'Send hint', run: () => this.setState({ liveMsg: `Hint sent to ${struggling} students at ${stamp}.` }) });
+    if (draftBanks || openCount) actions.push({ title: `Activate S15–S20 in the calendar`, why: `${openCount} sessions need 2 questions picked and ${draftBanks} banks need approval. Pre-test for S15 opens Tuesday 18:00.`, cta: 'Approve all', run: () => { this.setState({ banks: st.banks.map((x) => x === 'draft' ? 'active' : x), q: st.q.map((x) => x.gen && x.sel.length < 2 ? Object.assign({}, x, { sel: bestTwo(x) }) : x), step: 3 }); } });
+    actions.push({ title: 'Add a predict-the-output task this week', why: 'S13 1-D arrays: hidden-case failures suggest weak tracing of loop bounds.', cta: 'Add to timeline', run: () => this.setState({ step: 7, composeWeek: weeks.findIndex((d, i) => lmsWeeks.some((w) => w.i === i && w.tag === 'This week')), addKind: 'task', taskType: 'Predict the output', taskReady: true }) });
+    if (!st.asState.A.gen) actions.push({ title: 'Prepare the end-sem set for Batch A', why: 'Set the rules, then Assist generates 40 questions; approve 30 and send to the HOD. Each batch gets a new set.', cta: 'Start', run: go(9) });
+    if (noneCount) actions.push({ title: `Draft questions for ${noneCount} sessions`, why: 'Units 4–5 open in 5 weeks.', cta: 'Draft', run: () => { genAll(); this.setState({ step: 4, unit: 4 }); } });
+    const ask = (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      const c = (st.cmd || '').toLowerCase();
+      const m = c.match(/2301\d{3}/);
+      if (m) { const k = Number(m[0].slice(4)) - 1; this.setState({ step: 6, session: TODAY, attOpen: false, attDone: Object.assign({}, st.attDone, { [TODAY]: true }), inspect: Math.max(0, Math.min(62, k)), insSess: TODAY, insAtt: 3, reply: `Showing ${m[0]} from day 1 to today.`, cmd: '' }); return; }
+      const routes = [[['end-sem', 'endsem', 'assessment', 'exam'], 9, 'Opened assessments.'], [['today', 'session', 'attendance', 'monitor', 'live'], 6, 'Opened today’s session.', { session: TODAY, attOpen: !st.attDone[TODAY] }], [['quiz', 'task', 'announce', 'resource', 'class', 'timeline'], 7, 'Opened the class timeline.'], [['course file'], 8, 'Course file is ready to date.', { repTab: 'file' }], [['slow', 'fast', 'internal', 'attain', 'bell', 'gap'], 8, 'Internal mark report.', { repTab: 'internal' }], [['lab file', 'lab report', 'index'], 8, 'Student lab files.', { repTab: 'student' }], [['report', 'download', 'mark'], 8, 'Reports are current to this minute.'], [['pre', 'post', 'bank'], 5, 'Pre/post-test banks.'], [['question'], 4, 'Lab questions.'], [['plan', 'calendar'], 3, 'Session plan.'], [['batch'], 2, 'Batches.'], [['rubric', 'course', 'hod'], 1, 'Course setup.']];
+      const hit = routes.find(([keys]) => keys.some((k) => c.includes(k)));
+      this.setState(hit ? Object.assign({ step: hit[1], reply: hit[2], cmd: '' }, hit[3] || {}) : { reply: 'Try “open today’s session”, “show 2301044”, or “download course file”.' });
+    };
+
+    return {
+      phases, overallBar: `height:4px;width:${doneSteps * 20}%;background:#5FB3A1;border-radius:2px`, overallText: `${doneSteps} of 5 setup steps done`,
+      cmd: st.cmd, setCmd: (e) => this.setState({ cmd: e.target.value }), ask, hasReply: !!st.reply, reply: st.reply,
+      liveDot: `width:8px;height:8px;border-radius:50%;background:${live ? '#C2410C' : '#9C9A92'}`, liveText: live ? 'Live · Batch A · S13' : 'Batch A lab 10:00',
+      stepKicker: meta[0], stepTitle: meta[1], stepLead: meta[2],
+      is1: st.step === 1, is2: st.step === 2, is3: st.step === 3, is4: st.step === 4, is5: st.step === 5, is6: st.step === 6, is7: st.step === 7, is8: st.step === 8,
+      primaryBtn, ghostBtn, smallPrimary, smallGhost,
+      courseFields: [['Course code', 'CSL-101'], ['Course title', 'Programming in C Lab'], ['L-T-P-C', '0-0-2-1'], ['Semester', 'IV · 2026–27'], ['School / Department', 'SET · Computer Science'], ['Class', 'SY-B'], ['Faculty in-charge', 'Demo Faculty'], ['HOD', 'hod.cse@sanjivani.edu.in']].map(([label, value]) => ({ label, value })),
+      coList: [['CO1', 'Write C programs using input, output, operators and decisions', 'U1', 'L3 Apply'], ['CO2', 'Use loops to solve iterative problems', 'U2', 'L3 Apply'], ['CO3', 'Process arrays and strings with searching and sorting', 'U3', 'L4 Analyse'], ['CO4', 'Design modular programs with functions and pointers', 'U4', 'L4 Analyse'], ['CO5', 'Manage records with structures and files', 'U5', 'L6 Create']].map(([code, text, unit, bloom]) => ({ code, text, unit, bloom })),
+      poGrid: [['', 'PO1', 'PO2', 'PO3', 'PO5', 'PO12', 'PSO1'], ['CO1', 3, 2, 1, 0, 1, 2], ['CO2', 3, 2, 2, 0, 1, 2], ['CO3', 3, 3, 2, 1, 1, 3], ['CO4', 2, 3, 3, 1, 2, 3], ['CO5', 2, 2, 3, 2, 2, 3]].reduce((a, row, ri) => a.concat(row.map((v, ci) => ({ v: v === 0 ? '·' : v, style: ri === 0 || ci === 0 ? `padding:4px 2px;text-align:center;color:${muted}` : `padding:6px 2px;text-align:center;border-radius:3px;background:${['#F4F3EF', '#DCEBE6', '#9CC7BB', '#0E5E52'][v]};color:${v === 3 ? '#FFFFFF' : ink}` }))), []),
+      rubricRows, rubricTotal, rubricLocked: st.rubricState !== 'draft', rubricScaleNote: rubricTotal === 100 ? 'Reported out of 100' : `Reported out of 100 (scaled from ${rubricTotal})`,
+      rubricStatus: { draft: 'Draft', sent: 'Sent to HOD', approved: 'Approved by HOD' }[st.rubricState], rubricChip: { draft: grey, sent: warn, approved: good }[st.rubricState],
+      rubricNote: { draft: 'The course plan (details, COs, CO–PO map, session plan and rubric) goes to the HOD as one package.', sent: 'Sent to hod.cse@sanjivani.edu.in. Locked while under review.', approved: `Approved by HOD on ${stamp}. Changes need a new approval.` }[st.rubricState],
+      rubricDraft: st.rubricState === 'draft', rubricSent: st.rubricState === 'sent', sendRubric: () => this.setState({ rubricState: 'sent' }), hodApprove: () => this.setState({ rubricState: 'approved' }),
+      students: st.students, seats: st.seats, setStudents: (e) => this.setState({ students: Math.max(1, Math.min(400, parseInt(e.target.value, 10) || 1)) }), setSeats: (e) => this.setState({ seats: Math.max(10, Math.min(120, parseInt(e.target.value, 10) || 10)) }), cap, batches, confirmBatches: () => this.setState({ batchesOk: true, step: 3 }),
+      extra: st.extra, setExtra: (e) => this.setState({ extra: Math.max(0, Math.min(3, parseInt(e.target.value, 10) || 0)), merged: false, planOk: false }), reserve: st.reserve, toggleReserve: () => this.setState({ reserve: !st.reserve, merged: false, planOk: false }),
+      short, shortfall: short > 0, acceptMerge: () => this.setState({ merged: true }), planRows, activeSessions, approvePlan: () => this.setState({ planOk: short === 0 }), goQuestions: go(4),
+      planMsg: short > 0 ? 'Resolve the shortfall first.' : `Plan in calendars. ${activeSessions} sessions active; the rest go live as you approve their questions.`,
+      unitTabs, qRows, autoAll, genAll, openCount, hasQMsg: !!st.qMsg, qMsg: st.qMsg, selSummary: `${doneQ} of 30 sessions have 2 questions`,
+      activeBanks, draftBanks, bankCells, bankCols, overlap: overlapN, overlapColor: overlapN ? '#9F1D1D' : teal,
+      previewTopic: `S${st.preview + 1} · ${topics[st.preview]}`, previewNote: bstat === 'active' ? 'Active for every batch. Sample questions shown are for switch.' : bstat === 'draft' ? 'AI draft. Replace any question, then approve to activate. Sample questions shown are for switch.' : 'No bank yet.',
+      previewDraft: bstat === 'draft', previewNone: bstat === 'none', previewActive: bstat === 'active', previewHasBank: bstat !== 'none', approveOne: () => setBank(st.preview, 'active'), genOne: ai(() => setBank(st.preview, 'draft')),
+      approveAll: () => this.setState({ banks: st.banks.map((x) => x === 'draft' ? 'active' : x) }), approveAllLabel: draftBanks ? `Approve all ${draftBanks} drafts` : 'No drafts to approve', genAllBanks: ai(() => this.setState({ banks: st.banks.map((x) => x === 'none' ? 'draft' : x) })), genAllLabel: noneBanks ? `Generate drafts for ${noneBanks} sessions` : 'All sessions have banks',
+      sessCells, noSession: S === null, hasSession: S !== null, sessTitle: S === null ? '' : `S${S + 1} · ${topics[S]}`, sessShort: S === null ? '' : `S${S + 1} ${topics[S]} · Batch A`,
+      sessMeta: S === null ? '' : `${sessDate(S)} · Batch A · CO${Math.floor(S / 6) + 1} · ${btlOf(S)} · ${live ? 'live now' : past ? 'completed' : 'upcoming'}`,
+      monitorNote: live ? 'updates every 2 s' : past ? 'final state' : 'not started', liveStats, preDist, preLevels, preInsight: '11 students scored 2/5 or less; 7 of them are already struggling in the lab. Hard pre-test items (46%) were about loop bounds.',
+      seatsLive, legend, alerts, struggling, liveMsg: st.liveMsg,
+      sendHints: () => this.setState({ liveMsg: `Hint sent to ${struggling} students at ${stamp}.` }), assignTA: () => this.setState({ liveMsg: 'TA 1 notified with seat numbers.' }), flagSlow: () => this.setState({ liveMsg: `${struggling} students added to the slow-learner list.` }),
+      attOpen: st.attOpen && S !== null, attGrid, attSummary: `${nP} present · ${nL} late · ${nA} absent`, openAtt: () => this.setState({ attOpen: true }), closeAtt: () => this.setState({ attOpen: false }), confirmAtt: () => this.setState({ attOpen: false, attDone: Object.assign({}, st.attDone, { [S]: true }) }),
+      hasInspect: ins !== null, closeInspect: () => this.setState({ inspect: null }), insName: ins === null ? '' : `${roll(ins)} · Student ${ins + 1}`, insMeta: ins === null ? '' : `Batch A · Seat ${ins + 1} · joined with class code on 4 Jan 2027`,
+      insStats: insStudent ? [{ label: 'Attendance', value: `${insStudent.att}/${TODAY + 1}` }, { label: 'Sessions passed', value: `${insStudent.pass}/${TODAY}` }, { label: 'Pre-test average', value: (hist.reduce((a, h) => a + h.pre, 0) / hist.length).toFixed(1) + '/5' }, { label: 'Internal so far', value: `${Math.round(45 + 45 * ability)}/100` }, { label: 'Learner group', value: ability < 0.6 ? 'Slow' : ability > 0.85 ? 'Fast' : 'On track' }] : [],
+      insTimeline, insSessTitle: `S${hs.i + 1} ${hs.t} · ${hs.s === 'absent' ? 'absent' : 'submissions, Question 1'}`, insAttempts, insCode, insPrePost: hs.s === 'absent' ? '' : `Pre-test ${hs.pre}/5 · Post-test ${hs.post === null ? 'open until 23:59' : hs.post + '/5'}`,
+      weeksLms: lmsWeeks, addKinds, kindTask: st.addKind === 'task', kindAnn: st.addKind === 'ann', kindRes: st.addKind === 'res', taskTypes, taskType: st.taskType, setTaskType: (e) => this.setState({ taskType: e.target.value, taskReady: false }), genTask: ai(() => this.setState({ taskReady: true })), taskReady: st.taskReady, taskPrompt: smp[0], taskCode: smp[1], taskAnswer: smp[2],
+      annText: st.annText, setAnn: (e) => this.setState({ annText: e.target.value }), draftAnn: ai(() => this.setState({ annText: 'S15–S16 next Wednesday: string functions. Pre-test opens Tuesday 18:00, one attempt, closes when your lab starts.' })),
+      resTitle: st.resTitle, setResTitle: (e) => this.setState({ resTitle: e.target.value }), addItem, cancelAdd: () => this.setState({ composeWeek: null }), lmsMsg: st.lmsMsg, resendInvites: () => this.setState({ lmsMsg: 'Invites with class code resent to 3 students.' }), jumpToday: () => this.setState({ lmsMsg: 'This week is outlined in black.' }),
+      repTabs: [['file', 'Course file'], ['internal', 'Internal mark report'], ['student', 'Student lab files']].map(([id, label]) => ({ label, pick: () => this.setState({ repTab: id }), style: seg(st.repTab === id) })),
+      repFile: st.repTab === 'file', repInternal: st.repTab === 'internal', repStudent: st.repTab === 'student', fileSections, logRows, dlFile: dl('Course file to date'), dlFileX: dl('Mark lists and session log'),
+      overallPct: ov.pct, overallChip: ov.ok ? good : bad, overallResult: ov.ok ? 'Attained' : 'Not attained', coAttained: coRows.slice(0, 5).filter((r) => r.ok).length, slowAll: ov.slow, fastAll: ov.fast,
+      coRows, selCo: coRows[st.selCo].code, selMean: Math.round(mu), selSd: sd.toFixed(1), bins, curve, gaps, insights, slowList, fastList, dlInternal: dl('Internal mark report'), dlSheet: dl('Mark sheet as per rubric'),
+      stuOptions, stuIdx: String(st.stuIdx), setStu: (e) => this.setState({ stuIdx: Number(e.target.value) }), stuRows: sessions, stuRubric, stuRawOf: `${raw.toFixed(1)} / ${rubricTotal}`, stuTotal, stuAttPct,
+      dlStu: dl(`Lab file for ${roll(sk)}`), dlAllStu: dl('All student lab files (ZIP)'), reportMsg: st.reportMsg,
+      aiPlan: st.aiPlan, aiLeft: `${aiLeftN} of ${aiCap.total} left`, aiToday: aiTodayLeft > 0 ? `today ${st.aiTodayUsed}/${aiCap.daily} used` : `today ${aiCap.daily}/${aiCap.daily} · cap reached`, aiTodayColor: aiTodayLeft > 0 ? muted : '#9F1D1D',
+      aiBar: `height:4px;width:${Math.round(100 * aiLeftN / aiCap.total)}%;background:${aiTodayLeft > 0 ? teal : '#C2410C'};border-radius:2px`, aiTip: `${st.aiPlan} plan: ${aiCap.total} AI runs per subscription, at most ${aiCap.daily} per day. One run = one AI drafting request.`, hasAiMsg: !!st.aiMsg, aiMsg: st.aiMsg,
+      is9: st.step === 9, asBatches: ['A', 'B'].map((b) => ({ label: `Batch ${b}`, pick: () => this.setState({ asBatch: b, asMsg: '' }), style: seg(AB === b) })), asBatchName: `Batch ${AB}`, asStages, hasAsMsg: !!st.asMsg, asMsg: st.asMsg, asMsgBg: st.asOk ? '#E6F0EC' : '#FBEAEA', asMsgFg: st.asOk ? teal : '#8F1D14',
+      asS1: A.stage === 1, asS2: A.stage === 2, asS3: A.stage === 3, asS4: A.stage === 4, asS5: A.stage === 5, asS6: A.stage === 6, asFields, asCos, asLocked: A.gen,
+      asSummary: `Set of ${setSize} questions (${cfg.easy} easy, ${cfg.med} medium, ${cfg.hard} hard) → approve 30 → each student gets ${cfg.qper}. Per question ${cfg.vis} × ${cfg.mv} + ${cfg.hid} × ${cfg.mh} = ${perQ} marks; viva ${cfg.viva}; total ${total} marks; ${cfg.dur} minutes.${setSize !== 40 ? '  ! The set must total 40.' : ''}`,
+      asGenerate: ai(() => { if (setSize !== 40) { asMsgSet('Easy + medium + hard must add up to 40.', false); return; } setA({ gen: true, stage: 2, sel: [] }); asMsgSet(`40 new questions generated for Batch ${AB}; none repeat another batch's set.`); }),
+      asApprovedText: `${nSel} of 30 approved · ` + coSel.map((n) => `CO${n} ${coCount(n)}`).join(' · '), asQs, asPickBest: pickBest,
+      asSendHod: () => { if (nSel !== 30) { asMsgSet(`Approve exactly 30 questions (now ${nSel}).`, false); return; } const weak = coSel.filter((n) => coCount(n) < 4); if (weak.length) { asMsgSet(`${weak.map((n) => 'CO' + n).join(', ')} need at least 4 approved questions.`, false); return; } setA({ hod: 'sent', stage: 3 }); asMsgSet(`30 questions added to the question bank and sent to hod.cse@sanjivani.edu.in.`); },
+      asHodNote: A.hod === 'approved' ? 'Approved by the HOD. You can now schedule the test.' : A.hod === 'sent' ? `Batch ${AB} set (30 questions, ${total} marks) is with the HOD. Scheduling unlocks on approval.` : 'Not sent yet.', asHodPending: A.hod === 'sent', asHodApprove: () => { setA({ hod: 'approved', stage: 4 }); asMsgSet('HOD approved the question set.'); },
+      asDate: A.date, asTime: A.time, asSetDate: (e) => setA({ date: e.target.value }), asSetTime: (e) => setA({ time: e.target.value }), asSchedNote: `Batch ${AB} · ${cfg.dur} minutes · proctored · Lab 3`,
+      asSchedule: () => { if (A.hod !== 'approved') { asMsgSet('Waiting for HOD approval.', false); return; } setA({ scheduled: true, stage: 5 }); asMsgSet(`Scheduled for ${A.date} ${A.time} and added to faculty and student calendars.`); },
+      asConductTitle: `Attendance · Batch ${AB} end-sem`, asAttSummary: `${presentN} present · ${63 - presentN} absent`, asSeats, asCanActivate: !A.live && !A.ended, asIsLive: A.live && !A.ended,
+      asConductNote: A.ended ? 'Test closed. Marks computed as per the rubric.' : A.live ? `Test active for ${presentN} present students. Absent students cannot start.` : 'Mark attendance first. Only students marked present can start the test once you activate it.',
+      asActivate: () => { setA({ live: true }); asMsgSet(`Test activated for ${presentN} present students at ${stamp}.`); }, asEnd: () => { setA({ live: false, ended: true, stage: 6 }); asMsgSet('Test ended. Marks list and attainment are ready.'); }, asProctor,
+      asMarks, asCoBars, asInsight: 'CO4 is below the 60% line in the end-sem as in internals; the gap holds across both assessments.',
+      asAddFile: () => { setA({ added: true }); this.setState({ esAdded: true, asMsg: 'Mark list, attainment report and question set added to the course file (sections 11–13).', asOk: true }); }, asAddLabel: A.added ? 'Added to course file' : 'Add to course file', asDl: () => asMsgSet(`Simulation: Batch ${AB} end-sem mark list downloaded.`),
+      actions: actions.slice(0, 5), actionCount: `${Math.min(5, actions.length)} suggested`
+    };
+  }
+}
+</script>
+</body>
+</html>

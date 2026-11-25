@@ -1,0 +1,16 @@
+project_id = "xeio"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 15
+
+[auth]
+enabled = true
+site_url = "http://localhost:5173"
+enable_signup = false

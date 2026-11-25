@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>XeIO sign in</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F3EF}
+a{color:#0E5E52}
+input:focus,button:focus-visible,a:focus-visible{outline:2px solid #0E5E52;outline-offset:2px}
+button,input{font-family:'IBM Plex Sans',system-ui,sans-serif}
+.num{font-family:'IBM Plex Mono',ui-monospace,monospace}
+</style>
+</helmet>
+<div style="min-height: 820px; display: flex; flex-wrap: wrap; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #141413; background: #F4F3EF">
+  <section style="flex: 1 1 420px; background: #141413; color: #E8E6DF; padding: 56px 48px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+    <div style="font-weight: 600; font-size: 44px; letter-spacing: -1px; line-height: 1">Xe<span style="color: #3FA9F5">IO</span></div>
+    <h1 style="margin: 48px 0 0; font-size: 36px; font-weight: 600; line-height: 1.15; max-width: 440px">The AI faculty assistant that plans, runs and reports every lab.</h1>
+    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #CFCDC5; max-width: 440px">One sign-in for faculty, students, HODs, deans, the CoE and the VC. Each role sees only its own scope.</p>
+    <div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px"><div style="font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #A8A69E">Designed and maintained by</div><img src="/_blob/143e1330c3311a6116278c30bf4980a8" alt="elzeo · Innovate | Transform" style="width: 200px; height: auto"><div style="font-size: 12px; color: #A8A69E">Elzeo Future Technologies Pvt Ltd, India · Sanjivani University deployment · sample data</div></div>
+  </section>
+  <section style="flex: 1 1 420px; padding: 56px 48px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; gap: 18px; max-width: 560px">
+    <div><h2 style="margin: 0; font-size: 24px; font-weight: 600">Sign in</h2><p style="margin: 6px 0 0; font-size: 14px; line-height: 1.5; color: #6B6A63">Use your institutional account. Only emails created by the super admin, or invited by your faculty with a class code, can sign in.</p></div>
+    <form onSubmit="{{tryLogin}}" style="display: flex; flex-direction: column; gap: 10px; margin: 0">
+      <label for="email" style="font-size: 13px; font-weight: 600">Institutional email</label>
+      <input id="email" type="email" value="{{email}}" onChange="{{setEmail}}" placeholder="name@sanjivani.edu.in" style="height: 46px; box-sizing: border-box; padding: 0 12px; border: 1px solid #D6D3C9; border-radius: 6px; font-size: 15px; background: #FFFFFF">
+      <button type="submit" style="height: 46px; border: 0; border-radius: 6px; background: #141413; color: #FFFFFF; font-size: 15px; font-weight: 600; cursor: pointer">Continue with Sanjivani SSO</button>
+    </form>
+    <sc-if value="{{hasTarget}}" hint-placeholder-val="{{ false }}"><div role="status" style="padding: 14px; border: 1px solid #B7D9CB; background: #E6F0EC; border-radius: 6px; font-size: 14px; display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 600; color: #0E5E52">Signed in as {{targetRole}} (demo)</span><a href="{{targetHref}}" style="font-weight: 600">Open {{targetName}} →</a></div></sc-if>
+    <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}"><div role="alert" style="padding: 14px; border: 1px solid #F1C4BF; background: #FBEAEA; border-radius: 6px; font-size: 14px; color: #8F1D14">{{error}}</div></sc-if>
+    <div style="border-top: 1px solid #E2E0D8; padding-top: 14px; display: flex; flex-direction: column; gap: 8px">
+      <div style="font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #6B6A63">Demo accounts</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{demos}}" as="d" hint-placeholder-count="8"><button type="button" onClick="{{d.fill}}" style="min-height: 36px; padding: 0 12px; border: 1px solid #D6D3C9; border-radius: 5px; background: #FFFFFF; font-size: 13px; cursor: pointer">{{d.label}}</button></sc-for></div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":820}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { email: '', result: null }; }
+  renderVals() {
+    const accounts = {
+      'faculty.demo@sanjivani.edu.in': ['Faculty', 'Faculty.dc.html', 'the faculty workspace'],
+      'student.demo@sanjivani.edu.in': ['Student', 'Student.dc.html', 'the student app'],
+      'hod.cse@sanjivani.edu.in': ['HOD, CSE', 'Hod.dc.html', 'the HOD console'],
+      'dean.set@sanjivani.edu.in': ['Dean, SET', 'Oversight.dc.html', 'the Dean console'],
+      'coe@sanjivani.edu.in': ['CoE', 'Oversight.dc.html', 'the CoE console'],
+      'vc@sanjivani.edu.in': ['VC', 'Oversight.dc.html', 'the VC console'],
+      'superadmin@xeio': ['Super admin', 'SuperAdmin.dc.html', 'the super admin console']
+    };
+    const tryLogin = (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      const em = (this.state.email || '').trim().toLowerCase();
+      if (accounts[em]) { this.setState({ result: em }); return; }
+      this.setState({ result: em.endsWith('@sanjivani.edu.in') ? 'unknown' : 'domain' });
+    };
+    const r = this.state.result, acc = accounts[r];
+    const demos = [['Faculty', 'faculty.demo@sanjivani.edu.in'], ['Student', 'student.demo@sanjivani.edu.in'], ['HOD', 'hod.cse@sanjivani.edu.in'], ['Dean', 'dean.set@sanjivani.edu.in'], ['CoE', 'coe@sanjivani.edu.in'], ['VC', 'vc@sanjivani.edu.in'], ['Super admin', 'superadmin@xeio'], ['Not onboarded', 'new.person@sanjivani.edu.in']].map(([label, em]) => ({ label, fill: () => this.setState({ email: em, result: null }) }));
+    return {
+      email: this.state.email, setEmail: (e) => this.setState({ email: e.target.value, result: null }), tryLogin, demos,
+      hasTarget: !!acc, targetRole: acc ? acc[0] : '', targetHref: acc ? acc[1] : '#', targetName: acc ? acc[2] : '',
+      hasError: r === 'unknown' || r === 'domain', error: r === 'domain' ? 'Use your institutional account (@sanjivani.edu.in).' : 'Your email is not registered on XeIO. Ask your faculty for an invite, or your HOD for a staff login.'
+    };
+  }
+}
+</script>
+</body>
+</html>

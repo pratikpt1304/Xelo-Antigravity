@@ -1,0 +1,88 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Faculty.dc.html": {
+      "expand": "fill",
+      "h": 1800,
+      "is_interactive": true,
+      "title": "Faculty workspace (Assist)",
+      "w": 1440,
+      "x": 1360,
+      "y": 0
+    },
+    "Hod.dc.html": {
+      "expand": "fill",
+      "h": 1300,
+      "is_interactive": true,
+      "title": "HOD console",
+      "w": 1440,
+      "x": 0,
+      "y": 1920
+    },
+    "Main.dc.html": {
+      "expand": "fill",
+      "h": 820,
+      "is_interactive": true,
+      "title": "Sign in (all roles)",
+      "w": 1280,
+      "x": 0,
+      "y": 0
+    },
+    "Oversight.dc.html": {
+      "expand": "fill",
+      "h": 1200,
+      "is_interactive": true,
+      "title": "Dean, CoE and VC console",
+      "w": 1440,
+      "x": 1520,
+      "y": 1920
+    },
+    "Student.dc.html": {
+      "expand": "fill",
+      "h": 1600,
+      "is_interactive": true,
+      "title": "Student app",
+      "w": 1440,
+      "x": 2880,
+      "y": 0
+    },
+    "SuperAdmin.dc.html": {
+      "expand": "fill",
+      "h": 1200,
+      "is_interactive": true,
+      "title": "Super admin console",
+      "w": 1440,
+      "x": 3040,
+      "y": 1920
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-24T05:55:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "flows": {
+      "kind": "title1",
+      "maxW": 4320,
+      "text": "XeIO simulation: sign in, faculty workspace (Assist), student app · sample data",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Faculty.dc.html",
+    "Student.dc.html",
+    "Hod.dc.html",
+    "Oversight.dc.html",
+    "SuperAdmin.dc.html"
+  ],
+  "pages": [],
+  "title": "XeIO Sample UI"
+}

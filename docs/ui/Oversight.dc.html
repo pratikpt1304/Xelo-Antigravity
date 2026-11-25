@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>XeIO Dean, CoE and VC console</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F3EF}
+a{color:#0E5E52}
+select:focus,button:focus-visible,a:focus-visible{outline:2px solid #0E5E52;outline-offset:2px}
+button,select{font-family:'IBM Plex Sans',system-ui,sans-serif}
+.num{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.card{background:#FFFFFF;border:1px solid #E2E0D8;border-radius:6px}
+.lbl{font-size:11px;color:#6B6A63}
+th{font-weight:500;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:#6B6A63;text-align:left}
+</style>
+</helmet>
+<div style="min-height: 1200px; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 14px; color: #141413; background: #F4F3EF">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 24px; background: #141413; color: #E8E6DF">
+    <div style="display: flex; align-items: center; gap: 14px"><img src="/_blob/310d6bb43f64ba4b3825ee33891c415d" alt="elzeo" style="height: 18px"><div><div><span style="font-weight: 600; font-size: 18px; letter-spacing: -0.3px; color: #FFFFFF">Xe<span style="color: #3FA9F5">IO</span></span> <span style="font-size: 14px; color: #CFCDC5">{{roleTitle}}</span></div><div class="num" style="font-size: 11px; color: #A8A69E">{{roleEmail}} · scope: {{scope}}</div></div></div>
+    <nav aria-label="Sections" style="display: flex; flex-wrap: wrap; gap: 2px"><sc-for list="{{nav}}" as="n" hint-placeholder-count="3"><button type="button" onClick="{{n.go}}" style="{{n.style}}">{{n.label}}</button></sc-for></nav>
+    <div style="display: flex; align-items: center; gap: 10px; font-size: 12px">
+      <span style="color: #A8A69E">Demo: view as</span>
+      <sc-for list="{{roles}}" as="r" hint-placeholder-count="3"><button type="button" onClick="{{r.pick}}" style="{{r.style}}">{{r.label}}</button></sc-for>
+      <a href="Main.dc.html" style="color: #CFCDC5">Sign out</a>
+    </div>
+  </header>
+  <main style="max-width: 1280px; margin: 0 auto; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h1 style="margin: 0; font-size: 26px; font-weight: 600">{{title}}</h1><span style="font-size: 13px; color: #6B6A63">{{lead}}</span></div>
+    <sc-if value="{{hasMsg}}" hint-placeholder-val="{{ false }}"><div role="status" style="padding: 10px 14px; background: #E6F0EC; border-radius: 6px; font-size: 13px; color: #0E5E52">{{msg}}</div></sc-if>
+
+    <sc-if value="{{isMonitor}}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px"><sc-for list="{{kpis}}" as="k" hint-placeholder-count="5"><div class="card" style="padding: 14px"><div class="lbl">{{k.label}}</div><div class="num" style="font-size: 24px">{{k.value}}</div><div style="font-size: 12px; color: #6B6A63">{{k.note}}</div></div></sc-for></div>
+        <div class="card" style="overflow-x: auto">
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 860px">
+            <thead><tr><th style="padding: 10px 14px">Department</th><th style="padding: 10px 8px">School</th><th style="padding: 10px 8px; text-align: right">Lab courses</th><th style="padding: 10px 8px; text-align: right">Students</th><th style="padding: 10px 8px; text-align: right">Labs live now</th><th style="padding: 10px 8px; text-align: right">Attendance</th><th style="padding: 10px 8px; text-align: right">Completion</th><th style="padding: 10px 8px; text-align: right">CO attainment</th><th style="padding: 10px 14px; text-align: right">At risk</th></tr></thead>
+            <tbody><sc-for list="{{depts}}" as="d" hint-placeholder-count="6"><tr style="border-top: 1px solid #EFEDE6"><td style="padding: 9px 14px; font-weight: 500">{{d.name}}</td><td style="padding: 9px 8px">{{d.school}}</td><td class="num" style="padding: 9px 8px; text-align: right">{{d.courses}}</td><td class="num" style="padding: 9px 8px; text-align: right">{{d.students}}</td><td class="num" style="padding: 9px 8px; text-align: right">{{d.live}}</td><td class="num" style="padding: 9px 8px; text-align: right">{{d.att}}</td><td class="num" style="padding: 9px 8px; text-align: right">{{d.comp}}</td><td class="num" style="padding: 9px 8px; text-align: right">{{d.co}}</td><td class="num" style="padding: 9px 14px; text-align: right; color: {{d.riskColor}}">{{d.risk}}</td></tr></sc-for></tbody>
+          </table>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isCourses}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 13px">Department<select value="{{deptFilter}}" onChange="{{setDept}}" style="height: 36px; padding: 0 8px; border: 1px solid #D6D3C9; border-radius: 5px; font-size: 14px; background: #FFFFFF"><sc-for list="{{deptOptions}}" as="o" hint-placeholder-count="5"><option value="{{o}}">{{o}}</option></sc-for></select></label>
+        <div class="card" style="overflow-x: auto">
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 900px">
+            <thead><tr><th style="padding: 10px 14px">Course</th><th style="padding: 10px 8px">Department</th><th style="padding: 10px 8px">Faculty</th><th style="padding: 10px 8px; text-align: right">Students</th><th style="padding: 10px 8px; text-align: right">Sessions</th><th style="padding: 10px 8px; text-align: right">Attendance</th><th style="padding: 10px 8px">Course plan</th><th style="padding: 10px 14px">Internals</th></tr></thead>
+            <tbody><sc-for list="{{courses}}" as="c" hint-placeholder-count="10"><tr style="border-top: 1px solid #EFEDE6"><td style="padding: 9px 14px"><span class="num" style="font-size: 11px; color: #6B6A63">{{c.code}}</span> {{c.title}}</td><td style="padding: 9px 8px">{{c.dept}}</td><td style="padding: 9px 8px">{{c.fac}}</td><td class="num" style="padding: 9px 8px; text-align: right">{{c.n}}</td><td class="num" style="padding: 9px 8px; text-align: right">{{c.sess}}/30</td><td class="num" style="padding: 9px 8px; text-align: right">{{c.att}}</td><td style="padding: 9px 8px"><span style="{{c.planChip}}">{{c.plan}}</span></td><td style="padding: 9px 14px"><span style="{{c.intChip}}">{{c.int}}</span></td></tr></sc-for></tbody>
+          </table>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isInternals}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <sc-if value="{{isCoe}}" hint-placeholder-val="{{ true }}"><div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center"><button type="button" onClick="{{fetch}}" style="min-height: 42px; padding: 0 16px; border: 0; border-radius: 6px; background: #141413; color: #FFFFFF; font-weight: 600; cursor: pointer">Fetch HOD-approved internals</button><span class="num" style="font-size: 12px; color: #6B6A63">{{fetchNote}}</span></div></sc-if>
+        <div class="card" style="overflow-x: auto">
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 880px">
+            <thead><tr><th style="padding: 10px 14px">Course</th><th style="padding: 10px 8px">Department</th><th style="padding: 10px 8px">Approved by</th><th style="padding: 10px 8px; text-align: right">Students</th><th style="padding: 10px 8px; text-align: right">Mean /100</th><th style="padding: 10px 8px; text-align: right">Below 40</th><th style="padding: 10px 8px">Status</th><th style="padding: 10px 14px"></th></tr></thead>
+            <tbody><sc-for list="{{internals}}" as="it" hint-placeholder-count="5"><tr style="border-top: 1px solid #EFEDE6"><td style="padding: 9px 14px"><span class="num" style="font-size: 11px; color: #6B6A63">{{it.code}}</span> {{it.title}}</td><td style="padding: 9px 8px">{{it.dept}}</td><td style="padding: 9px 8px; font-size: 12px">{{it.by}}</td><td class="num" style="padding: 9px 8px; text-align: right">{{it.n}}</td><td class="num" style="padding: 9px 8px; text-align: right">{{it.mean}}</td><td class="num" style="padding: 9px 8px; text-align: right">{{it.low}}</td><td style="padding: 9px 8px"><span style="{{it.chip}}">{{it.status}}</span></td>
+              <td style="padding: 9px 14px; white-space: nowrap"><sc-if value="{{it.canAct}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{it.accept}}" style="min-height: 32px; padding: 0 10px; border: 0; border-radius: 5px; background: #0E5E52; color: #FFFFFF; font-size: 12px; font-weight: 600; cursor: pointer; margin-right: 4px">Accept into results</button><button type="button" onClick="{{it.ret}}" style="min-height: 32px; padding: 0 10px; border: 1px solid #D6D3C9; border-radius: 5px; background: #FFFFFF; font-size: 12px; cursor: pointer">Return to HOD</button></sc-if></td></tr></sc-for></tbody>
+          </table>
+        </div>
+        <div style="font-size: 12px; color: #6B6A63">{{internalsNote}}</div>
+      </div>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { role: 'coe', tab: 'internals', dept: 'All', fetched: false, msg: '', st: { 'ITL-204': 'accepted', 'MEL-210': 'accepted', 'CSL-202': 'hod', 'ETL-205': 'faculty' } };
+  }
+  renderVals() {
+    const st = this.state;
+    const teal = '#0E5E52', muted = '#6B6A63';
+    const tag = (bg, fg) => `display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:500;background:${bg};color:${fg};white-space:nowrap`;
+    const good = tag('#E6F0EC', teal), warn = tag('#FFF4EC', '#9A3412'), grey = tag('#F1EFE9', muted), blue = tag('#EAEFF7', '#23436E'), bad = tag('#FBEAEA', '#9F1D1D');
+    const R = { dean: ['Dean', 'dean.set@sanjivani.edu.in', 'School of Engineering and Technology (SET)'], coe: ['Controller of Examinations', 'coe@sanjivani.edu.in', 'University'], vc: ['Vice-Chancellor', 'vc@sanjivani.edu.in', 'University'] }[st.role];
+    const pill = (on) => `min-height:32px;padding:0 10px;border:0;border-radius:5px;cursor:pointer;font-size:12px;background:${on ? '#E8E6DF' : '#2C2B28'};color:${on ? '#141413' : '#E8E6DF'};font-weight:${on ? 600 : 400}`;
+    const roles = [['dean', 'Dean'], ['coe', 'CoE'], ['vc', 'VC']].map(([id, label]) => ({ label, pick: () => this.setState({ role: id, msg: '' }), style: pill(st.role === id) }));
+    const navS = (on) => `min-height:36px;padding:0 12px;border:0;border-radius:5px;cursor:pointer;font-size:13px;background:${on ? '#2C2B28' : 'transparent'};color:${on ? '#FFFFFF' : '#CFCDC5'};font-weight:${on ? 600 : 400}`;
+    const nav = [['monitor', 'Monitor'], ['courses', 'All courses'], ['internals', 'Internal marks']].map(([id, label]) => ({ label, go: () => this.setState({ tab: id, msg: '' }), style: navS(st.tab === id) }));
+
+    const allDepts = [['Computer Science and Engineering', 'SET', 8, 787, 3, 89, 81, '4/5', 64], ['Information Technology', 'SET', 6, 540, 2, 91, 84, '5/5', 31], ['Mechanical Engineering', 'SET', 5, 410, 1, 86, 77, '4/5', 42], ['Electronics and Telecommunication', 'SET', 5, 395, 0, 88, 80, '4/5', 29], ['Commerce and Management', 'SCM', 3, 260, 0, 92, 87, '5/5', 11], ['Pharmaceutical Sciences', 'SPS', 4, 310, 1, 90, 83, '4/5', 19]];
+    const visDepts = st.role === 'dean' ? allDepts.filter((d) => d[1] === 'SET') : allDepts;
+    const depts = visDepts.map(([name, school, courses, students, live, att, comp, co, risk]) => ({ name, school, courses, students, live, att: att + '%', comp: comp + '%', co, risk, riskColor: risk > 40 ? '#9F1D1D' : '#141413' }));
+    const sum = (i) => visDepts.reduce((a, d) => a + d[i], 0);
+    const kpis = [['Departments', String(visDepts.length), st.role === 'dean' ? 'in SET' : 'across 3 schools'], ['Lab courses', String(sum(2)), 'this semester'], ['Students', String(sum(3)), 'onboarded'], ['Labs live now', String(sum(4)), 'Wed 24 Feb'], ['At risk', String(sum(8)), 'attendance or completion']].map(([label, value, note]) => ({ label, value, note }));
+
+    const C = [['CSL-101', 'Programming in C Lab', 'Computer Science and Engineering', 'Demo Faculty', 125, 12, '91%', 'Approved', 'In progress'], ['CSL-102', 'Data Structures Lab', 'Computer Science and Engineering', 'Faculty B', 118, 12, '88%', 'Approved', 'In progress'], ['CSL-202', 'Database Systems Lab', 'Computer Science and Engineering', 'Faculty D', 102, 30, '90%', 'Approved', 'HOD approved'], ['CSL-302', 'Web Technologies Lab', 'Computer Science and Engineering', 'Faculty G', 84, 10, '82%', 'Declined', 'In progress'], ['ITL-204', 'Python Programming Lab', 'Information Technology', 'Faculty J', 96, 30, '93%', 'Approved', 'Accepted by CoE'], ['ITL-206', 'Cloud Computing Lab', 'Information Technology', 'Faculty K', 88, 11, '90%', 'Approved', 'In progress'], ['MEL-210', 'CAD Lab', 'Mechanical Engineering', 'Faculty L', 72, 30, '87%', 'Approved', 'Accepted by CoE'], ['ETL-205', 'Embedded C Lab', 'Electronics and Telecommunication', 'Faculty M', 80, 30, '88%', 'Approved', 'With faculty'], ['SCL-110', 'Business Analytics Lab', 'Commerce and Management', 'Faculty N', 90, 12, '92%', 'Approved', 'In progress'], ['SPL-120', 'Pharma Informatics Lab', 'Pharmaceutical Sciences', 'Faculty P', 70, 12, '90%', 'Approved', 'In progress']];
+    const school = (d) => (allDepts.find((x) => x[0] === d) || [])[1];
+    const inScope = C.filter((c) => st.role !== 'dean' || school(c[2]) === 'SET');
+    const deptOptions = ['All'].concat(visDepts.map((d) => d[0]));
+    const courses = inScope.filter((c) => st.dept === 'All' || c[2] === st.dept).map(([code, title, dept, fac, n, sess, att, plan, int]) => ({ code, title, dept, fac, n, sess, att, plan, int, planChip: plan === 'Approved' ? good : bad, intChip: int === 'Accepted by CoE' ? good : int === 'HOD approved' ? blue : grey }));
+
+    const I = [['ITL-204', 'Python Programming Lab', 'Information Technology', 'hod.it · 18 Feb', 96, 74.2, 1], ['MEL-210', 'CAD Lab', 'Mechanical Engineering', 'hod.mech · 20 Feb', 72, 69.8, 2], ['CSL-202', 'Database Systems Lab', 'Computer Science and Engineering', 'hod.cse · today', 102, 71.4, 3], ['ETL-205', 'Embedded C Lab', 'Electronics and Telecommunication', 'awaiting HOD', 80, 0, 0]];
+    const isCoe = st.role === 'coe';
+    const internals = I.filter((x) => st.role !== 'dean' || school(x[2]) === 'SET').filter((x) => st.fetched || x[0] !== 'CSL-202' || !isCoe || st.st[x[0]] !== 'hod').map(([code, title, dept, by, n, mean, low]) => {
+      const s = st.st[code];
+      const label = { accepted: 'Accepted into results', hod: 'Approved by HOD · ready', faculty: 'Awaiting HOD approval', returned: 'Returned to HOD' }[s];
+      return { code, title, dept, by, n, mean: mean ? mean.toFixed(1) : '—', low: mean ? low : '—', status: label, chip: s === 'accepted' ? good : s === 'hod' ? blue : s === 'returned' ? bad : grey, canAct: isCoe && s === 'hod',
+        accept: () => this.setState({ st: Object.assign({}, st.st, { [code]: 'accepted' }), msg: `${code} internal marks accepted into results.` }), ret: () => this.setState({ st: Object.assign({}, st.st, { [code]: 'returned' }), msg: `${code} returned to the HOD for review.` }) };
+    });
+    const T = { monitor: ['Live monitor', st.role === 'dean' ? 'Departments in SET, updated live' : 'All departments, updated live'], courses: ['All lab courses', `${courses.length} courses in your scope`], internals: ['Internal marks', isCoe ? 'Only HOD-approved internals can be fetched into results' : 'View only; the CoE fetches and accepts internals'] }[st.tab];
+
+    return {
+      roleTitle: R[0], roleEmail: R[1], scope: R[2], roles, nav, title: T[0], lead: T[1], hasMsg: !!st.msg, msg: st.msg,
+      isMonitor: st.tab === 'monitor', isCourses: st.tab === 'courses', isInternals: st.tab === 'internals', isCoe,
+      kpis, depts, deptFilter: st.dept, deptOptions, setDept: (e) => this.setState({ dept: e.target.value }), courses,
+      internals, fetch: () => this.setState({ fetched: true, msg: 'Fetched 1 new set of HOD-approved internals: CSL-202 Database Systems Lab.' }), fetchNote: st.fetched ? 'Last fetched just now' : 'Last fetched 18 Feb, 17:40',
+      internalsNote: isCoe ? 'Accepted internals are locked; any later change needs the HOD to re-approve and the CoE to accept again.' : 'Dean and VC see status only. Marks move to results when the CoE accepts them.'
+    };
+  }
+}
+</script>
+</body>
+</html>

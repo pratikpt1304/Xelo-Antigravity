@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>XeIO HOD console</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F3EF}
+a{color:#0E5E52}
+input:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:2px solid #0E5E52;outline-offset:2px}
+button,input,textarea{font-family:'IBM Plex Sans',system-ui,sans-serif}
+.num{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.card{background:#FFFFFF;border:1px solid #E2E0D8;border-radius:6px}
+.lbl{font-size:11px;color:#6B6A63}
+th{font-weight:500;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:#6B6A63;text-align:left}
+</style>
+</helmet>
+<div style="min-height: 1300px; display: flex; flex-wrap: wrap; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 14px; color: #141413; background: #F4F3EF">
+  <aside aria-label="HOD navigation" style="flex: 1 1 232px; max-width: 256px; background: #141413; color: #E8E6DF; padding: 20px 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+    <div style="padding: 0 6px"><div><span style="font-weight: 600; font-size: 20px; letter-spacing: -0.3px; color: #FFFFFF">Xe<span style="color: #3FA9F5">IO</span></span> <span style="font-size: 14px; color: #CFCDC5">HOD</span></div><div style="font-size: 11px; color: #A8A69E">Computer Science and Engineering · SET</div></div>
+    <nav style="display: flex; flex-direction: column; gap: 2px"><sc-for list="{{nav}}" as="n" hint-placeholder-count="5"><button type="button" onClick="{{n.go}}" style="{{n.style}}"><span style="flex: 1; text-align: left">{{n.label}}</span><span class="num" style="{{n.badgeStyle}}">{{n.badge}}</span></button></sc-for></nav>
+    <div style="margin-top: auto; padding: 0 8px; font-size: 12px; display: flex; flex-direction: column; gap: 6px"><span style="color: #A8A69E">hod.cse@sanjivani.edu.in</span><a href="Main.dc.html" style="color: #CFCDC5">Sign out</a><div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: #8F8D85">by <img src="/_blob/310d6bb43f64ba4b3825ee33891c415d" alt="elzeo" style="height: 13px"></div></div>
+  </aside>
+  <main style="flex: 999 1 640px; min-width: 0; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h1 style="margin: 0; font-size: 26px; font-weight: 600">{{title}}</h1><span class="num" style="font-size: 12px; color: #6B6A63">{{sub}}</span></div>
+    <sc-if value="{{hasMsg}}" hint-placeholder-val="{{ false }}"><div role="status" style="padding: 10px 14px; background: #E6F0EC; border-radius: 6px; font-size: 13px; color: #0E5E52">{{msg}}</div></sc-if>
+
+    <sc-if value="{{isOverview}}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px"><sc-for list="{{kpis}}" as="k" hint-placeholder-count="5"><div class="card" style="padding: 14px"><div class="lbl">{{k.label}}</div><div class="num" style="font-size: 24px">{{k.value}}</div><div style="font-size: 12px; color: #6B6A63">{{k.note}}</div></div></sc-for></div>
+        <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+          <div class="card" style="flex: 2 1 420px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+            <strong>Waiting for you</strong>
+            <sc-for list="{{queue}}" as="qq" hint-placeholder-count="4"><button type="button" onClick="{{qq.open}}" style="display: grid; grid-template-columns: 110px 1fr auto; gap: 10px; align-items: center; text-align: left; padding: 9px 0; border: 0; border-top: 1px solid #EFEDE6; background: none; cursor: pointer; font-size: 13px; color: #141413"><span style="{{qq.chip}}">{{qq.kind}}</span><span><strong>{{qq.course}}</strong> · {{qq.what}}</span><span class="num" style="font-size: 12px; color: #6B6A63">{{qq.age}}</span></button></sc-for>
+          </div>
+          <div class="card" style="flex: 1 1 280px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+            <strong>Assist suggests</strong>
+            <div style="font-size: 13px; line-height: 1.5">CSL-302 Web Technologies Lab has 17 students at risk and completion at 68%. Ask the faculty for a remedial plan before mid-term.</div>
+            <div style="font-size: 13px; line-height: 1.5">CSL-301’s end-sem paper does not cover CO4. Decline with a note rather than approving.</div>
+            <div style="font-size: 13px; line-height: 1.5">CSL-202 final marks are ready; approving today lets the CoE close results on schedule.</div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isApprovals}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+        <div class="card" style="flex: 1 1 300px; max-width: 380px; overflow: hidden">
+          <sc-for list="{{queue}}" as="qq" hint-placeholder-count="5"><button type="button" onClick="{{qq.open}}" style="{{qq.rowStyle}}"><span style="{{qq.chip}}">{{qq.kind}}</span><span style="font-weight: 600">{{qq.course}}</span><span style="font-size: 12px; color: #6B6A63">{{qq.what}} · {{qq.age}}</span></button></sc-for>
+          <sc-if value="{{queueEmpty}}" hint-placeholder-val="{{ false }}"><div style="padding: 16px; color: #6B6A63">Nothing waiting. All clear.</div></sc-if>
+        </div>
+        <sc-if value="{{hasSel}}" hint-placeholder-val="{{ true }}">
+          <div class="card" style="flex: 2 1 480px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+            <div><div class="lbl">{{selKind}}</div><div style="font-size: 20px; font-weight: 600">{{selTitle}}</div><div style="font-size: 13px; color: #6B6A63">{{selMeta}}</div></div>
+            <div style="overflow-x: auto"><table style="width: 100%; border-collapse: collapse; font-size: 13px"><thead><tr><sc-for list="{{selHead}}" as="h" hint-placeholder-count="4"><th style="padding: 7px 8px">{{h}}</th></sc-for></tr></thead><tbody><sc-for list="{{selRows}}" as="row" hint-placeholder-count="6"><tr style="border-top: 1px solid #EFEDE6"><sc-for list="{{row}}" as="cell" hint-placeholder-count="4"><td style="padding: 7px 8px">{{cell}}</td></sc-for></tr></sc-for></tbody></table></div>
+            <div style="display: flex; flex-direction: column; gap: 6px; padding: 12px; background: #FBFAF7; border: 1px solid #EFEDE6; border-radius: 5px"><div style="font-size: 12px; font-weight: 600">Assist checks</div><sc-for list="{{selChecks}}" as="ck" hint-placeholder-count="3"><div style="{{ck.style}}">{{ck.text}}</div></sc-for></div>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #6B6A63">Remarks to faculty (required to decline)<textarea value="{{remark}}" onChange="{{setRemark}}" rows="2" style="border: 1px solid #D6D3C9; border-radius: 5px; padding: 8px; font-size: 13px; resize: vertical"></textarea></label>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px"><button type="button" onClick="{{approve}}" style="min-height: 42px; padding: 0 16px; border: 0; border-radius: 6px; background: #141413; color: #FFFFFF; font-weight: 600; cursor: pointer">{{approveLabel}}</button><button type="button" onClick="{{decline}}" style="min-height: 42px; padding: 0 16px; border: 1px solid #D6D3C9; border-radius: 6px; background: #FFFFFF; cursor: pointer">{{declineLabel}}</button></div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isCourses}}" hint-placeholder-val="{{ false }}">
+      <div class="card" style="overflow-x: auto">
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 980px">
+          <thead><tr><th style="padding: 10px 14px">Course</th><th style="padding: 10px 8px">Class · faculty</th><th style="padding: 10px 8px; text-align: right">Students</th><th style="padding: 10px 8px; text-align: right">Sessions</th><th style="padding: 10px 8px; text-align: right">Attendance</th><th style="padding: 10px 8px; text-align: right">Completion</th><th style="padding: 10px 8px; text-align: right">At risk</th><th style="padding: 10px 8px">Course plan</th><th style="padding: 10px 8px">End-sem paper</th><th style="padding: 10px 14px">Final marks</th></tr></thead>
+          <tbody><sc-for list="{{courses}}" as="c" hint-placeholder-count="8"><tr style="border-top: 1px solid #EFEDE6"><td style="padding: 9px 14px"><div class="num" style="font-size: 11px; color: #6B6A63">{{c.code}}</div><div style="font-weight: 500">{{c.title}}</div></td><td style="padding: 9px 8px; font-size: 12px">{{c.cls}} · {{c.fac}}</td><td class="num" style="padding: 9px 8px; text-align: right">{{c.n}}</td><td class="num" style="padding: 9px 8px; text-align: right">{{c.sess}}/30</td><td class="num" style="padding: 9px 8px; text-align: right">{{c.att}}</td><td class="num" style="padding: 9px 8px; text-align: right">{{c.comp}}</td><td class="num" style="padding: 9px 8px; text-align: right; color: {{c.riskColor}}">{{c.risk}}</td><td style="padding: 9px 8px"><span style="{{c.planChip}}">{{c.plan}}</span></td><td style="padding: 9px 8px"><span style="{{c.esChip}}">{{c.es}}</span></td><td style="padding: 9px 14px"><span style="{{c.fmChip}}">{{c.fm}}</span></td></tr></sc-for></tbody>
+        </table>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isLive}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <div class="card" style="overflow-x: auto">
+          <div style="padding: 12px 16px; border-bottom: 1px solid #E2E0D8; display: flex; justify-content: space-between; gap: 8px"><strong>Today’s labs · Wed 24 Feb</strong><span style="font-size: 12px; color: #6B6A63">live rows update every 2 s</span></div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 860px">
+            <thead><tr><th style="padding: 9px 14px">Time</th><th style="padding: 9px 8px">Course · batch</th><th style="padding: 9px 8px">Room</th><th style="padding: 9px 8px">Status</th><th style="padding: 9px 8px; text-align: right">Present</th><th style="padding: 9px 8px; text-align: right">Pre-test done</th><th style="padding: 9px 8px; text-align: right">Passed</th><th style="padding: 9px 14px; text-align: right">Struggling</th></tr></thead>
+            <tbody><sc-for list="{{labs}}" as="l" hint-placeholder-count="6"><tr style="border-top: 1px solid #EFEDE6"><td class="num" style="padding: 8px 14px">{{l.time}}</td><td style="padding: 8px">{{l.course}}</td><td style="padding: 8px">{{l.room}}</td><td style="padding: 8px"><span style="{{l.chip}}">{{l.status}}</span></td><td class="num" style="padding: 8px; text-align: right">{{l.present}}</td><td class="num" style="padding: 8px; text-align: right">{{l.pre}}</td><td class="num" style="padding: 8px; text-align: right">{{l.passed}}</td><td class="num" style="padding: 8px 14px; text-align: right; color: #9A3412">{{l.stuck}}</td></tr></sc-for></tbody>
+          </table>
+        </div>
+        <div class="card" style="overflow-x: auto">
+          <div style="padding: 12px 16px; border-bottom: 1px solid #E2E0D8"><strong>Students at risk across the department</strong></div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px"><tbody><sc-for list="{{risk}}" as="r" hint-placeholder-count="6"><tr style="border-top: 1px solid #EFEDE6"><td class="num" style="padding: 8px 14px">{{r.roll}}</td><td style="padding: 8px">{{r.course}}</td><td style="padding: 8px; color: #6B6A63">{{r.why}}</td><td class="num" style="padding: 8px 14px; text-align: right">{{r.att}}</td></tr></sc-for></tbody></table>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isFinal}}" hint-placeholder-val="{{ false }}">
+      <div class="card" style="overflow-x: auto">
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 820px">
+          <thead><tr><th style="padding: 10px 14px">Course</th><sc-for list="{{pipeHead}}" as="ph" hint-placeholder-count="5"><th style="padding: 10px 8px; text-align: center">{{ph}}</th></sc-for></tr></thead>
+          <tbody><sc-for list="{{pipe}}" as="p" hint-placeholder-count="8"><tr style="border-top: 1px solid #EFEDE6"><td style="padding: 9px 14px"><span class="num" style="font-size: 11px; color: #6B6A63">{{p.code}}</span> {{p.title}}</td><sc-for list="{{p.cells}}" as="pc" hint-placeholder-count="5"><td style="padding: 9px 8px; text-align: center"><span style="{{pc}}"></span></td></sc-for></tr></sc-for></tbody>
+        </table>
+        <div style="padding: 10px 14px; font-size: 12px; color: #6B6A63; border-top: 1px solid #EFEDE6">Filled dot = stage reached. Approving final marks recommends them to the CoE, who fetches them into results.</div>
+      </div>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab: 'overview', sel: 'plan-CSL-101', remark: '', msg: '', tick: 0, status: {
+      'CSL-101': { plan: 'pending', es: 'draft', fm: 0 }, 'CSL-102': { plan: 'approved', es: 'submitted', fm: 0 }, 'CSL-201': { plan: 'approved', es: 'approved', fm: 0 }, 'CSL-202': { plan: 'approved', es: 'approved', fm: 2 },
+      'CSL-203': { plan: 'approved', es: 'draft', fm: 0 }, 'CSL-301': { plan: 'approved', es: 'submitted', fm: 0 }, 'CSL-302': { plan: 'declined', es: 'draft', fm: 0 }, 'CSL-303': { plan: 'pending', es: 'draft', fm: 0 } } };
+  }
+  componentDidMount() { this.t = setInterval(() => { if (this.state.tab === 'live') this.setState({ tick: this.state.tick + 1 }); }, 2000); }
+  componentWillUnmount() { clearInterval(this.t); }
+  renderVals() {
+    const st = this.state, S = st.status;
+    const teal = '#0E5E52', muted = '#6B6A63', ink = '#141413';
+    const tag = (bg, fg) => `display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:500;background:${bg};color:${fg};white-space:nowrap`;
+    const good = tag('#E6F0EC', teal), warn = tag('#FFF4EC', '#9A3412'), bad = tag('#FBEAEA', '#9F1D1D'), grey = tag('#F1EFE9', muted), blue = tag('#EAEFF7', '#23436E');
+    const C = [['CSL-101', 'Programming in C Lab', 'SY-B', 'Demo Faculty', 125, 12, 91, 84, 9], ['CSL-102', 'Data Structures Lab', 'SY-A', 'Faculty B', 118, 12, 88, 79, 12], ['CSL-201', 'Object-Oriented Programming Lab', 'TY-A', 'Faculty C', 96, 12, 93, 86, 5], ['CSL-202', 'Database Systems Lab', 'TY-B', 'Faculty D', 102, 30, 90, 88, 4], ['CSL-203', 'Operating Systems Lab', 'TY-A', 'Faculty E', 96, 11, 85, 72, 14], ['CSL-301', 'Computer Networks Lab', 'LY-A', 'Faculty F', 88, 12, 94, 90, 3], ['CSL-302', 'Web Technologies Lab', 'LY-B', 'Faculty G', 84, 10, 82, 68, 17], ['CSL-303', 'Machine Learning Lab', 'LY-A', 'Faculty H', 88, 0, 0, 0, 0]];
+    const planChip = { pending: [warn, 'Awaiting you'], approved: [good, 'Approved'], declined: [bad, 'Declined · resubmit'] };
+    const esChip = { draft: [grey, 'Being set'], submitted: [warn, 'Awaiting you'], approved: [good, 'Approved'], declined: [bad, 'Declined'] };
+    const fmLabels = ['Not yet', 'Faculty draft', 'Awaiting you', 'Sent to CoE', 'Accepted by CoE'];
+    const fmChips = [grey, grey, warn, blue, good];
+    const courses = C.map(([code, title, cls, fac, n, sess, att, comp, risk]) => ({ code, title, cls, fac, n, sess, att: sess ? att + '%' : '—', comp: sess ? comp + '%' : '—', risk, riskColor: risk > 10 ? '#9F1D1D' : '#141413', plan: planChip[S[code].plan][1], planChip: planChip[S[code].plan][0], es: esChip[S[code].es][1], esChip: esChip[S[code].es][0], fm: fmLabels[S[code].fm], fmChip: fmChips[S[code].fm] }));
+    const titleOf = (code) => C.find((c) => c[0] === code)[1];
+
+    const items = [];
+    C.forEach(([code]) => {
+      if (S[code].plan === 'pending') items.push({ id: 'plan-' + code, type: 'plan', code, kind: 'Course plan', what: 'course plan and mark scheme', age: code === 'CSL-101' ? 'today' : '2 days' });
+      if (S[code].es === 'submitted') items.push({ id: 'es-' + code, type: 'es', code, kind: 'End-sem paper', what: 'lab question paper', age: code === 'CSL-102' ? '1 day' : '3 days' });
+      if (S[code].fm === 2) items.push({ id: 'fm-' + code, type: 'fm', code, kind: 'Final marks', what: 'internal marks out of 100', age: 'today' });
+    });
+    const kindChip = { plan: blue, es: tag('#F1ECF5', '#5B3B8C'), fm: warn };
+    const queue = items.map((it) => Object.assign({}, it, { chip: kindChip[it.type], course: it.code, open: () => this.setState({ tab: 'approvals', sel: it.id, remark: '', msg: '' }), rowStyle: `display:flex;flex-direction:column;align-items:flex-start;gap:3px;width:100%;text-align:left;padding:12px 14px;border:0;border-bottom:1px solid #EFEDE6;cursor:pointer;background:${st.sel === it.id ? '#FBFAF7' : '#FFFFFF'};box-shadow:${st.sel === it.id ? 'inset 3px 0 0 #141413' : 'none'};color:#141413;font-size:13px` }));
+    const cur = items.find((it) => it.id === st.sel) || items[0];
+
+    let selKind = '', selTitle = '', selMeta = '', selHead = [], selRows = [], selChecks = [], approveLabel = 'Approve', declineLabel = 'Decline';
+    const ok = (t) => ({ text: '✓ ' + t, style: `font-size:13px;color:${teal}` }), flag = (t) => ({ text: '! ' + t, style: 'font-size:13px;color:#9A3412' });
+    if (cur && cur.type === 'plan') {
+      selKind = 'Course plan and mark scheme'; selTitle = `${cur.code} · ${titleOf(cur.code)}`; selMeta = cur.code === 'CSL-101' ? 'Demo Faculty · 5 COs with Bloom levels · CO–PO map · 30 sessions, 6 Jan – 5 May' : 'Faculty H · 5 COs · CO–PO map · 30 sessions, 11 Jan – 10 May';
+      selHead = ['Rubric component', 'Earned in each session', 'Marks'];
+      selRows = [['Attendance', 'Present in the session', '10'], ['Pre-test', '5 MCQs, one attempt, before the lab', '5'], ['Post-test', '5 MCQs, same day, after hidden tests pass', '5'], ['Visible test cases', '2 per question', '10'], ['Hidden test cases', '3 per question', '10'], ['Viva', 'Out of 10 per session', '10'], ['Total', 'Scaled to 100 in reports', '50']];
+      selChecks = [ok('Every CO has at least 4 sessions'), ok('Bloom levels span L2 to L6'), ok('Session plan avoids all calendar holidays'), cur.code === 'CSL-303' ? flag('Unit 5 has only 3 sessions for CO5 (Create); consider one more') : ok('Rubric matches the department template')];
+      approveLabel = 'Approve course plan'; declineLabel = 'Decline with remarks';
+    } else if (cur && cur.type === 'es') {
+      selKind = 'End-sem lab question paper'; selTitle = `${cur.code} · ${titleOf(cur.code)}`; selMeta = 'Each student is assigned 2 questions from this set; 2 visible + 3 hidden test cases each.';
+      selHead = ['Question', 'CO', 'BTL', 'Marks'];
+      selRows = cur.code === 'CSL-102' ? [['Q1 Stack using arrays with overflow checks', 'CO1', 'L3', '25'], ['Q2 Queue with circular buffer', 'CO2', 'L3', '25'], ['Q3 Singly linked list: insert and delete', 'CO3', 'L3', '25'], ['Q4 Binary search tree: insert and inorder', 'CO4', 'L4', '25'], ['Q5 Graph BFS from an adjacency list', 'CO5', 'L4', '25'], ['Q6 Merge sort with step count', 'CO5', 'L4', '25']]
+        : [['Q1 Socket echo server', 'CO2', 'L3', '25'], ['Q2 Checksum computation', 'CO1', 'L3', '25'], ['Q3 Sliding window simulation', 'CO3', 'L4', '25'], ['Q4 Distance-vector routing table', 'CO5', 'L4', '25'], ['Q5 HTTP request parser', 'CO2', 'L3', '25']];
+      selChecks = cur.code === 'CSL-102' ? [ok('All 5 COs covered, each by 1–2 questions'), ok('Every reference solution passes its 5 test cases'), ok('No overlap with this semester’s lab questions')] : [flag('CO4 is not covered by any question'), flag('CO2 has 2 questions while CO4 has none'), ok('Every reference solution passes its 5 test cases')];
+      approveLabel = 'Approve paper'; declineLabel = 'Decline with remarks';
+    } else if (cur && cur.type === 'fm') {
+      selKind = 'Final internal marks'; selTitle = `${cur.code} · ${titleOf(cur.code)}`; selMeta = 'Faculty D · 102 students · out of 100 as per approved rubric';
+      selHead = ['Measure', 'Value', 'Note', ''];
+      selRows = [['Mean', '71.4', 'sd 12.8', ''], ['Highest / lowest', '96 / 31', '', ''], ['Below 40', '3 students', 'eligible for makeup only', ''], ['Overall CO attainment', '78% at ≥ 50%', 'all 5 COs attained', ''], ['Attendance below 75%', '4 students', 'flagged to CoE', '']];
+      selChecks = [ok('Marks recomputed from session records match the faculty sheet'), ok('Rubric used is the HOD-approved version'), flag('2 students scored above 90 with 3+ integrity flags each; review before approving')];
+      approveLabel = 'Approve and recommend to CoE'; declineLabel = 'Return to faculty';
+    }
+    const setS = (code, patch) => Object.assign({}, S, { [code]: Object.assign({}, S[code], patch) });
+    const approve = () => { if (!cur) return; const patch = cur.type === 'plan' ? { plan: 'approved' } : cur.type === 'es' ? { es: 'approved' } : { fm: 3 }; const m = cur.type === 'fm' ? `${cur.code} final marks approved and recommended to the CoE.` : `${cur.code} ${cur.kind.toLowerCase()} approved. Faculty notified.`; this.setState({ status: setS(cur.code, patch), sel: '', remark: '', msg: m }); };
+    const decline = () => { if (!cur) return; if (!st.remark.trim()) { this.setState({ msg: 'Add a remark for the faculty before declining.' }); return; } const patch = cur.type === 'plan' ? { plan: 'declined' } : cur.type === 'es' ? { es: 'declined' } : { fm: 1 }; this.setState({ status: setS(cur.code, patch), sel: '', remark: '', msg: `${cur.code} returned to faculty with your remarks.` }); };
+
+    const live = (base, k) => Math.min(base[1], base[0] + Math.floor(st.tick * k));
+    const labs = [['10:00', 'CSL-101 · Batch A', 'Lab 3', 'Live', '60/63', '59/63', `${live([18, 63], 1.5)}/63`, 6], ['10:00', 'CSL-203 · Batch A', 'Lab 5', 'Live', '45/48', '41/48', `${live([9, 48], 1)}/48`, 8], ['11:00', 'CSL-301 · Batch B', 'Lab 6', 'Live', '43/44', '44/44', `${live([30, 44], 0.6)}/44`, 1], ['14:00', 'CSL-101 · Batch B', 'Lab 4', 'Upcoming', '—', '55/62', '—', '—'], ['14:00', 'CSL-302 · Batch A', 'Lab 2', 'Upcoming', '—', '31/42', '—', '—'], ['09:00', 'CSL-201 · Batch A', 'Lab 1', 'Done', '47/48', '46/48', '44/48', '—']]
+      .map(([time, course, room, status, present, pre, passed, stuck]) => ({ time, course, room, status, present, pre, passed, stuck, chip: status === 'Live' ? warn : status === 'Done' ? good : grey }));
+    const risk = [['2301012', 'CSL-101', 'Attendance 67%; 3 sessions pending', '67%'], ['2302044', 'CSL-302', 'Hidden tests pending in 5 sessions', '78%'], ['2201031', 'CSL-203', 'Pre-test under 2/5 for 4 weeks', '81%'], ['2301027', 'CSL-101', 'Attendance 71%', '71%'], ['2202018', 'CSL-102', 'No passing run in last 2 labs', '85%'], ['2302007', 'CSL-302', 'Attendance 64%', '64%']].map(([roll, course, why, att]) => ({ roll, course, why, att }));
+    const pipeHead = ['Faculty draft', 'Submitted', 'HOD approved', 'Sent to CoE', 'Accepted'];
+    const pipe = C.map(([code, title]) => ({ code, title, cells: [1, 2, 3, 3, 4].map((stage, i) => { const reached = S[code].fm >= stage && !(i === 3 && S[code].fm < 3); return `display:inline-block;width:12px;height:12px;border-radius:50%;border:1.5px solid ${reached ? teal : '#C9C6BC'};background:${reached ? teal : 'transparent'}`; }) }));
+
+    const tabs = [['overview', 'Overview', ''], ['approvals', 'Approvals', String(items.length)], ['courses', 'Courses', '8'], ['live', 'Live monitor', '3 live'], ['final', 'Final marks', '']];
+    const nav = tabs.map(([id, label, badge]) => ({ label, badge, go: () => this.setState({ tab: id, msg: '' }), style: `display:flex;align-items:center;gap:8px;width:100%;min-height:38px;padding:0 10px;border:0;border-radius:5px;cursor:pointer;font-size:13px;background:${st.tab === id ? '#2C2B28' : 'transparent'};color:${st.tab === id ? '#FFFFFF' : '#CFCDC5'};font-weight:${st.tab === id ? 600 : 400}`, badgeStyle: badge ? `font-size:11px;padding:1px 6px;border-radius:9px;background:${id === 'approvals' ? '#C2410C' : '#2C2B28'};color:#FFFFFF` : 'display:none' }));
+    const T = { overview: ['Department overview', 'Sem IV · 2026–27 · 8 lab courses · 787 students'], approvals: ['Approvals', `${items.length} waiting`], courses: ['Courses in the department', 'live figures'], live: ['Live monitor', 'Wed 24 Feb · 3 labs running'], final: ['Final marks pipeline', 'HOD approval recommends marks to the CoE'] }[st.tab];
+    const kpis = [['Lab courses', '8', '1 starting next week'], ['Students', '787', 'across 14 batches'], ['Avg attendance', '89%', '4 courses above 90%'], ['Avg completion', '81%', 'sessions passed on time'], ['At risk', '64', 'attendance or completion']].map(([label, value, note]) => ({ label, value, note }));
+
+    return {
+      nav, title: T[0], sub: T[1], hasMsg: !!st.msg, msg: st.msg,
+      isOverview: st.tab === 'overview', isApprovals: st.tab === 'approvals', isCourses: st.tab === 'courses', isLive: st.tab === 'live', isFinal: st.tab === 'final',
+      kpis, queue, queueEmpty: items.length === 0, hasSel: !!cur, selKind, selTitle, selMeta, selHead, selRows, selChecks, approveLabel, declineLabel, approve, decline,
+      remark: st.remark, setRemark: (e) => this.setState({ remark: e.target.value }), courses, labs, risk, pipeHead, pipe
+    };
+  }
+}
+</script>
+</body>
+</html>
